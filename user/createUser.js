@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 const { isEmail } = require('validator')
+const trim = require('../misc/trim')
 const createError = require('../misc/createServerError')
 const roles = require('../misc/roles')
 const getDb = require('../misc/get-db')
@@ -45,12 +46,10 @@ module.exports = async (req, res, next) => {
 
   // TODO: a user cannot add a user with a higher role
 
-  const db = await getDb()
-  const collection = db.collection('users')
+  const collection = (await getDb()).collection('users')
   const alreadyExistingUser = await collection.findOne({ email })
 
   if (alreadyExistingUser) {
-    db.close()
     return next(createError(400, 'a user with this email address already exists'))
   }
 
@@ -62,8 +61,4 @@ module.exports = async (req, res, next) => {
   })
 
   res.status(201).end()
-}
-
-function trim(string) {
-  return string.replace(/^\s*/, '').replace(/\s*$/, '')
 }
