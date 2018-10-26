@@ -1,11 +1,11 @@
-const bcrypt = require('bcryptjs')
-const { isEmail } = require('validator')
-const trim = require('../misc/trim')
-const createError = require('../misc/createServerError')
-const roles = require('../misc/roles')
-const getDb = require('../misc/get-db')
-
-module.exports = async (req, res, next) => {
+module.exports = ({
+  bcrypt,
+  isEmail,
+  trim,
+  createError,
+  roles,
+  getDb
+}) => async (req, res, next) => {
   const name = trim(req.body.name || ''),
         email = trim(req.body.email || ''),
         password = trim(req.body.password || ''),
