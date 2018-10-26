@@ -8,7 +8,8 @@ module.exports = {
   },
   env: 'development',
   db: {
-    uri: 'mongodb://localhost:27017/premura',
-    collection: 'sessions'
+    url: 'mongodb://localhost:27017',
+    dbName: 'premura',
+    sessionsCollection: 'sessions'
   }
 }

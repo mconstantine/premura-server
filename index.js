@@ -11,7 +11,10 @@ const sessionOptions = config.session
 
 const user = require('./user/index')
 
-sessionOptions.store = new MongoDBStore(config.db)
+sessionOptions.store = new MongoDBStore({
+  uri: `${config.db.url}/${config.db.dbName}`,
+  collection: config.db.sessionsCollection
+})
 
 if (config.env === 'production') {
   app.set('trust proxy', 1)
