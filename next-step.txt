@@ -1,0 +1,1 @@
+Test createUser, login and logout.

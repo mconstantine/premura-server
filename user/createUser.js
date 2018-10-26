@@ -44,7 +44,9 @@ module.exports = async (req, res, next) => {
     return next(createError(400, `role should be one of ${roles.join(', ')}`))
   }
 
-  // TODO: a user cannot add a user with a higher role
+  if (roles.indexOf(req.session.user.role) < roles.indexOf(role)) {
+    return next(createError(401, 'you cannot register a user with a role higher than yours'))
+  }
 
   const collection = (await getDb()).collection('users')
   const alreadyExistingUser = await collection.findOne({ email })
