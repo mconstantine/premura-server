@@ -1,0 +1,72 @@
+const endpoint = require('./endpoint')
+
+describe('endpoint', () => {
+  it('Should create the right paths', () => {
+    const router = {
+      use: jest.fn(() => router),
+      get: jest.fn(() => router),
+      post: jest.fn(() => router),
+      put: jest.fn(() => router),
+      delete: jest.fn(() => router)
+    }
+
+    const paths = {
+      loginGate: 'loginGate',
+      createUser: 'createUser',
+      getUsers: 'getUsers',
+      getUser: 'getUser',
+      updateUser: 'updateUser',
+      deleteUser: 'deleteUser',
+      login: 'login',
+      logout: 'logout'
+    }
+
+    endpoint(Object.assign(paths, { router }))
+
+    expect(router.use.mock.calls[0]).toEqual([paths.loginGate])
+    expect(router.get.mock.calls[0]).toEqual(['/users', paths.getUsers])
+    expect(router.get.mock.calls[1]).toEqual(['/users/:id', paths.getUser])
+    expect(router.post.mock.calls[0]).toEqual(['/users/login', paths.login])
+    expect(router.post.mock.calls[1]).toEqual(['/users', paths.createUser])
+    expect(router.post.mock.calls[2]).toEqual(['/users/logout', paths.logout])
+    expect(router.put.mock.calls[0]).toEqual(['/users/:id', paths.updateUser])
+    expect(router.delete.mock.calls[0]).toEqual(['/users/:id', paths.deleteUser])
+  })
+
+  it('Should allow login before using loginGate', () => {
+    let didCreateLoginPath = false
+
+    const router = {
+      use: function() {
+        if (arguments[0] === paths.loginGate && !didCreateLoginPath) {
+          throw new Error('It does not allow login before using loginGate')
+        }
+
+        return router
+      },
+      post: function() {
+        if (arguments[1] === paths.login) {
+          didCreateLoginPath = true
+        }
+
+        return router
+      },
+      get: () => router,
+      put: () => router,
+      delete: () => router
+    }
+
+    const paths = {
+      loginGate: 'loginGate',
+      createUser: 'createUser',
+      getUsers: 'getUsers',
+      getUser: 'getUser',
+      updateUser: 'updateUser',
+      deleteUser: 'deleteUser',
+      login: 'login',
+      logout: 'logout'
+    }
+
+    endpoint(Object.assign(paths, { router }))
+  })
+})
