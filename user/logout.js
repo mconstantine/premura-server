@@ -1,3 +1,4 @@
 module.exports = (req, res) => {
-  res.end('Endpoint not implemented.')
+  delete req.session.user
+  res.end()
 }
