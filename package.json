@@ -4,7 +4,8 @@
   "description": "A server and API for Premura.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --watch",
+    "start": "nodemon ."
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,16 @@
   "bugs": {
     "url": "https://github.com/mconstantine/premura-server/issues"
   },
-  "homepage": "https://github.com/mconstantine/premura-server#readme"
+  "homepage": "https://github.com/mconstantine/premura-server#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "connect-mongodb-session": "^2.0.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0",
+    "nodemon": "^1.18.5"
+  }
 }
