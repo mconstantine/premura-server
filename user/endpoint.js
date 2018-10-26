@@ -18,4 +18,6 @@ module.exports = ({
   .put('/users/:id', updateUser)
   .delete('/users/:id', deleteUser)
   .post('/users/logout', logout)
+
+  return router
 }

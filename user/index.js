@@ -19,4 +19,4 @@ module.exports = endpoint({
   deleteUser,
   login,
   logout
-})()
+})

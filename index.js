@@ -9,6 +9,8 @@ const config = require('./config')
 const app = express()
 const sessionOptions = config.session
 
+const user = require('./user/index')
+
 sessionOptions.store = new MongoDBStore(config.db)
 
 if (config.env === 'production') {
@@ -27,6 +29,7 @@ app
 .use(session(sessionOptions))
 .use(bodyParser.json())
 .use(bodyParser.urlencoded({ extended: false }))
+.use(user)
 
 app.get('/', (req, res) => res.send('Hello ' + JSON.stringify(req.session)))
 
