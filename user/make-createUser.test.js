@@ -1,4 +1,4 @@
-const createUser = require('./createUser')
+const makeCreateUser = require('./make-createUser')
 const roles = Array.from(require('../misc/roles'))
 
 roles.includes = jest.fn(() => true)
@@ -25,12 +25,12 @@ describe('createUser', () => {
   const collection = jest.fn(() => ({ findOne, insertOne }))
   const getDb = () => ({ collection })
 
-  const doCreateUser = createUser({ bcrypt, trim, createError, isEmail, roles, getDb })
+  const createUser = makeCreateUser({ bcrypt, trim, createError, isEmail, roles, getDb })
 
   it('Should clean data', async () => {
     req.body = Object.assign({}, completeData)
 
-    await doCreateUser(req, res, next)
+    await createUser(req, res, next)
 
     expect(trim).toHaveBeenNthCalledWith(1, completeData.name)
     expect(trim).toHaveBeenNthCalledWith(2, completeData.email)
@@ -45,7 +45,7 @@ describe('createUser', () => {
     roles.includes.mockClear()
 
     req.body = Object.assign({}, completeData)
-    await doCreateUser(req, res, next)
+    await createUser(req, res, next)
     expect(isEmail).toHaveBeenCalledWith(completeData.email)
     expect(roles.includes).toHaveBeenCalledWith(completeData.role)
 
@@ -53,32 +53,32 @@ describe('createUser', () => {
 
     req.body = Object.assign({}, completeData)
     req.body.name = ''
-    await doCreateUser(req, res, next)
+    await createUser(req, res, next)
     expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('name')])
 
     req.body = Object.assign({}, completeData)
     req.body.email = ''
-    await doCreateUser(req, res, next)
+    await createUser(req, res, next)
     expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('email')])
 
     req.body = Object.assign({}, completeData)
     req.body.password = ''
-    await doCreateUser(req, res, next)
+    await createUser(req, res, next)
     expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('password')])
 
     req.body = Object.assign({}, completeData)
     req.body.passwordConfirmation = ''
-    await doCreateUser(req, res, next)
+    await createUser(req, res, next)
     expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('passwordConfirmation')])
 
     req.body.passwordConfirmation = 'somethingelse'
-    await doCreateUser(req, res, next)
+    await createUser(req, res, next)
     expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('password')])
     expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('passwordConfirmation')])
 
     req.body = Object.assign({}, completeData)
     req.body.role = ''
-    await doCreateUser(req, res, next)
+    await createUser(req, res, next)
     expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('role')])
   })
 
@@ -86,7 +86,7 @@ describe('createUser', () => {
     collection.mockClear()
     findOne.mockClear()
     req.body = Object.assign({}, completeData)
-    await doCreateUser(req, res, next)
+    await createUser(req, res, next)
     expect(collection).toHaveBeenCalledWith('users')
     expect(findOne).toHaveBeenCalledWith({ email: completeData.email })
   })
@@ -96,7 +96,7 @@ describe('createUser', () => {
     requestFromLowerRole.session.user.role = 'maker'
     requestFromLowerRole.body = Object.assign({}, completeData)
     requestFromLowerRole.body.role = 'manager'
-    await doCreateUser(requestFromLowerRole, res, next)
+    await createUser(requestFromLowerRole, res, next)
     expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
   })
 
@@ -104,7 +104,7 @@ describe('createUser', () => {
     collection.mockClear()
     insertOne.mockClear()
     req.body = Object.assign({}, completeData)
-    await doCreateUser(req, res, next)
+    await createUser(req, res, next)
 
     const result = Object.assign({}, completeData)
     delete result.passwordConfirmation
@@ -116,7 +116,7 @@ describe('createUser', () => {
   it('Should encrypt the password', async () => {
     bcrypt.hash.mockClear()
     req.body = Object.assign({}, completeData)
-    await doCreateUser(req, res, next)
+    await createUser(req, res, next)
     expect(bcrypt.hash).toHaveBeenCalledWith(completeData.password, 10)
   })
 })
