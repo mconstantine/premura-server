@@ -17,7 +17,7 @@ describe('login', () => {
   }
 
   const req = { session: {} }
-  const res = { end: () => {} }
+  const res = { send: jest.fn() }
   const next = jest.fn()
 
   it('Should clean data', async () => {
@@ -70,5 +70,12 @@ describe('login', () => {
     await login(req, res, next)
     expect(req.session.user).toBeInstanceOf(Object)
     expect(req.session.user).not.toHaveProperty('password')
+  })
+
+  it('Should return the session', async () => {
+    res.send.mockClear()
+    req.body = Object.assign({}, completeData)
+    await login(req, res, next)
+    expect(res.send).toHaveBeenCalledWith(req.session.user)
   })
 })

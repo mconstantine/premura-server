@@ -23,5 +23,5 @@ module.exports = ({ bcrypt, createError, trim, getDb }) => async (req, res, next
   delete user.password
 
   req.session.user = user
-  res.end()
+  res.send(req.session.user)
 }
