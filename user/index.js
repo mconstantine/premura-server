@@ -3,7 +3,7 @@ const { isEmail } = require('validator')
 const trim = require('../misc/trim')
 const createError = require('../misc/createServerError')
 const roles = require('../misc/roles')
-const getDb = require('../misc/get-db')
+const getDb = require('../misc/getDb')
 
 const router = require('express').Router()
 const endpoint = require('./endpoint')
