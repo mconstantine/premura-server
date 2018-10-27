@@ -24,6 +24,6 @@ module.exports = endpoint({
   getUser,
   updateUser,
   deleteUser,
-  login,
+  login: login({ bcrypt, createError, trim, getDb }),
   logout
 })

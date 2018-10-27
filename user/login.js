@@ -1,9 +1,4 @@
-const bcrypt = require('bcryptjs')
-const createError = require('../misc/createServerError')
-const trim = require('../misc/trim')
-const getDb = require('../misc/get-db')
-
-module.exports = async (req, res, next) => {
+module.exports = ({ bcrypt, createError, trim, getDb }) => async (req, res, next) => {
   const email = trim(req.body.email || '')
   const password = trim(req.body.password || '')
 
