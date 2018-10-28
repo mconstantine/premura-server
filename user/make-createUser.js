@@ -52,15 +52,16 @@ module.exports = ({
   const alreadyExistingUser = await collection.findOne({ email })
 
   if (alreadyExistingUser) {
-    return next(createError(400, 'a user with this email address already exists'))
+    delete alreadyExistingUser.password
+    return next(createError(409, JSON.stringify(alreadyExistingUser)))
   }
 
-  await collection.insertOne({
+  const result = await collection.insertOne({
     name,
     email,
     password: await bcrypt.hash(password, 10),
     role
   })
 
-  res.status(201).end()
+  res.status(201).send({ _id: result.insertedId })
 }

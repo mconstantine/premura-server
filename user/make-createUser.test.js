@@ -1,6 +1,9 @@
 const makeCreateUser = require('./make-createUser')
 const roles = Array.from(require('../misc/roles'))
 
+let findOneResult
+let insertOneResult = { insertedId: '1234567890abcdef' }
+
 roles.includes = jest.fn(() => true)
 
 describe('createUser', () => {
@@ -16,12 +19,12 @@ describe('createUser', () => {
   const trim = jest.fn(x => x)
   const createError = jest.fn((code, message) => [code, message])
   const req = { session: { user: { role: 'master' } } }
-  const res = { status: jest.fn(() => res), end: jest.fn() }
+  const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
   const isEmail = jest.fn(() => true)
 
-  const findOne = jest.fn()
-  const insertOne = jest.fn()
+  const findOne = jest.fn(() => findOneResult)
+  const insertOne = jest.fn(() => insertOneResult)
   const collection = jest.fn(() => ({ findOne, insertOne }))
   const getDb = () => ({ collection })
 
@@ -37,7 +40,7 @@ describe('createUser', () => {
     expect(trim).toHaveBeenNthCalledWith(3, completeData.password)
     expect(trim).toHaveBeenNthCalledWith(4, completeData.passwordConfirmation)
     expect(res.status).toHaveBeenCalledWith(201)
-    expect(res.end).toHaveBeenCalled()
+    expect(res.send).toHaveBeenCalled()
   })
 
   it('Should validate data', async () => {
@@ -118,5 +121,19 @@ describe('createUser', () => {
     req.body = Object.assign({}, completeData)
     await createUser(req, res, next)
     expect(bcrypt.hash).toHaveBeenCalledWith(completeData.password, 10)
+  })
+
+  it('Should report the conflict in case of existing user', async () => {
+    findOneResult = { test: true }
+    req.body = Object.assign({}, completeData)
+    await createUser(req, res, next)
+    expect(next).toHaveBeenLastCalledWith([409, JSON.stringify(findOneResult)])
+    findOneResult = null
+  })
+
+  it('Should return the new user id', async () => {
+    req.body = Object.assign({}, completeData)
+    await createUser(req, res, next)
+    expect(res.send).toHaveBeenCalledWith({ _id: insertOneResult.insertedId })
   })
 })
