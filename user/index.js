@@ -12,7 +12,7 @@ const endpoint = require('./endpoint')
 const loginGate = require('../misc/loginGate')
 const makeCreateUser = require('./make-createUser')
 const makeGetUsers = require('./make-getUsers')
-const getUser = require('./getUser')
+const makeGetUser = require('./make-getUser')
 const updateUser = require('./updateUser')
 const makeDeleteUser = require('./make-deleteUser')
 const makeLogin = require('./make-login')
@@ -23,7 +23,7 @@ module.exports = endpoint({
   loginGate,
   createUser: makeCreateUser({ bcrypt, isEmail, trim, createError, roles, getDb }),
   getUsers: makeGetUsers({ getDb, cursorify }),
-  getUser,
+  getUser: makeGetUser({ getDb, createError, ObjectID }),
   updateUser,
   deleteUser: makeDeleteUser({ createError, ObjectID, getDb, roles }),
   login: makeLogin({ bcrypt, createError, trim, getDb }),
