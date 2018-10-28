@@ -52,6 +52,7 @@ module.exports = ({
   const alreadyExistingUser = await collection.findOne({ email })
 
   if (alreadyExistingUser) {
+    delete alreadyExistingUser.email
     delete alreadyExistingUser.password
     return next(createError(409, JSON.stringify(alreadyExistingUser)))
   }

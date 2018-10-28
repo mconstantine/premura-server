@@ -1,1 +1,1 @@
-Do getUser. It may be a good thing to hide user's email addresses.
+Do getUser.

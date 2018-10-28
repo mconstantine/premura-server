@@ -129,6 +129,20 @@ describe('createUser', () => {
     findOneResult = null
   })
 
+  it('Should hide sensible data when reporting a conflict', async () => {
+    next.mockClear()
+    findOneResult = { test: true, email: 'should be hidden', password: 'should be hidden' }
+    req.body = Object.assign({}, completeData)
+    await createUser(req, res, next)
+
+    const result = JSON.parse(next.mock.calls.pop()[0][1])
+
+    expect(result).not.toHaveProperty('email')
+    expect(result).not.toHaveProperty('password')
+
+    findOneResult = null
+  })
+
   it('Should return the new user id', async () => {
     req.body = Object.assign({}, completeData)
     await createUser(req, res, next)
