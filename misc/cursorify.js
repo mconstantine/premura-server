@@ -10,7 +10,7 @@ const base64Url = require('base64-url')
  * - use the `X-Pages-Count` and `X-Current-Page` headers to know where you are
  * - if you neither use the `page` and `perPage` GET parameters nor a cursor, you don't get pagination
  */
-module.exports = async (req, res, collection, options = {}) => {
+module.exports = async (req, res, query, options = {}) => {
   const paginationOptions = {}
   const cursor = req.get('X-Page-Cursor')
 
@@ -41,7 +41,7 @@ module.exports = async (req, res, collection, options = {}) => {
   options.limit = paginationOptions.limit
   options.skip = paginationOptions.skip
 
-  const count = await collection.countDocuments()
+  const count = await query.countDocuments()
   const pagesCount = Math.ceil(count / options.limit)
   const currentPage = Math.floor(options.skip / options.limit)
 
