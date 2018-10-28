@@ -4,7 +4,7 @@ const trim = require('../misc/trim')
 const createError = require('../misc/createServerError')
 const roles = require('../misc/roles')
 const getDb = require('../misc/getDb')
-const ObjectID = require('mongodb').ObjectID
+const { ObjectID } = require('mongodb')
 const cursorify = require('../misc/cursorify')
 
 const router = require('express').Router()
