@@ -21,10 +21,12 @@
   },
   "homepage": "https://github.com/mconstantine/premura-server#readme",
   "dependencies": {
+    "base64-url": "^2.2.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "connect-mongodb-session": "^2.0.3",
     "cors": "^2.8.4",
+    "ejson": "^2.1.2",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "mongodb": "^3.1.8",
