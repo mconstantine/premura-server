@@ -90,7 +90,6 @@ describe('createUser', () => {
     findOne.mockClear()
     req.body = Object.assign({}, completeData)
     await createUser(req, res, next)
-    expect(collection).toHaveBeenCalledWith('users')
     expect(findOne).toHaveBeenCalledWith({ email: completeData.email })
   })
 
@@ -112,7 +111,6 @@ describe('createUser', () => {
     const result = Object.assign({}, completeData)
     delete result.passwordConfirmation
 
-    expect(collection).toHaveBeenCalledWith('users')
     expect(insertOne).toHaveBeenCalledWith(result)
   })
 
