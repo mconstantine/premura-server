@@ -4,6 +4,7 @@ const trim = require('../misc/trim')
 const createError = require('../misc/createServerError')
 const roles = require('../misc/roles')
 const getDb = require('../misc/getDb')
+const ObjectID = require('mongodb').ObjectID
 
 const router = require('express').Router()
 const endpoint = require('./endpoint')
@@ -12,7 +13,7 @@ const makeCreateUser = require('./make-createUser')
 const getUsers = require('./getUsers')
 const getUser = require('./getUser')
 const updateUser = require('./updateUser')
-const deleteUser = require('./deleteUser')
+const makeDeleteUser = require('./make-deleteUser')
 const makeLogin = require('./make-login')
 const logout = require('./logout')
 
@@ -23,7 +24,7 @@ module.exports = endpoint({
   getUsers,
   getUser,
   updateUser,
-  deleteUser,
+  deleteUser: makeDeleteUser({ createError, ObjectID, getDb, roles }),
   login: makeLogin({ bcrypt, createError, trim, getDb }),
   logout
 })
