@@ -4,6 +4,7 @@ module.exports = ({
   createUser,
   getUsers,
   getUser,
+  findUsers,
   updateUser,
   deleteUser,
   login,
@@ -14,6 +15,7 @@ module.exports = ({
   .use(loginGate)
   .post('/users', createUser)
   .get('/users', getUsers)
+  .get('/users/find', findUsers)
   .get('/users/:id', getUser)
   .put('/users/:id', updateUser)
   .delete('/users/:id', deleteUser)
