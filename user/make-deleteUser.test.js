@@ -13,8 +13,14 @@ describe('deleteUser', () => {
   const getDb = () => ({ collection })
   const res = { end: () => {} }
 
+  let shouldObjectIDFail = false
+
   class ObjectID {
     constructor(string) {
+      if (shouldObjectIDFail) {
+        throw new Error('Failing!')
+      }
+
       this.string = string
     }
 
@@ -30,6 +36,13 @@ describe('deleteUser', () => {
     await deleteUser(req, null, next)
     expect(next).toHaveBeenCalledWith([400, expect.stringContaining('id')])
     req.params = { id: _id }
+  })
+
+  it('Should handle ObjectID failing', async () => {
+    shouldObjectIDFail = true
+    await deleteUser(req, null, next)
+    expect(next).toHaveBeenCalledWith([404, expect.any(String)])
+    shouldObjectIDFail = false
   })
 
   it('Should check for the user existence', async () => {
