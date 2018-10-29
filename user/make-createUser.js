@@ -10,7 +10,8 @@ module.exports = ({
         email = trim(req.body.email || ''),
         password = trim(req.body.password || ''),
         passwordConfirmation = trim(req.body.passwordConfirmation || ''),
-        role = req.body.role || ''
+        role = req.body.role || '',
+        jobRole = trim(req.body.jobRole || '')
 
   if (!name.length) {
     return next(createError(400, 'missing required parameter name'))
@@ -40,6 +41,10 @@ module.exports = ({
     return next(createError(400, 'missing required parameter role'))
   }
 
+  if (!jobRole) {
+    return next(createError(400, 'missing required parameter jobRole'))
+  }
+
   if (!roles.includes(role)) {
     return next(createError(400, `role should be one of ${roles.join(', ')}`))
   }
@@ -61,7 +66,8 @@ module.exports = ({
     name,
     email,
     password: await bcrypt.hash(password, 10),
-    role
+    role,
+    jobRole
   })
 
   res.status(201).send({ _id: result.insertedId })

@@ -83,6 +83,15 @@ module.exports = ({
 
         update.name = name
         break
+      case 'jobRole':
+        const jobRole = trim(req.body.jobRole)
+
+        if (!jobRole) {
+          return next(createError(400, 'jobRole is empty'))
+        }
+
+        update.jobRole = jobRole
+        break
       default:
         break
     }

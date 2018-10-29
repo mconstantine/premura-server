@@ -12,7 +12,8 @@ describe('createUser', () => {
     email: 'john.doe@example.com',
     password: 'password',
     passwordConfirmation: 'password',
-    role: 'maker'
+    role: 'maker',
+    jobRole: 'Technologist'
   }
 
   const bcrypt = { hash: jest.fn(x => x) }
@@ -39,6 +40,7 @@ describe('createUser', () => {
     expect(trim).toHaveBeenNthCalledWith(2, completeData.email)
     expect(trim).toHaveBeenNthCalledWith(3, completeData.password)
     expect(trim).toHaveBeenNthCalledWith(4, completeData.passwordConfirmation)
+    expect(trim).toHaveBeenNthCalledWith(5, completeData.jobRole)
     expect(res.status).toHaveBeenCalledWith(201)
     expect(res.send).toHaveBeenCalled()
   })
@@ -83,6 +85,11 @@ describe('createUser', () => {
     req.body.role = ''
     await createUser(req, res, next)
     expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('role')])
+
+    req.body = Object.assign({}, completeData)
+    req.body.jobRole = ''
+    await createUser(req, res, next)
+    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('jobRole')])
   })
 
   it('Should check for existing users', async () => {
