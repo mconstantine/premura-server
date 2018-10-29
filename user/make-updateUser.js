@@ -1,4 +1,6 @@
-module.exports = ({ createError, ObjectID, getDb, roles, trim, bcrypt }) => async (req, res, next) => {
+module.exports = ({
+  createError, ObjectID, getDb, roles, trim, bcrypt, isEmail
+}) => async (req, res, next) => {
   if (!req.params.id) {
     return next(createError(400, 'missing required parameter id'))
   }
@@ -25,7 +27,9 @@ module.exports = ({ createError, ObjectID, getDb, roles, trim, bcrypt }) => asyn
     const role = trim(req.body.role)
     delete req.body.role
 
-    // TODO: validate role
+    if (!roles.includes(role)) {
+      return next(createError(400, `role should be one of ${roles.join(', ')}`))
+    }
 
     if (roles.indexOf(currentUser.role) <= roles.indexOf(user.role)) {
       return next(createError(401, "only a user with a higher role can change another user's role"))
@@ -38,9 +42,11 @@ module.exports = ({ createError, ObjectID, getDb, roles, trim, bcrypt }) => asyn
     const email = trim(req.body.email)
     delete req.body.email
 
-    // TODO: validate email
+    if (!isEmail(email)) {
+      return next(createError(400, 'invalid email format'))
+    }
 
-    if (currentUser._id !== user._id && currentUser.role !== 'master') {
+    if (currentUser._id != user._id.toString() && currentUser.role !== 'master') {
       return next(createError(401, 'you can change only your own e-mail address'))
     }
 
@@ -51,9 +57,7 @@ module.exports = ({ createError, ObjectID, getDb, roles, trim, bcrypt }) => asyn
     const password = trim(req.body.password)
     delete req.body.password
 
-    // TODO: validate password
-
-    if (currentUser._id !== user._id && currentUser.role !== 'master') {
+    if (currentUser._id != user._id.toString() && currentUser.role !== 'master') {
       return next(createError(401, 'you can change only your own password'))
     }
 
@@ -61,19 +65,40 @@ module.exports = ({ createError, ObjectID, getDb, roles, trim, bcrypt }) => asyn
   }
 
   for (let i in req.body) {
-    if (!user[i]) {
+    if (i === '_id') {
       continue
     }
 
-    if (currentUser._id !== user._id) {
+    if (currentUser._id != user._id.toString()) {
       return next(createError(401, 'you can change this information only for your own profile'))
     }
 
-    update[i] = req.body[i]
+    switch(i) {
+      case 'name':
+        const name = trim(req.body.name)
+
+        if (!name) {
+          return next(createError(400, 'name is empty'))
+        }
+
+        update.name = name
+        break
+      default:
+        break
+    }
   }
-  // everything else: self
 
-  await collection.updateOne({ _id }, update)
+  await collection.updateOne({ _id }, { $set: update })
 
-  // TODO: logout if update contains email or password
+  if (update.email || update.password) {
+    return res.redirect('/users/logout')
+  }
+
+  for (let i in update) {
+    if (req.session.user[i]) {
+      req.session.user[i] = update[i]
+    }
+  }
+
+  return res.send(req.session.user)
 }

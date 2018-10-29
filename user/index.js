@@ -27,7 +27,7 @@ module.exports = endpoint({
   getUsers: makeGetUsers({ getDb, cursorify }),
   getUser: makeGetUser({ getDb, createError, ObjectID }),
   findUsers: makeFindUsers({ createError, getDb, find }),
-  updateUser: makeUpdateUser({}),
+  updateUser: makeUpdateUser({ createError, ObjectID, getDb, roles, trim, bcrypt, isEmail }),
   deleteUser: makeDeleteUser({ createError, ObjectID, getDb, roles }),
   login: makeLogin({ bcrypt, createError, trim, getDb }),
   logout
