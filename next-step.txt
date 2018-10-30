@@ -1,1 +1,1 @@
-Should we do findUser?
+Go on with validation. Remove validator when done.

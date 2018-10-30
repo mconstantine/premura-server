@@ -19,7 +19,9 @@ describe('endpoint', () => {
       updateUser: 'updateUser',
       deleteUser: 'deleteUser',
       login: 'login',
-      logout: 'logout'
+      logout: 'logout',
+      validateCreateUser: 'validateCreateUser',
+      sendValidation: 'sendValidation'
     }
 
     endpoint(Object.assign(paths, { router }))
@@ -29,7 +31,9 @@ describe('endpoint', () => {
     expect(router.get.mock.calls[1]).toEqual(['/users/find', paths.findUsers])
     expect(router.get.mock.calls[2]).toEqual(['/users/:id', paths.getUser])
     expect(router.post.mock.calls[0]).toEqual(['/users/login', paths.login])
-    expect(router.post.mock.calls[1]).toEqual(['/users', paths.createUser])
+    expect(router.post.mock.calls[1]).toEqual([
+      '/users', 'validateCreateUser', 'sendValidation', paths.createUser
+    ])
     expect(router.post.mock.calls[2]).toEqual(['/users/logout', paths.logout])
     expect(router.put.mock.calls[0]).toEqual(['/users/:id', paths.updateUser])
     expect(router.delete.mock.calls[0]).toEqual(['/users/:id', paths.deleteUser])

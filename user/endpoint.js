@@ -8,12 +8,14 @@ module.exports = ({
   updateUser,
   deleteUser,
   login,
-  logout
+  logout,
+  validateCreateUser,
+  sendValidation
 }) => {
   router
   .post('/users/login', login)
   .use(loginGate)
-  .post('/users', createUser)
+  .post('/users', validateCreateUser, sendValidation, createUser)
   .get('/users', getUsers)
   .get('/users/find', findUsers)
   .get('/users/:id', getUser)

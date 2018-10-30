@@ -17,83 +17,19 @@ describe('createUser', () => {
   }
 
   const bcrypt = { hash: jest.fn(x => x) }
-  const trim = jest.fn(x => x)
   const createError = jest.fn((code, message) => [code, message])
   const req = { session: { user: { role: 'master' } } }
   const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
-  const isEmail = jest.fn(() => true)
 
   const findOne = jest.fn(() => findOneResult)
   const insertOne = jest.fn(() => insertOneResult)
-  const collection = jest.fn(() => ({ findOne, insertOne }))
+  const collection = () => ({ findOne, insertOne })
   const getDb = () => ({ collection })
 
-  const createUser = makeCreateUser({ bcrypt, trim, createError, isEmail, roles, getDb })
-
-  it('Should clean data', async () => {
-    req.body = Object.assign({}, completeData)
-
-    await createUser(req, res, next)
-
-    expect(trim).toHaveBeenNthCalledWith(1, completeData.name)
-    expect(trim).toHaveBeenNthCalledWith(2, completeData.email)
-    expect(trim).toHaveBeenNthCalledWith(3, completeData.password)
-    expect(trim).toHaveBeenNthCalledWith(4, completeData.passwordConfirmation)
-    expect(trim).toHaveBeenNthCalledWith(5, completeData.jobRole)
-    expect(res.status).toHaveBeenCalledWith(201)
-    expect(res.send).toHaveBeenCalled()
-  })
-
-  it('Should validate data', async () => {
-    isEmail.mockClear()
-    roles.includes.mockClear()
-
-    req.body = Object.assign({}, completeData)
-    await createUser(req, res, next)
-    expect(isEmail).toHaveBeenCalledWith(completeData.email)
-    expect(roles.includes).toHaveBeenCalledWith(completeData.role)
-
-    next.mockClear()
-
-    req.body = Object.assign({}, completeData)
-    req.body.name = ''
-    await createUser(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('name')])
-
-    req.body = Object.assign({}, completeData)
-    req.body.email = ''
-    await createUser(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('email')])
-
-    req.body = Object.assign({}, completeData)
-    req.body.password = ''
-    await createUser(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('password')])
-
-    req.body = Object.assign({}, completeData)
-    req.body.passwordConfirmation = ''
-    await createUser(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('passwordConfirmation')])
-
-    req.body.passwordConfirmation = 'somethingelse'
-    await createUser(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('password')])
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('passwordConfirmation')])
-
-    req.body = Object.assign({}, completeData)
-    req.body.role = ''
-    await createUser(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('role')])
-
-    req.body = Object.assign({}, completeData)
-    req.body.jobRole = ''
-    await createUser(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('jobRole')])
-  })
+  const createUser = makeCreateUser({ bcrypt, createError, roles, getDb })
 
   it('Should check for existing users', async () => {
-    collection.mockClear()
     findOne.mockClear()
     req.body = Object.assign({}, completeData)
     await createUser(req, res, next)
@@ -110,15 +46,23 @@ describe('createUser', () => {
   })
 
   it('Should create a new user', async () => {
-    collection.mockClear()
     insertOne.mockClear()
     req.body = Object.assign({}, completeData)
     await createUser(req, res, next)
 
     const result = Object.assign({}, completeData)
     delete result.passwordConfirmation
+    expect(insertOne).toHaveBeenCalledWith(expect.objectContaining(result))
+  })
 
-    expect(insertOne).toHaveBeenCalledWith(result)
+  it('Should save the registration date', async () => {
+    insertOne.mockClear()
+    req.body = Object.assign({}, completeData)
+    await createUser(req, res, next)
+
+    expect(insertOne).toHaveBeenCalledWith(expect.objectContaining({
+      registrationDate: expect.any(Date)
+    }))
   })
 
   it('Should encrypt the password', async () => {
@@ -138,7 +82,14 @@ describe('createUser', () => {
 
   it('Should hide sensible data when reporting a conflict', async () => {
     next.mockClear()
-    findOneResult = { test: true, email: 'should be hidden', password: 'should be hidden' }
+    findOneResult = {
+      test: true,
+      email: 'should be hidden',
+      password: 'should be hidden',
+      registrationDate: 'should be hidden',
+      lastLoginDate: 'should be hidden',
+    }
+
     req.body = Object.assign({}, completeData)
     await createUser(req, res, next)
 
@@ -146,6 +97,8 @@ describe('createUser', () => {
 
     expect(result).not.toHaveProperty('email')
     expect(result).not.toHaveProperty('password')
+    expect(result).not.toHaveProperty('registrationDate')
+    expect(result).not.toHaveProperty('lastLoginDate')
 
     findOneResult = null
   })
