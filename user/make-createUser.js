@@ -1,10 +1,16 @@
 module.exports = ({ bcrypt, getDb, roles, createError }) => async (req, res, next) => {
-  if (roles.indexOf(req.session.user.role) < roles.indexOf(req.body.role)) {
+  const name = req.body.name
+  const email = req.body.email
+  const password = req.body.password
+  const role = req.body.role
+  const jobRole = req.body.jobRole
+
+  if (roles.indexOf(req.session.user.role) < roles.indexOf(role)) {
     return next(createError(401, 'you cannot register a user with a role higher than yours'))
   }
 
   const collection = (await getDb()).collection('users')
-  const alreadyExistingUser = await collection.findOne({ email: req.body.email })
+  const alreadyExistingUser = await collection.findOne({ email })
 
   if (alreadyExistingUser) {
     delete alreadyExistingUser.email
@@ -15,11 +21,8 @@ module.exports = ({ bcrypt, getDb, roles, createError }) => async (req, res, nex
   }
 
   const result = await collection.insertOne({
-    name: req.body.name,
-    email: req.body.email,
-    password: await bcrypt.hash(req.body.password, 10),
-    role: req.body.role,
-    jobRole: req.body.jobRole,
+    name, email, role, jobRole,
+    password: await bcrypt.hash(password, 10),
     registrationDate: new Date()
   })
 
