@@ -11,14 +11,13 @@ module.exports = ({ getDb, createError, ObjectID }) => async (req, res, next) =>
     return next(createError(404, 'user not found'))
   }
 
-  const user = await (await getDb()).collection('users').findOne({ _id })
+  const user = await (await getDb()).collection('users').findOne({ _id }, {
+    projection: { email: 0, password: 0, registrationDate: 0, lastLoginDate: 0 }
+  })
 
   if (!user) {
     return next(createError(404, 'user not found'))
   }
-
-  delete user.email
-  delete user.password
 
   res.send(user)
 }

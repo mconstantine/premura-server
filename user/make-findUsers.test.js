@@ -28,10 +28,10 @@ describe('findUsers', () => {
   it('Should hide sensitive user data', async () => {
     await findUsers(req, res, next)
     expect(find).toHaveBeenLastCalledWith(
-      expect.anything(),
-      expect.anything(),
-      expect.anything(),
-      expect.objectContaining({ projection: { email: 0, password: 0 } })
+      expect.anything(), expect.anything(), expect.anything(),
+      expect.objectContaining({
+        projection: { email: 0, password: 0, registrationDate: 0, lastLoginDate: 0 }
+      })
     )
   })
 })

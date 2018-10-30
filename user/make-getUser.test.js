@@ -2,7 +2,7 @@ const makeGetUser = require('./make-getUser')
 
 describe('getUser', () => {
   let findOneResult = true
-  const findOne = () => findOneResult
+  const findOne = jest.fn(() => findOneResult)
   const collection = () => ({ findOne })
   const getDb = () => ({ collection })
   const createError = (code, message) => [code, message]
@@ -57,13 +57,11 @@ describe('getUser', () => {
     expect(res.send).toHaveBeenLastCalledWith(findOneResult)
   })
 
-  it('Should hide sensible data', async () => {
-    findOneResult = { answer: 42, email: 'should be hidden', password: 'should be hidden' }
+  it('Should hide sensitive information', async () => {
     await getUser(req, res, next)
 
-    const result = res.send.mock.calls.pop()[0]
-
-    expect(result).not.toHaveProperty('email')
-    expect(result).not.toHaveProperty('password')
+    expect(findOne).toHaveBeenLastCalledWith(expect.anything(), {
+      projection: { email: 0, password: 0, registrationDate: 0, lastLoginDate: 0 }
+    })
   })
 })

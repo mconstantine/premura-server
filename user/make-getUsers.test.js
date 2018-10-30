@@ -25,12 +25,14 @@ describe('getUsers', () => {
     expect(cursorify).toHaveBeenCalled()
   })
 
-  it('Should not return sensible data', async () => {
+  it('Should not return sensitive information', async () => {
     await(getUsers(req, res))
 
     expect(find).toHaveBeenLastCalledWith(
       expect.anything(),
-      expect.objectContaining({ projection: { password: 0, email: 0 } })
+      expect.objectContaining({
+        projection: { password: 0, email: 0, registrationDate: 0, lastLoginDate: 0 }
+      })
     )
   })
 })
