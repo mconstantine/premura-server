@@ -33,7 +33,7 @@ describe('createUser', () => {
     findOne.mockClear()
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
-    expect(findOne).toHaveBeenCalledWith({ email: data.email })
+    expect(findOne).toHaveBeenCalledWith({ email: data.email }, expect.anything())
   })
 
   it("Should check for the logged in user's role", async () => {
@@ -80,27 +80,18 @@ describe('createUser', () => {
     findOneResult = null
   })
 
-  it('Should hide sensible data when reporting a conflict', async () => {
-    next.mockClear()
-    findOneResult = {
-      test: true,
-      email: 'should be hidden',
-      password: 'should be hidden',
-      registrationDate: 'should be hidden',
-      lastLoginDate: 'should be hidden',
-    }
-
+  it('Should hide sensible information', async () => {
+    findOne.mockClear()
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
-
-    const result = JSON.parse(next.mock.calls.pop()[0][1])
-
-    expect(result).not.toHaveProperty('email')
-    expect(result).not.toHaveProperty('password')
-    expect(result).not.toHaveProperty('registrationDate')
-    expect(result).not.toHaveProperty('lastLoginDate')
-
-    findOneResult = null
+    expect(findOne).toHaveBeenCalledWith(expect.anything(), {
+      projection: expect.objectContaining({
+        email: 0,
+        password: 0,
+        registrationDate: 0,
+        lastLoginDate: 0
+      })
+    })
   })
 
   it('Should return the new user id', async () => {

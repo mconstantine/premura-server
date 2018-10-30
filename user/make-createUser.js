@@ -10,13 +10,11 @@ module.exports = ({ bcrypt, getDb, roles, createError }) => async (req, res, nex
   }
 
   const collection = (await getDb()).collection('users')
-  const alreadyExistingUser = await collection.findOne({ email })
+  const alreadyExistingUser = await collection.findOne({ email }, {
+    projection: { password: 0, email: 0, registrationDate: 0, lastLoginDate: 0 }
+  })
 
   if (alreadyExistingUser) {
-    delete alreadyExistingUser.email
-    delete alreadyExistingUser.password
-    delete alreadyExistingUser.registrationDate
-    delete alreadyExistingUser.lastLoginDate
     return next(createError(409, JSON.stringify(alreadyExistingUser)))
   }
 
