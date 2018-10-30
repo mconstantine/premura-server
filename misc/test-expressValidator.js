@@ -17,7 +17,9 @@ const check = function(what) {
     isEmail: jest.fn(function() { return this }),
     isLength: jest.fn(function() { return this }),
     custom: jest.fn(function() { return this }),
-    isIn: jest.fn(function() { return this })
+    isIn: jest.fn(function() { return this }),
+    optional: jest.fn(function() { return this }),
+    isMongoId: jest.fn(function() { return this })
   })
 
   _getCheckCall = function(what) {

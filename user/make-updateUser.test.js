@@ -2,13 +2,8 @@ const makeUpdateUser = require('./make-updateUser')
 const roles = require('../misc/roles')
 
 describe('updateUser', () => {
-  let shouldObjectIDFail = false
   class ObjectID {
     constructor(string) {
-      if (shouldObjectIDFail) {
-        throw new Error('Failing!')
-      }
-
       this.string = string
     }
 
@@ -45,13 +40,6 @@ describe('updateUser', () => {
     await updateUser(req, null, next)
     expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('id')])
     req.params = { id }
-  })
-
-  it('Should handle ObjectID failure', async () => {
-    shouldObjectIDFail = true
-    await updateUser(req, null, next)
-    expect(next).toHaveBeenLastCalledWith([404, expect.anything()])
-    shouldObjectIDFail = false
   })
 
   it('Should check for the user existance', async () => {
@@ -183,34 +171,6 @@ describe('updateUser', () => {
       expect.anything(),
       { $set: expect.objectContaining({ name }) }
     )
-  })
-
-  it('Should clean data', async () => {
-    trim.mockClear()
-    findOneResult = Object.assign({}, masterUserData)
-    findOneResult.role = 'maker'
-    req.session.user = Object.assign({}, masterUserData)
-    req.body = Object.assign({}, masterUserData)
-    await updateUser(req, res, next)
-
-    expect(trim).toHaveBeenNthCalledWith(1, masterUserData.role)
-    expect(trim).toHaveBeenNthCalledWith(2, masterUserData.email)
-    expect(trim).toHaveBeenNthCalledWith(3, masterUserData.password)
-    expect(trim).toHaveBeenNthCalledWith(4, masterUserData.name)
-  })
-
-  it('Should validate data', async () => {
-    isEmail.mockClear()
-    const email = 'whatever@example.com'
-    findOneResult = { _id: 'me', role: 'maker' }
-    req.session.user = { _id: 'me', role: 'master' }
-    req.body = { email }
-    await updateUser(req, res, next)
-    expect(isEmail).toHaveBeenCalledWith(email)
-
-    req.body.role = 'hjsDJHVliug'
-    await updateUser(req, null, next)
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('role')])
   })
 
   it('Should encrypt the password', async () => {

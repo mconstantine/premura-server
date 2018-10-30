@@ -1,8 +1,6 @@
 const bcrypt = require('bcryptjs')
-const { isEmail } = require('validator')
 const { validationResult } = require('express-validator/check')
 const { check } = require('express-validator/check')
-const trim = require('../misc/trim')
 const createError = require('../misc/createServerError')
 const roles = require('../misc/roles')
 const getDb = require('../misc/getDb')
@@ -23,8 +21,9 @@ const makeDeleteUser = require('./make-deleteUser')
 const makeLogin = require('./make-login')
 const logout = require('./logout')
 
-const makeValidateCreateUser = require('./make-validateCreateUser')
 const makeValidateLogin = require('./make-validateLogin')
+const makeValidateCreateUser = require('./make-validateCreateUser')
+const makeValidateUpdateUser = require('./make-validateUpdateUser')
 
 module.exports = endpoint({
   router,
@@ -32,12 +31,13 @@ module.exports = endpoint({
   createUser: makeCreateUser({ bcrypt, createError, roles, getDb }),
   getUsers: makeGetUsers({ getDb, cursorify }),
   getUser: makeGetUser({ getDb, createError, ObjectID }),
-  findUsers: makeFindUsers({ createError, getDb, find }),
-  updateUser: makeUpdateUser({ createError, ObjectID, getDb, roles, trim, bcrypt, isEmail }),
+  findUsers: makeFindUsers({ getDb, find }),
+  updateUser: makeUpdateUser({ createError, ObjectID, getDb, roles, bcrypt }),
   deleteUser: makeDeleteUser({ createError, ObjectID, getDb, roles }),
-  login: makeLogin({ bcrypt, createError, trim, getDb }),
+  login: makeLogin({ bcrypt, createError, getDb }),
   logout,
   sendValidation: makeSendValidation({ validationResult }),
+  validateLogin: makeValidateLogin({ check }),
   validateCreateUser: makeValidateCreateUser({ check, roles }),
-  validateLogin: makeValidateLogin({ check })
+  validateUpdateUser: makeValidateUpdateUser({ check, roles })
 })

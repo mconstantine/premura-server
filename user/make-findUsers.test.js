@@ -10,12 +10,20 @@ describe('findUsers', () => {
   const queryResult = { test: true }
   const find = jest.fn(() => ({ toArray: () => queryResult }))
   const findUsers = makeFindUsers({ createError, getDb, find })
-  const res = { send: jest.fn() }
+  const res = { status: jest.fn(() => res), send: jest.fn() }
 
   it('Should check that a query is provided', async () => {
     req.query = {}
-    await findUsers(req, null, next)
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('query')])
+    await findUsers(req, res, next)
+    expect(res.status).toHaveBeenLastCalledWith(422)
+    expect(res.send).toHaveBeenLastCalledWith({
+      errors: [{
+        location: 'query',
+        param: 'q',
+        value: req.query.q,
+        msg: 'query is empty'
+      }]
+    })
     req.query = { q }
   })
 

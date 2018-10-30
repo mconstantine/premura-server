@@ -11,17 +11,15 @@ describe('deleteUser', () => {
   const deleteOne = jest.fn()
   const collection = () => ({ findOne, deleteOne })
   const getDb = () => ({ collection })
-  const res = { end: () => {} }
-
-  let shouldObjectIDFail = false
+  const res = { status: jest.fn(() => res), send: jest.fn(), end: () => {} }
 
   class ObjectID {
     constructor(string) {
-      if (shouldObjectIDFail) {
-        throw new Error('Failing!')
-      }
-
       this.string = string
+    }
+
+    static isValid(string) {
+      return !!string
     }
 
     equals(string) {
@@ -33,16 +31,18 @@ describe('deleteUser', () => {
 
   it('Should check that an ID is provided', async () => {
     req.params = {}
-    await deleteUser(req, null, next)
-    expect(next).toHaveBeenCalledWith([400, expect.stringContaining('id')])
-    req.params = { id: _id }
-  })
+    await deleteUser(req, res, next)
+    expect(res.status).toHaveBeenCalledWith(422)
+    expect(res.send).toHaveBeenCalledWith({
+      errors: [{
+        location: 'params',
+        param: 'id',
+        value: req.params.id,
+        msg: 'invalid user id'
+      }]
+    })
 
-  it('Should handle ObjectID failing', async () => {
-    shouldObjectIDFail = true
-    await deleteUser(req, null, next)
-    expect(next).toHaveBeenCalledWith([404, expect.any(String)])
-    shouldObjectIDFail = false
+    req.params = { id: _id }
   })
 
   it('Should check for the user existence', async () => {

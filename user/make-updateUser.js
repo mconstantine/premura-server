@@ -1,18 +1,11 @@
 module.exports = ({
-  createError, ObjectID, getDb, roles, trim, bcrypt, isEmail
+  createError, ObjectID, getDb, roles, bcrypt
 }) => async (req, res, next) => {
   if (!req.params.id) {
     return next(createError(400, 'missing required parameter id'))
   }
 
-  let _id
-
-  try {
-    _id = new ObjectID(req.params.id)
-  } catch (ex) {
-    return next(createError(404, 'user not found'))
-  }
-
+  const _id = new ObjectID(req.params.id)
   const collection = (await getDb()).collection('users')
   const user = await collection.findOne({ _id })
 
@@ -24,12 +17,8 @@ module.exports = ({
   const update = {}
 
   if (req.body.role) {
-    const role = trim(req.body.role)
+    const role = req.body.role
     delete req.body.role
-
-    if (!roles.includes(role)) {
-      return next(createError(400, `role should be one of ${roles.join(', ')}`))
-    }
 
     if (roles.indexOf(currentUser.role) <= roles.indexOf(user.role)) {
       return next(createError(401, "only a user with a higher role can change another user's role"))
@@ -39,12 +28,8 @@ module.exports = ({
   }
 
   if (req.body.email) {
-    const email = trim(req.body.email)
+    const email = req.body.email
     delete req.body.email
-
-    if (!isEmail(email)) {
-      return next(createError(400, 'invalid email format'))
-    }
 
     if (currentUser._id != user._id.toString() && currentUser.role !== 'master') {
       return next(createError(401, 'you can change only your own e-mail address'))
@@ -54,7 +39,7 @@ module.exports = ({
   }
 
   if (req.body.password) {
-    const password = trim(req.body.password)
+    const password = req.body.password
     delete req.body.password
 
     if (currentUser._id != user._id.toString() && currentUser.role !== 'master') {
@@ -75,22 +60,8 @@ module.exports = ({
 
     switch(i) {
       case 'name':
-        const name = trim(req.body.name)
-
-        if (!name) {
-          return next(createError(400, 'name is empty'))
-        }
-
-        update.name = name
-        break
       case 'jobRole':
-        const jobRole = trim(req.body.jobRole)
-
-        if (!jobRole) {
-          return next(createError(400, 'jobRole is empty'))
-        }
-
-        update.jobRole = jobRole
+        update[i] = req.body[i]
         break
       default:
         break
@@ -104,6 +75,7 @@ module.exports = ({
   }
 
   for (let i in update) {
+    // This if statement is why we don't need to hide sensitive information
     if (req.session.user[i]) {
       req.session.user[i] = update[i]
     }

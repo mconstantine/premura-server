@@ -1,1 +1,2 @@
-Go on with validation. Remove validator when done.
+Make users searchable by jobRole
+Isolate user's sensitive information projection

@@ -1,16 +1,16 @@
 module.exports = ({ createError, ObjectID, getDb, roles }) => async (req, res, next) => {
-  if (!req.params.id) {
-    return next(createError(400, 'missing required parameter id'))
+  if (!ObjectID.isValid(req.params.id)) {
+    return res.status(422).send({
+      errors: [{
+        location: 'params',
+        param: 'id',
+        value: req.params.id,
+        msg: 'invalid user id'
+      }]
+    })
   }
 
-  let _id
-
-  try {
-    _id = new ObjectID(req.params.id)
-  } catch(ex) {
-    return next(createError(404, 'user not found'))
-  }
-
+  const _id = new ObjectID(req.params.id)
   const collection = (await getDb()).collection('users')
   const user = await collection.findOne({ _id })
 

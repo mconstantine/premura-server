@@ -9,9 +9,10 @@ module.exports = ({
   deleteUser,
   login,
   logout,
-  validateCreateUser,
+  sendValidation,
   validateLogin,
-  sendValidation
+  validateCreateUser,
+  validateUpdateUser
 }) => {
   router
   .post('/users/login', validateLogin, sendValidation, login)
@@ -20,7 +21,7 @@ module.exports = ({
   .get('/users', getUsers)
   .get('/users/find', findUsers)
   .get('/users/:id', getUser)
-  .put('/users/:id', updateUser)
+  .put('/users/:id', validateUpdateUser, sendValidation, updateUser)
   .delete('/users/:id', deleteUser)
   .post('/users/logout', logout)
 

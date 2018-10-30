@@ -1,6 +1,13 @@
-module.exports = ({ createError, getDb, find }) => async (req, res, next) => {
+module.exports = ({ getDb, find }) => async (req, res, next) => {
   if (!req.query.q) {
-    return next(createError(400, 'missing required parameter q (query)'))
+    return res.status(422).send({
+      errors: [{
+        location: 'query',
+        param: 'q',
+        value: req.query.q,
+        msg: 'query is empty'
+      }]
+    })
   }
 
   const collection = (await getDb()).collection('users')

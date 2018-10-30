@@ -17,6 +17,10 @@ describe('getUser', () => {
       this.string = string
     }
 
+    static isValid(string) {
+      return !!string
+    }
+
     equals(string) {
       return string === this.string
     }
@@ -24,7 +28,7 @@ describe('getUser', () => {
 
   const id = '1234567890abcdef'
   const req = { params: { id } }
-  const res = { send: jest.fn() }
+  const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
 
   const getUser = makeGetUser({ getDb, createError, ObjectID })
@@ -32,8 +36,16 @@ describe('getUser', () => {
   it('Should check that an ID is provided', async () => {
     req.params = {}
 
-    await getUser(req, null, next)
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('id')])
+    await getUser(req, res, next)
+    expect(res.status).toHaveBeenLastCalledWith(422)
+    expect(res.send).toHaveBeenLastCalledWith({
+      errors: [{
+        location: 'params',
+        param: 'id',
+        value: req.params.id,
+        msg: 'invalid user id'
+      }]
+    })
 
     req.params = { id }
   })

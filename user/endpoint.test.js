@@ -22,6 +22,7 @@ describe('endpoint', () => {
       logout: 'logout',
       validateCreateUser: 'validateCreateUser',
       validateLogin: 'validateLogin',
+      validateUpdateUser: 'validateUpdateUser',
       sendValidation: 'sendValidation'
     }
 
@@ -37,7 +38,9 @@ describe('endpoint', () => {
       '/users', 'validateCreateUser', 'sendValidation', paths.createUser
     ])
     expect(router.post.mock.calls[2]).toEqual(['/users/logout', paths.logout])
-    expect(router.put.mock.calls[0]).toEqual(['/users/:id', paths.updateUser])
+    expect(router.put.mock.calls[0]).toEqual([
+      '/users/:id', 'validateUpdateUser', 'sendValidation', paths.updateUser
+    ])
     expect(router.delete.mock.calls[0]).toEqual(['/users/:id', paths.deleteUser])
   })
 
