@@ -1,16 +1,10 @@
-module.exports = ({ bcrypt, createError, trim, getDb }) => async (req, res, next) => {
-  const email = trim(req.body.email || '')
-  const password = trim(req.body.password || '')
-
-  if (!email.length) {
-    return next(createError(400, 'missing required parameter email'))
-  }
-
-  if (!password.length) {
-    return next(createError(400, 'missing required parameter password'))
-  }
-
-  const user = await (await getDb()).collection('users').findOne({ email })
+module.exports = ({ bcrypt, createError, getDb }) => async (req, res, next) => {
+  const email = req.body.email
+  const password = req.body.password
+  const collection = (await getDb()).collection('users')
+  const user = await collection.findOne({ email }, {
+    projection: { email: 0, registrationDate: 0, lastLoginDate: 0 }
+  })
 
   if (!user) {
     return next(createError(400, 'user not found'))
@@ -21,6 +15,10 @@ module.exports = ({ bcrypt, createError, trim, getDb }) => async (req, res, next
   }
 
   delete user.password
+
+  await collection.updateOne({ email }, {
+    $set: { lastLoginDate: new Date() }
+  })
 
   req.session.user = user
   res.send(req.session.user)

@@ -21,6 +21,7 @@ describe('endpoint', () => {
       login: 'login',
       logout: 'logout',
       validateCreateUser: 'validateCreateUser',
+      validateLogin: 'validateLogin',
       sendValidation: 'sendValidation'
     }
 
@@ -30,7 +31,8 @@ describe('endpoint', () => {
     expect(router.get.mock.calls[0]).toEqual(['/users', paths.getUsers])
     expect(router.get.mock.calls[1]).toEqual(['/users/find', paths.findUsers])
     expect(router.get.mock.calls[2]).toEqual(['/users/:id', paths.getUser])
-    expect(router.post.mock.calls[0]).toEqual(['/users/login', paths.login])
+    expect(router.post.mock.calls[0]).toEqual([
+      '/users/login', 'validateLogin', 'sendValidation', paths.login])
     expect(router.post.mock.calls[1]).toEqual([
       '/users', 'validateCreateUser', 'sendValidation', paths.createUser
     ])
@@ -51,7 +53,7 @@ describe('endpoint', () => {
         return router
       },
       post: function() {
-        if (arguments[1] === paths.login) {
+        if (arguments[3] === paths.login) {
           didCreateLoginPath = true
         }
 

@@ -10,10 +10,11 @@ module.exports = ({
   login,
   logout,
   validateCreateUser,
+  validateLogin,
   sendValidation
 }) => {
   router
-  .post('/users/login', login)
+  .post('/users/login', validateLogin, sendValidation, login)
   .use(loginGate)
   .post('/users', validateCreateUser, sendValidation, createUser)
   .get('/users', getUsers)

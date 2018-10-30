@@ -24,6 +24,7 @@ const makeLogin = require('./make-login')
 const logout = require('./logout')
 
 const makeValidateCreateUser = require('./make-validateCreateUser')
+const makeValidateLogin = require('./make-validateLogin')
 
 module.exports = endpoint({
   router,
@@ -36,6 +37,7 @@ module.exports = endpoint({
   deleteUser: makeDeleteUser({ createError, ObjectID, getDb, roles }),
   login: makeLogin({ bcrypt, createError, trim, getDb }),
   logout,
+  sendValidation: makeSendValidation({ validationResult }),
   validateCreateUser: makeValidateCreateUser({ check, roles }),
-  sendValidation: makeSendValidation({ validationResult })
+  validateLogin: makeValidateLogin({ check })
 })
