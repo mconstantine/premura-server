@@ -6,6 +6,7 @@ describe('getUser', () => {
   const collection = () => ({ findOne })
   const getDb = () => ({ collection })
   const createError = (code, message) => [code, message]
+  const sensitiveInformationProjection = { test: true }
 
   let shouldObjectIDFail = false
   class ObjectID {
@@ -31,7 +32,7 @@ describe('getUser', () => {
   const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
 
-  const getUser = makeGetUser({ getDb, createError, ObjectID })
+  const getUser = makeGetUser({ getDb, createError, ObjectID, sensitiveInformationProjection })
 
   it('Should check that an ID is provided', async () => {
     req.params = {}
@@ -73,7 +74,7 @@ describe('getUser', () => {
     await getUser(req, res, next)
 
     expect(findOne).toHaveBeenLastCalledWith(expect.anything(), {
-      projection: { email: 0, password: 0, registrationDate: 0, lastLoginDate: 0 }
+      projection: sensitiveInformationProjection
     })
   })
 })

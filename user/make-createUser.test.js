@@ -7,6 +7,7 @@ let insertOneResult = { insertedId: '1234567890abcdef' }
 roles.includes = jest.fn(() => true)
 
 describe('createUser', () => {
+  const sensitiveInformationProjection = { test: true }
   const data = {
     name: 'John Doe',
     email: 'john.doe@example.com',
@@ -27,7 +28,9 @@ describe('createUser', () => {
   const collection = () => ({ findOne, insertOne })
   const getDb = () => ({ collection })
 
-  const createUser = makeCreateUser({ bcrypt, createError, roles, getDb })
+  const createUser = makeCreateUser({
+    bcrypt, createError, roles, getDb, sensitiveInformationProjection
+  })
 
   it('Should check for existing users', async () => {
     findOne.mockClear()
@@ -85,12 +88,7 @@ describe('createUser', () => {
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
     expect(findOne).toHaveBeenCalledWith(expect.anything(), {
-      projection: expect.objectContaining({
-        email: 0,
-        password: 0,
-        registrationDate: 0,
-        lastLoginDate: 0
-      })
+      projection: expect.objectContaining(sensitiveInformationProjection)
     })
   })
 

@@ -8,7 +8,7 @@ describe('cursorify', () => {
   let headers = {}, documentsCount = 100
   const req = { get: key => headers[key], query: {} }
   const res = { setHeader: jest.fn() }
-  const collection = { countDocuments: () => documentsCount }
+  const collection = { count: () => documentsCount }
 
   it('Should be optional', async () => {
     headers = {}

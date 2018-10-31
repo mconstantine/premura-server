@@ -1,4 +1,6 @@
-module.exports = ({ getDb, createError, ObjectID }) => async (req, res, next) => {
+module.exports = ({
+  getDb, createError, ObjectID, sensitiveInformationProjection
+}) => async (req, res, next) => {
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
       errors: [{
@@ -19,7 +21,7 @@ module.exports = ({ getDb, createError, ObjectID }) => async (req, res, next) =>
   }
 
   const user = await (await getDb()).collection('users').findOne({ _id }, {
-    projection: { email: 0, password: 0, registrationDate: 0, lastLoginDate: 0 }
+    projection: sensitiveInformationProjection
   })
 
   if (!user) {

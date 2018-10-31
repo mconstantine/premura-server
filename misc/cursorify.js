@@ -41,7 +41,7 @@ module.exports = async (req, res, query, options = {}) => {
   options.limit = paginationOptions.limit
   options.skip = paginationOptions.skip
 
-  const count = await query.countDocuments()
+  const count = await query.count()
   const pagesCount = Math.ceil(count / options.limit)
   const currentPage = Math.floor(options.skip / options.limit)
 

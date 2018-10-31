@@ -1,6 +1,8 @@
 const endpoint = require('./endpoint')
 
 describe('endpoint', () => {
+  const catchExceptions = x => x
+
   it('Should create the right paths', () => {
     const router = {
       use: jest.fn(() => router),
@@ -26,7 +28,7 @@ describe('endpoint', () => {
       sendValidation: 'sendValidation'
     }
 
-    endpoint(Object.assign(paths, { router }))
+    endpoint(Object.assign(paths, { router, catchExceptions }))
 
     expect(router.use.mock.calls[0]).toEqual([paths.loginGate])
     expect(router.get.mock.calls[0]).toEqual(['/users', paths.getUsers])
@@ -78,6 +80,6 @@ describe('endpoint', () => {
       logout: 'logout'
     }
 
-    endpoint(Object.assign(paths, { router }))
+    endpoint(Object.assign(paths, { router, catchExceptions }))
   })
 })

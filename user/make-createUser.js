@@ -1,4 +1,6 @@
-module.exports = ({ bcrypt, getDb, roles, createError }) => async (req, res, next) => {
+module.exports = ({
+  bcrypt, getDb, roles, createError, sensitiveInformationProjection
+}) => async (req, res, next) => {
   const name = req.body.name
   const email = req.body.email
   const password = req.body.password
@@ -11,7 +13,7 @@ module.exports = ({ bcrypt, getDb, roles, createError }) => async (req, res, nex
 
   const collection = (await getDb()).collection('users')
   const alreadyExistingUser = await collection.findOne({ email }, {
-    projection: { password: 0, email: 0, registrationDate: 0, lastLoginDate: 0 }
+    projection: sensitiveInformationProjection
   })
 
   if (alreadyExistingUser) {

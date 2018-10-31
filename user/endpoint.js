@@ -12,17 +12,18 @@ module.exports = ({
   sendValidation,
   validateLogin,
   validateCreateUser,
-  validateUpdateUser
+  validateUpdateUser,
+  catchExceptions
 }) => {
   router
-  .post('/users/login', validateLogin, sendValidation, login)
+  .post('/users/login', validateLogin, sendValidation, catchExceptions(login))
   .use(loginGate)
-  .post('/users', validateCreateUser, sendValidation, createUser)
-  .get('/users', getUsers)
-  .get('/users/find', findUsers)
-  .get('/users/:id', getUser)
-  .put('/users/:id', validateUpdateUser, sendValidation, updateUser)
-  .delete('/users/:id', deleteUser)
+  .post('/users', validateCreateUser, sendValidation, catchExceptions(createUser))
+  .get('/users', catchExceptions(getUsers))
+  .get('/users/find', catchExceptions(findUsers))
+  .get('/users/:id', catchExceptions(getUser))
+  .put('/users/:id', validateUpdateUser, sendValidation, catchExceptions(updateUser))
+  .delete('/users/:id', catchExceptions(deleteUser))
   .post('/users/logout', logout)
 
   return router

@@ -9,8 +9,9 @@ describe('findUsers', () => {
   const getDb = () => ({ collection })
   const queryResult = { test: true }
   const find = jest.fn(() => ({ toArray: () => queryResult }))
-  const findUsers = makeFindUsers({ createError, getDb, find })
   const res = { status: jest.fn(() => res), send: jest.fn() }
+  const sensitiveInformationProjection = { test: true }
+  const findUsers = makeFindUsers({ createError, getDb, find, sensitiveInformationProjection })
 
   it('Should check that a query is provided', async () => {
     req.query = {}
@@ -38,7 +39,7 @@ describe('findUsers', () => {
     expect(find).toHaveBeenLastCalledWith(
       expect.anything(), expect.anything(), expect.anything(),
       expect.objectContaining({
-        projection: { email: 0, password: 0, registrationDate: 0, lastLoginDate: 0 }
+        projection: sensitiveInformationProjection
       })
     )
   })

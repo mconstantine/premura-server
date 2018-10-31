@@ -9,7 +9,8 @@ describe('getUsers', () => {
   const collection = () => Collection
   const getDb = () => ({ collection })
   const cursorify = jest.fn((req, res, collection, options) => options)
-  const getUsers = makeGetUsers({ getDb, cursorify })
+  const sensitiveInformationProjection = { test: true }
+  const getUsers = makeGetUsers({ getDb, cursorify, sensitiveInformationProjection })
   const req = null
   const res = { send: jest.fn() }
 
@@ -30,9 +31,7 @@ describe('getUsers', () => {
 
     expect(find).toHaveBeenLastCalledWith(
       expect.anything(),
-      expect.objectContaining({
-        projection: { password: 0, email: 0, registrationDate: 0, lastLoginDate: 0 }
-      })
+      expect.objectContaining({ projection: sensitiveInformationProjection })
     )
   })
 })

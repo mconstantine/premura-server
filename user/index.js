@@ -7,6 +7,8 @@ const getDb = require('../misc/getDb')
 const { ObjectID } = require('mongodb')
 const cursorify = require('../misc/cursorify')
 const find = require('../misc/find')
+const sensitiveInformationProjection = require('./sensitiveInformationProjection')
+const catchExceptions = require('../misc/catchExceptions')
 
 const makeSendValidation = require('../misc/make-sendValidation')
 const router = require('express').Router()
@@ -26,12 +28,13 @@ const makeValidateCreateUser = require('./make-validateCreateUser')
 const makeValidateUpdateUser = require('./make-validateUpdateUser')
 
 module.exports = endpoint({
+  catchExceptions,
   router,
   loginGate,
-  createUser: makeCreateUser({ bcrypt, createError, roles, getDb }),
-  getUsers: makeGetUsers({ getDb, cursorify }),
-  getUser: makeGetUser({ getDb, createError, ObjectID }),
-  findUsers: makeFindUsers({ getDb, find }),
+  createUser: makeCreateUser({ bcrypt, createError, roles, getDb, sensitiveInformationProjection }),
+  getUsers: makeGetUsers({ getDb, cursorify, sensitiveInformationProjection }),
+  getUser: makeGetUser({ getDb, createError, ObjectID, sensitiveInformationProjection }),
+  findUsers: makeFindUsers({ getDb, find, sensitiveInformationProjection }),
   updateUser: makeUpdateUser({ createError, ObjectID, getDb, roles, bcrypt }),
   deleteUser: makeDeleteUser({ createError, ObjectID, getDb, roles }),
   login: makeLogin({ bcrypt, createError, getDb }),
