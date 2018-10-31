@@ -1,6 +1,6 @@
 const endpoint = require('./endpoint')
 
-describe('endpoint', () => {
+describe('user endpoint', () => {
   const catchExceptions = x => x
 
   it('Should create the right paths', () => {
