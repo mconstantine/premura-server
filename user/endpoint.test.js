@@ -37,13 +37,14 @@ describe('user endpoint', () => {
     expect(router.get.mock.calls[2]).toEqual(['/users/roles', paths.getJobRoles])
     expect(router.get.mock.calls[3]).toEqual(['/users/:id', paths.getUser])
     expect(router.post.mock.calls[0]).toEqual([
-      '/users/login', 'validateLogin', 'sendValidation', paths.login])
+      '/users/login', paths.validateLogin, paths.sendValidation, paths.login
+    ])
     expect(router.post.mock.calls[1]).toEqual([
-      '/users', 'validateCreateUser', 'sendValidation', paths.createUser
+      '/users', paths.validateCreateUser, paths.sendValidation, paths.createUser
     ])
     expect(router.post.mock.calls[2]).toEqual(['/users/logout', paths.logout])
     expect(router.put.mock.calls[0]).toEqual([
-      '/users/:id', 'validateUpdateUser', 'sendValidation', paths.updateUser
+      '/users/:id', paths.validateUpdateUser, paths.sendValidation, paths.updateUser
     ])
     expect(router.delete.mock.calls[0]).toEqual(['/users/:id', paths.deleteUser])
   })
