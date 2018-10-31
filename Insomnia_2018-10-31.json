@@ -1,0 +1,361 @@
+{
+	"_type": "export",
+	"__export_format": 3,
+	"__export_date": "2018-10-31T10:58:41.247Z",
+	"__export_source": "insomnia.desktop.app:v6.0.2",
+	"resources": [
+		{
+			"_id": "wrk_943fedb18bd3464c99b9662b7840b3ee",
+			"created": 1537344556792,
+			"description": "",
+			"modified": 1537344556792,
+			"name": "Insomnia",
+			"parentId": null,
+			"_type": "workspace"
+		},
+		{
+			"_id": "env_0308a99aadd04236bdaf6a0298da2b22",
+			"color": null,
+			"created": 1537344556817,
+			"data": {},
+			"isPrivate": false,
+			"metaSortKey": 1537344556817,
+			"modified": 1537344556817,
+			"name": "New Environment",
+			"parentId": "wrk_943fedb18bd3464c99b9662b7840b3ee",
+			"_type": "environment"
+		},
+		{
+			"_id": "jar_930030b947b54480bdda65f3358b79a8",
+			"cookies": [
+				{
+					"creation": "2018-10-26T16:59:24.509Z",
+					"domain": "localhost",
+					"expires": "2018-11-14T08:59:40.000Z",
+					"hostOnly": true,
+					"httpOnly": true,
+					"id": "6498048216618999",
+					"key": "premura_session",
+					"lastAccessed": "2018-10-31T08:59:40.543Z",
+					"path": "/",
+					"value": "s%3AfBw1Ji5IU__8F7uX--ygm0IDQNjsE7Jd.rxze7gvuNR5pWuZtrYwdgSkz%2BPW%2FSlheSxuHYFZphsk"
+				}
+			],
+			"created": 1537344556818,
+			"modified": 1540976380543,
+			"name": "Default Jar",
+			"parentId": "wrk_943fedb18bd3464c99b9662b7840b3ee",
+			"_type": "cookie_jar"
+		},
+		{
+			"_id": "fld_d1b0cc3493b24f10bf0d9ac45de321b1",
+			"created": 1540567664841,
+			"description": "",
+			"environment": {},
+			"metaSortKey": -1540567664841,
+			"modified": 1540567664841,
+			"name": "Premura",
+			"parentId": "wrk_943fedb18bd3464c99b9662b7840b3ee",
+			"_type": "request_group"
+		},
+		{
+			"_id": "fld_ea96d70301ee4044b9609111d208cbf2",
+			"created": 1540983454340,
+			"description": "",
+			"environment": {},
+			"metaSortKey": -1540983454340,
+			"modified": 1540983454340,
+			"name": "user",
+			"parentId": "fld_d1b0cc3493b24f10bf0d9ac45de321b1",
+			"_type": "request_group"
+		},
+		{
+			"_id": "req_5828e5f0c11e458d816c85e7cf119efb",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"name\": \"John Doe\",\n\t\"email\": \"john.doe@example.com\",\n\t\"password\": \"Poi098=)(\",\n\t\"passwordConfirmation\": \"Poi098=)(\",\n\t\"role\": \"manager\",\n\t\"jobRole\": \"Project Manager\"\n}"
+			},
+			"created": 1540567674048,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_aad5fe4497c543a598be1fa6eac6fc5c",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1540982796309,
+			"method": "POST",
+			"modified": 1540983478681,
+			"name": "createUser",
+			"parameters": [],
+			"parentId": "fld_ea96d70301ee4044b9609111d208cbf2",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "http://localhost:5000/users/",
+			"_type": "request"
+		},
+		{
+			"_id": "req_8f89eefbd023407fbf79314cff970078",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"email\": \"john.doe@example.com\",\n\t\"password\": \"Poi098=)(\"\n}"
+			},
+			"created": 1540572444172,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_d871932a0cc24150b597b4799be732b0",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1540982796409,
+			"method": "POST",
+			"modified": 1540983475316,
+			"name": "login",
+			"parameters": [],
+			"parentId": "fld_ea96d70301ee4044b9609111d208cbf2",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "http://localhost:5000/users/login/",
+			"_type": "request"
+		},
+		{
+			"_id": "req_f9635bed2ab64cca91610820d34848a4",
+			"authentication": {},
+			"body": {},
+			"created": 1540573430622,
+			"description": "",
+			"headers": [],
+			"isPrivate": false,
+			"metaSortKey": -1540982796459,
+			"method": "POST",
+			"modified": 1540983473692,
+			"name": "logout",
+			"parameters": [],
+			"parentId": "fld_ea96d70301ee4044b9609111d208cbf2",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "http://localhost:5000/users/logout/",
+			"_type": "request"
+		},
+		{
+			"_id": "req_2b042e2b71f44b0295c4ccbfcc519fc0",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"jobRole\": \"Project Manager\"\n}"
+			},
+			"created": 1540811919619,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_66276433d9df456b80ac45253d95bfc2",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1540982796509,
+			"method": "PUT",
+			"modified": 1540983471455,
+			"name": "updateUser",
+			"parameters": [],
+			"parentId": "fld_ea96d70301ee4044b9609111d208cbf2",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "http://localhost:5000/users/5bd87280cec9f93d4093e198/",
+			"_type": "request"
+		},
+		{
+			"_id": "req_cb148412dd744fd2acf5319ea029fd57",
+			"authentication": {},
+			"body": {
+				"mimeType": "application/json",
+				"text": "{\n\t\"email\": \"mconst@mconst.it\",\n\t\"password\": \"Poi098=)(\"\n}"
+			},
+			"created": 1540813258166,
+			"description": "",
+			"headers": [
+				{
+					"id": "pair_d871932a0cc24150b597b4799be732b0",
+					"name": "Content-Type",
+					"value": "application/json"
+				}
+			],
+			"isPrivate": false,
+			"metaSortKey": -1540982796359,
+			"method": "POST",
+			"modified": 1540983477014,
+			"name": "master login",
+			"parameters": [],
+			"parentId": "fld_ea96d70301ee4044b9609111d208cbf2",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "http://localhost:5000/users/login/",
+			"_type": "request"
+		},
+		{
+			"_id": "req_56c57e9a43d5483eabc2bf64b1a0c4f7",
+			"authentication": {},
+			"body": {},
+			"created": 1540911657622,
+			"description": "",
+			"headers": [],
+			"isPrivate": false,
+			"metaSortKey": -1540982796559,
+			"method": "DELETE",
+			"modified": 1540983469072,
+			"name": "deleteUser",
+			"parameters": [],
+			"parentId": "fld_ea96d70301ee4044b9609111d208cbf2",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "http://localhost:5000/users/5bd87261cec9f93d4093e197/",
+			"_type": "request"
+		},
+		{
+			"_id": "req_6e7e13dcb0414b638d45618101abf2bb",
+			"authentication": {},
+			"body": {},
+			"created": 1540976520587,
+			"description": "",
+			"headers": [],
+			"isPrivate": false,
+			"metaSortKey": -1540982796609,
+			"method": "GET",
+			"modified": 1540983466940,
+			"name": "findUsers",
+			"parameters": [
+				{
+					"id": "pair_28a98aad5d454e228ea0ee8ab763cf27",
+					"name": "name",
+					"value": "jo"
+				},
+				{
+					"id": "pair_02fdc6adfd134068942ceca4fc4badaa",
+					"name": "jobRole",
+					"value": "pro"
+				}
+			],
+			"parentId": "fld_ea96d70301ee4044b9609111d208cbf2",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "http://localhost:5000/users/find/",
+			"_type": "request"
+		},
+		{
+			"_id": "req_f5ef6d8e82594269bca19acee2f08991",
+			"authentication": {},
+			"body": {},
+			"created": 1540976663698,
+			"description": "",
+			"headers": [],
+			"isPrivate": false,
+			"metaSortKey": -1540982796709,
+			"method": "GET",
+			"modified": 1540983462554,
+			"name": "getUser",
+			"parameters": [],
+			"parentId": "fld_ea96d70301ee4044b9609111d208cbf2",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "http://localhost:5000/users/5bd87280cec9f93d4093e198/",
+			"_type": "request"
+		},
+		{
+			"_id": "req_9ddb65140b4b4c7fb7fe67b7979a15dd",
+			"authentication": {},
+			"body": {},
+			"created": 1540976757188,
+			"description": "",
+			"headers": [],
+			"isPrivate": false,
+			"metaSortKey": -1540982796659,
+			"method": "GET",
+			"modified": 1540983464593,
+			"name": "getUsers",
+			"parameters": [
+				{
+					"id": "pair_382e8b88fa6a46afba1c2adc7c4b402f",
+					"name": "perPage",
+					"value": "1"
+				},
+				{
+					"id": "pair_b82688b35f9d46608f33c431c5dc0bee",
+					"name": "page",
+					"value": "1"
+				}
+			],
+			"parentId": "fld_ea96d70301ee4044b9609111d208cbf2",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "http://localhost:5000/users/",
+			"_type": "request"
+		},
+		{
+			"_id": "req_99b0a2e15d764b999e409afca9a46eac",
+			"authentication": {},
+			"body": {},
+			"created": 1540982796759,
+			"description": "",
+			"headers": [],
+			"isPrivate": false,
+			"metaSortKey": -1540982796759,
+			"method": "GET",
+			"modified": 1540983457875,
+			"name": "getJobRoles",
+			"parameters": [],
+			"parentId": "fld_ea96d70301ee4044b9609111d208cbf2",
+			"settingDisableRenderRequestBody": false,
+			"settingEncodeUrl": true,
+			"settingMaxTimelineDataSize": 1000,
+			"settingRebuildPath": true,
+			"settingSendCookies": true,
+			"settingStoreCookies": true,
+			"url": "http://localhost:5000/users/roles/",
+			"_type": "request"
+		}
+	]
+}
