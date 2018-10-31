@@ -7,7 +7,9 @@ const makeSendValidation = require('../misc/make-sendValidation')
 const loginGate = require('../misc/loginGate')
 
 const makeCreateCategory = require('./make-createCategory')
+const makeAddTerms = require('./make-addTerms')
 const makeValidateCreateCategory = require('./make-validateCreateCategory')
+const makeValidateAddTerms = require('./make-validateAddTerms')
 const getDb = require('../misc/getDb')
 
 const sendValidation = makeSendValidation({ validationResult })
@@ -18,5 +20,7 @@ module.exports = endpoint({
   sendValidation,
   catchExceptions,
   createCategory: makeCreateCategory({ getDb }),
-  validateCreateCategory: makeValidateCreateCategory({ check })
+  addTerms: makeAddTerms({ getDb }),
+  validateCreateCategory: makeValidateCreateCategory({ check }),
+  validateAddTerms: makeValidateAddTerms({ check })
 })
