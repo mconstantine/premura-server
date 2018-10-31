@@ -10,6 +10,7 @@ const app = express()
 const sessionOptions = config.session
 
 const user = require('./user/index')
+const category = require('./category/index')
 
 sessionOptions.store = new MongoDBStore({
   uri: `${config.db.url}/${config.db.dbName}`,
@@ -33,6 +34,7 @@ app
 .use(bodyParser.json())
 .use(bodyParser.urlencoded({ extended: false }))
 .use(user)
+.use(category)
 
 app.get('/', (req, res) => res.send('Hello ' + JSON.stringify(req.session)))
 

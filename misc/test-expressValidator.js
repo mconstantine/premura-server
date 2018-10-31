@@ -19,7 +19,9 @@ const check = function(what) {
     custom: jest.fn(function() { return this }),
     isIn: jest.fn(function() { return this }),
     optional: jest.fn(function() { return this }),
-    isMongoId: jest.fn(function() { return this })
+    isMongoId: jest.fn(function() { return this }),
+    isBoolean: jest.fn(function() { return this }),
+    toBoolean: jest.fn(function() { return this })
   })
 
   _getCheckCall = function(what) {
