@@ -40,16 +40,18 @@ describe('createUser', () => {
   })
 
   it("Should check for the logged in user's role", async () => {
-    const requestFromLowerRole = Object.assign({}, req)
-    requestFromLowerRole.session.user.role = 'maker'
-    requestFromLowerRole.body = Object.assign({}, data)
-    requestFromLowerRole.body.role = 'manager'
-    await createUser(requestFromLowerRole, res, next)
+    const requestFromSameRole = Object.assign({}, req)
+    requestFromSameRole.session.user.role = 'maker'
+    requestFromSameRole.body = Object.assign({}, data)
+    requestFromSameRole.body.role = 'maker'
+    await createUser(requestFromSameRole, res, next)
     expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
   })
 
   it('Should create a new user', async () => {
     insertOne.mockClear()
+    req.session.user = Object.assign({}, data)
+    req.session.user.role = 'master'
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
 
@@ -60,6 +62,8 @@ describe('createUser', () => {
 
   it('Should save the registration date', async () => {
     insertOne.mockClear()
+    req.session.user = Object.assign({}, data)
+    req.session.user.role = 'master'
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
 
@@ -70,6 +74,8 @@ describe('createUser', () => {
 
   it('Should encrypt the password', async () => {
     bcrypt.hash.mockClear()
+    req.session.user = Object.assign({}, data)
+    req.session.user.role = 'master'
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
     expect(bcrypt.hash).toHaveBeenCalledWith(data.password, 10)
@@ -77,6 +83,8 @@ describe('createUser', () => {
 
   it('Should report the conflict in case of existing user', async () => {
     findOneResult = { test: true }
+    req.session.user = Object.assign({}, data)
+    req.session.user.role = 'master'
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
     expect(next).toHaveBeenLastCalledWith([409, JSON.stringify(findOneResult)])
@@ -85,6 +93,8 @@ describe('createUser', () => {
 
   it('Should hide sensible information', async () => {
     findOne.mockClear()
+    req.session.user = Object.assign({}, data)
+    req.session.user.role = 'master'
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
     expect(findOne).toHaveBeenCalledWith(expect.anything(), {
@@ -93,6 +103,8 @@ describe('createUser', () => {
   })
 
   it('Should return the new user id', async () => {
+    req.session.user = Object.assign({}, data)
+    req.session.user.role = 'master'
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
     expect(res.send).toHaveBeenCalledWith({ _id: insertOneResult.insertedId })

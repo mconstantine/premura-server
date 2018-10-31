@@ -6,8 +6,9 @@ module.exports = ({
   const password = req.body.password
   const role = req.body.role
   const jobRole = req.body.jobRole
+  const currentUser = req.session.user
 
-  if (roles.indexOf(req.session.user.role) < roles.indexOf(role)) {
+  if (roles.indexOf(role) >= roles.indexOf(currentUser.role)) {
     return next(createError(401, 'you cannot register a user with a role higher than yours'))
   }
 
