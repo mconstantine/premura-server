@@ -3,10 +3,10 @@ const roles = require('../misc/roles')
 
 describe('deleteUser', () => {
   const _id = '1234567890abcdef'
+  let findOneResult = { _id, role: 'maker' }
   const req = { params: { id: _id }, session: { user: { role: 'master' } } }
   const next = jest.fn()
   const createError = (code, message) => [code, message]
-  const findOneResult = { _id, role: 'maker' }
   const findOne = jest.fn(() => findOneResult)
   const deleteOne = jest.fn()
   const collection = () => ({ findOne, deleteOne })
@@ -51,10 +51,20 @@ describe('deleteUser', () => {
     expect(findOne).toHaveBeenCalledWith({ _id: new ObjectID(_id) })
   })
 
-  it('Should not allow the deletion of a user with higher or equal role', async () => {
-    req.session.user.role = 'maker'
+  it('Should not allow a non master user to delete a user', async () => {
+    req.session.user.role = 'manager'
+    findOneResult = { role: 'maker' }
     await deleteUser(req, res, next)
     expect(next).toHaveBeenCalledWith([401, expect.any(String)])
+  })
+
+  it('Should allow a master user to delete a user', async () => {
+    next.mockClear()
+    deleteOne.mockClear()
     req.session.user.role = 'master'
+    findOneResult = { role: 'master' }
+    await deleteUser(req, res, next)
+    expect(next).not.toHaveBeenCalled()
+    expect(deleteOne).toHaveBeenCalled()
   })
 })
