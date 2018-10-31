@@ -13,6 +13,7 @@ module.exports = ({
   validateLogin,
   validateCreateUser,
   validateUpdateUser,
+  getJobRoles,
   catchExceptions
 }) => {
   router
@@ -21,6 +22,7 @@ module.exports = ({
   .post('/users', validateCreateUser, sendValidation, catchExceptions(createUser))
   .get('/users', catchExceptions(getUsers))
   .get('/users/find', catchExceptions(findUsers))
+  .get('/users/roles', catchExceptions(getJobRoles))
   .get('/users/:id', catchExceptions(getUser))
   .put('/users/:id', validateUpdateUser, sendValidation, catchExceptions(updateUser))
   .delete('/users/:id', catchExceptions(deleteUser))

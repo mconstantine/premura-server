@@ -18,6 +18,7 @@ const makeCreateUser = require('./make-createUser')
 const makeGetUsers = require('./make-getUsers')
 const makeGetUser = require('./make-getUser')
 const makeFindUsers = require('./make-findUsers')
+const makeGetJobRoles = require('./make-getJobRoles')
 const makeUpdateUser = require('./make-updateUser')
 const makeDeleteUser = require('./make-deleteUser')
 const makeLogin = require('./make-login')
@@ -35,6 +36,7 @@ module.exports = endpoint({
   getUsers: makeGetUsers({ getDb, cursorify, sensitiveInformationProjection }),
   getUser: makeGetUser({ getDb, createError, ObjectID, sensitiveInformationProjection }),
   findUsers: makeFindUsers({ getDb, find, sensitiveInformationProjection }),
+  getJobRoles: makeGetJobRoles({ getDb }),
   updateUser: makeUpdateUser({ createError, ObjectID, getDb, roles, bcrypt }),
   deleteUser: makeDeleteUser({ createError, ObjectID, getDb, roles }),
   login: makeLogin({ bcrypt, createError, getDb }),
