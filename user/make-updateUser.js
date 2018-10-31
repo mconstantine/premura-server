@@ -1,8 +1,15 @@
 module.exports = ({
   createError, ObjectID, getDb, roles, bcrypt
 }) => async (req, res, next) => {
-  if (!req.params.id) {
-    return next(createError(400, 'missing required parameter id'))
+  if (!ObjectID.isValid(req.params.id)) {
+    return res.status(422).send({
+      errors: [{
+        location: 'params',
+        param: 'id',
+        value: req.params.id,
+        msg: 'invalid user id'
+      }]
+    })
   }
 
   const _id = new ObjectID(req.params.id)

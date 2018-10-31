@@ -7,6 +7,10 @@ describe('updateUser', () => {
       this.string = string
     }
 
+    static isValid(string) {
+      return !!string
+    }
+
     equals(string) {
       return this.string === string
     }
@@ -25,7 +29,7 @@ describe('updateUser', () => {
   const bcrypt = { hash: jest.fn(() => '3ncrypt3d') }
   const isEmail = jest.fn(() => true)
   const updateUser = makeUpdateUser({ createError, ObjectID, getDb, roles, trim, bcrypt, isEmail })
-  const res = { redirect: jest.fn(), send: jest.fn() }
+  const res = { status: jest.fn(() => res), redirect: jest.fn(), send: jest.fn() }
 
   const masterUserData = {
     _id: 'me',
@@ -37,8 +41,16 @@ describe('updateUser', () => {
 
   it('Should check that a user ID is provided', async () => {
     req.params = {}
-    await updateUser(req, null, next)
-    expect(next).toHaveBeenLastCalledWith([400, expect.stringContaining('id')])
+    await updateUser(req, res, next)
+    expect(res.status).toHaveBeenLastCalledWith(422)
+    expect(res.send).toHaveBeenLastCalledWith({
+      errors: [{
+        location: 'params',
+        param: 'id',
+        value: req.params.id,
+        msg: 'invalid user id'
+      }]
+    })
     req.params = { id }
   })
 
