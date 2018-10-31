@@ -1,14 +1,14 @@
-module.exports = async (collection, fields, query, options) => {
-  const indexOptions = fields.reduce((res, field) => {
-    res[field] = 'text'
-    return res
-  }, {})
+module.exports = async (collection, query, options) => {
+  const dbQuery = {}
 
-  await collection.createIndex(indexOptions)
-
-  return await collection.find({
-    $text: {
-      $search: query
+  for (let i in query) {
+    dbQuery[i] = {
+      $regex: new RegExp(
+        query[i].replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"),
+        'gi'
+      )
     }
-  }, options)
+  }
+
+  return await collection.find(dbQuery, options)
 }
