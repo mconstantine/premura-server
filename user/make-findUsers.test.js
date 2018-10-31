@@ -16,28 +16,36 @@ describe('findUsers', () => {
   it('Should check that a query is provided', async () => {
     req.query = {}
     await findUsers(req, res, next)
-    expect(res.status).toHaveBeenLastCalledWith(422)
-    expect(res.send).toHaveBeenLastCalledWith({
-      errors: [{
-        location: 'query',
-        param: 'q',
-        value: req.query.q,
-        msg: 'query is empty'
-      }]
-    })
-    req.query = { q }
+    expect(res.send).toHaveBeenLastCalledWith([])
   })
 
   it('Should search by user name', async () => {
+    const name = 'nameQuery'
+    req.query = { name }
     await findUsers(req, res, next)
-    expect(find).toHaveBeenLastCalledWith(expect.anything(), ['name'], q, expect.anything())
+    expect(find).toHaveBeenLastCalledWith(expect.anything(), { name }, expect.anything())
     expect(res.send).toHaveBeenLastCalledWith(queryResult)
   })
 
+  it('Should search by user jobRole', async () => {
+    const jobRole = 'jobRoleQuery'
+    req.query = { jobRole }
+    await findUsers(req, res, next)
+    expect(find).toHaveBeenLastCalledWith(expect.anything(), { jobRole }, expect.anything())
+    expect(res.send).toHaveBeenLastCalledWith(queryResult)
+  })
+
+  it('Should return nothing by default', async () => {
+    req.query = { invalidField: 'whatever' }
+    await findUsers(req, res, next)
+    expect(res.send).toHaveBeenLastCalledWith([])
+  })
+
   it('Should hide sensitive user data', async () => {
+    req.query = { name: 'whatever' }
     await findUsers(req, res, next)
     expect(find).toHaveBeenLastCalledWith(
-      expect.anything(), expect.anything(), expect.anything(),
+      expect.anything(), expect.anything(),
       expect.objectContaining({
         projection: sensitiveInformationProjection
       })

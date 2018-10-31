@@ -1,17 +1,20 @@
 module.exports = ({ getDb, find, sensitiveInformationProjection }) => async (req, res) => {
-  if (!req.query.q) {
-    return res.status(422).send({
-      errors: [{
-        location: 'query',
-        param: 'q',
-        value: req.query.q,
-        msg: 'query is empty'
-      }]
-    })
+  if (!req.query.name && !req.query.jobRole) {
+    return res.send([])
   }
 
   const collection = (await getDb()).collection('users')
-  const result = await (await find(collection, ['name'], req.query.q, {
+  const query = {}
+
+  if (req.query.name) {
+    query.name = req.query.name
+  }
+
+  if (req.query.jobRole) {
+    query.jobRole = req.query.jobRole
+  }
+
+  const result = await (await find(collection, query, {
     projection: sensitiveInformationProjection
   })).toArray()
 
