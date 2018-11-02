@@ -7,8 +7,10 @@ const { ObjectID } = require('mongodb')
 const makeSendValidation = require('../misc/make-sendValidation')
 const loginGate = require('../misc/loginGate')
 const createError = require('../misc/createServerError')
+const cursorify = require('../misc/cursorify')
 
 const makeCreateCategory = require('./make-createCategory')
+const makeGetCategories = require('./make-getCategories')
 const makeUpdateCategory = require('./make-updateCategory')
 const makeAddTerms = require('./make-addTerms')
 const makeValidateCreateCategory = require('./make-validateCreateCategory')
@@ -24,6 +26,7 @@ module.exports = endpoint({
   sendValidation,
   catchExceptions,
   createCategory: makeCreateCategory({ getDb, createError }),
+  getCategories: makeGetCategories({ getDb, cursorify }),
   updateCategory: makeUpdateCategory({ getDb, ObjectID, createError }),
   addTerms: makeAddTerms({ getDb, ObjectID, createError }),
   validateCreateCategory: makeValidateCreateCategory({ check }),

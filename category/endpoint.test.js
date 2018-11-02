@@ -15,6 +15,7 @@ describe('category endpoint', () => {
     const paths = {
       loginGate: 'loginGate',
       createCategory: 'createCategory',
+      getCategories: 'getCategories',
       updateCategory: 'updateCategory',
       addTerms: 'addTerms',
       validateCreateCategory: 'validateCreateCategory',
@@ -26,6 +27,7 @@ describe('category endpoint', () => {
     endpoint(Object.assign(paths, { router, catchExceptions }))
 
     expect(router.use.mock.calls[0]).toEqual([paths.loginGate])
+    expect(router.get.mock.calls[0]).toEqual(['/categories', paths.getCategories])
     expect(router.post.mock.calls[0]).toEqual([
       '/categories', paths.validateCreateCategory, paths.sendValidation, paths.createCategory
     ])
