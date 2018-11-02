@@ -7,5 +7,8 @@ module.exports = ({ check }) => [
 
   check('allowsMultipleTerms')
   .not().isEmpty().withMessage('allowsMultipleTerms is empty')
-  .isBoolean().withMessage('allowsMultipleTerms should be a boolean value')
+  .isBoolean().withMessage('allowsMultipleTerms should be a boolean value'),
+
+  check('terms')
+  .not().exists().withMessage('this endpoint cannot operate on terms')
 ]

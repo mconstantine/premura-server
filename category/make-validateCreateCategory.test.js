@@ -29,4 +29,12 @@ describe('validateCreateCategory', () => {
     expect(call.isEmpty).toHaveBeenCalled()
     expect(call.isBoolean).toHaveBeenCalled()
   })
+
+  it('Should ensure that the user is not trying to create terms', () => {
+    makeValidateCreateCategory({ check })
+    const call = getCheckCall('terms')
+
+    expect(call.not).toHaveBeenCalled()
+    expect(call.exists).toHaveBeenCalled()
+  })
 })
