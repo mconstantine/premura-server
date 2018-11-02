@@ -1,7 +1,14 @@
-module.exports = ({ getDb }) => async (req, res) => {
+module.exports = ({ getDb, createError }) => async (req, res, next) => {
   const name = req.body.name
   const description = req.body.description
   const allowsMultipleTerms = req.body.allowsMultipleTerms
+
+  const collection = (await getDb()).collection('categories')
+  const existingCategory = await collection.findOne({ name })
+
+  if (existingCategory) {
+    return next(createError(409, JSON.stringify(existingCategory)))
+  }
 
   const category = { name, allowsMultipleTerms, terms: [] }
 
@@ -9,6 +16,6 @@ module.exports = ({ getDb }) => async (req, res) => {
     category.description = description
   }
 
-  const result = await (await getDb()).collection('categories').insertOne(category)
+  const result = await collection.insertOne(category)
   res.status(201).send({ _id: result.insertedId })
 }

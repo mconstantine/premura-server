@@ -21,7 +21,7 @@ module.exports = endpoint({
   loginGate,
   sendValidation,
   catchExceptions,
-  createCategory: makeCreateCategory({ getDb }),
+  createCategory: makeCreateCategory({ getDb, createError }),
   addTerms: makeAddTerms({ getDb, ObjectID, createError }),
   validateCreateCategory: makeValidateCreateCategory({ check }),
   validateAddTerms: makeValidateAddTerms({ check })
