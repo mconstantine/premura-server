@@ -10,4 +10,8 @@ module.exports = class ObjectID {
   equals(string) {
     return this.string === string
   }
+
+  toString() {
+    return this.string
+  }
 }
