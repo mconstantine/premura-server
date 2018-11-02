@@ -16,10 +16,12 @@ const makeUpdateCategory = require('./make-updateCategory')
 const makeDeleteCategory = require('./make-deleteCategory')
 const makeAddTerms = require('./make-addTerms')
 const makeUpdateTerms = require('./make-updateTerms')
+const makeRemoveTerms = require('./make-removeTerms')
 const makeValidateCreateCategory = require('./make-validateCreateCategory')
 const makeValidateUpdateCategory = require('./make-validateUpdateCategory')
 const makeValidateAddTerms = require('./make-validateAddTerms')
 const makeValidateUpdateTerms = require('./make-validateUpdateTerms')
+const makeValidateRemoveTerms = require('./make-validateRemoveTerms')
 const getDb = require('../misc/getDb')
 
 const sendValidation = makeSendValidation({ validationResult })
@@ -36,8 +38,10 @@ module.exports = endpoint({
   deleteCategory: makeDeleteCategory({ getDb, ObjectID, createError }),
   addTerms: makeAddTerms({ getDb, ObjectID, createError }),
   updateTerms: makeUpdateTerms({ getDb, ObjectID, createError }),
+  removeTerms: makeRemoveTerms({ getDb, ObjectID, createError }),
   validateCreateCategory: makeValidateCreateCategory({ check }),
   validateUpdateCategory: makeValidateUpdateCategory({ check }),
   validateAddTerms: makeValidateAddTerms({ check }),
-  validateUpdateTerms: makeValidateUpdateTerms({ check })
+  validateUpdateTerms: makeValidateUpdateTerms({ check }),
+  validateRemoveTerms: makeValidateRemoveTerms({ check })
 })

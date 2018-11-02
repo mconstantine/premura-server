@@ -21,10 +21,12 @@ describe('category endpoint', () => {
       deleteCategory: 'deleteCategory',
       addTerms: 'addTerms',
       updateTerms: 'updateTerms',
+      removeTerms: 'removeTerms',
       validateCreateCategory: 'validateCreateCategory',
       validateUpdateCategory: 'validateUpdateCategory',
-      validateUpdateTerms: 'validateUpdateTerms',
       validateAddTerms: 'validateAddTerms',
+      validateUpdateTerms: 'validateUpdateTerms',
+      validateRemoveTerms: 'validateRemoveTerms',
       sendValidation: 'sendValidation'
     }
 
@@ -46,5 +48,8 @@ describe('category endpoint', () => {
       '/categories/:id/terms', paths.validateUpdateTerms, paths.sendValidation, paths.updateTerms
     ])
     expect(router.delete.mock.calls[0]).toEqual(['/categories/:id', paths.deleteCategory])
+    expect(router.delete.mock.calls[1]).toEqual([
+      '/categories/:id/terms', paths.validateRemoveTerms, paths.sendValidation, paths.removeTerms
+    ])
   })
 })
