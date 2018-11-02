@@ -3,7 +3,7 @@ module.exports = ({ getDb }) => async (req, res) => {
   const description = req.body.description
   const allowsMultipleTerms = req.body.allowsMultipleTerms
 
-  const category = { name, allowsMultipleTerms }
+  const category = { name, allowsMultipleTerms, terms: [] }
 
   if (description) {
     category.description = description

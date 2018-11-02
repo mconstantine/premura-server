@@ -44,4 +44,13 @@ describe('createCategory', () => {
     await createCategory(req, res)
     expect(res.send).toHaveBeenLastCalledWith({ _id })
   })
+
+  it('Should create an empty terms array', async () => {
+    const name = 'name'
+    const allowsMultipleTerms = true
+
+    req.body = { name, allowsMultipleTerms }
+    await createCategory(req, res)
+    expect(insertOne).toHaveBeenLastCalledWith(expect.objectContaining({ terms: [] }))
+  })
 })
