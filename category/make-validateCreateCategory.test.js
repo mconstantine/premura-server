@@ -28,6 +28,5 @@ describe('validateCreateCategory', () => {
     expect(call.not).toHaveBeenCalled()
     expect(call.isEmpty).toHaveBeenCalled()
     expect(call.isBoolean).toHaveBeenCalled()
-    expect(call.toBoolean).toHaveBeenCalled()
   })
 })
