@@ -15,8 +15,10 @@ describe('category endpoint', () => {
     const paths = {
       loginGate: 'loginGate',
       createCategory: 'createCategory',
+      updateCategory: 'updateCategory',
       addTerms: 'addTerms',
       validateCreateCategory: 'validateCreateCategory',
+      validateUpdateCategory: 'validateUpdateCategory',
       validateAddTerms: 'validateAddTerms',
       sendValidation: 'sendValidation'
     }
@@ -29,6 +31,9 @@ describe('category endpoint', () => {
     ])
     expect(router.post.mock.calls[1]).toEqual([
       '/categories/:id/terms', paths.validateAddTerms, paths.sendValidation, paths.addTerms
+    ])
+    expect(router.put.mock.calls[0]).toEqual([
+      '/categories/:id', paths.validateUpdateCategory, paths.sendValidation, paths.updateCategory
     ])
   })
 })

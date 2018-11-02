@@ -9,8 +9,10 @@ const loginGate = require('../misc/loginGate')
 const createError = require('../misc/createServerError')
 
 const makeCreateCategory = require('./make-createCategory')
+const makeUpdateCategory = require('./make-updateCategory')
 const makeAddTerms = require('./make-addTerms')
 const makeValidateCreateCategory = require('./make-validateCreateCategory')
+const makeValidateUpdateCategory = require('./make-validateUpdateCategory')
 const makeValidateAddTerms = require('./make-validateAddTerms')
 const getDb = require('../misc/getDb')
 
@@ -22,7 +24,9 @@ module.exports = endpoint({
   sendValidation,
   catchExceptions,
   createCategory: makeCreateCategory({ getDb, createError }),
+  updateCategory: makeUpdateCategory({ getDb, ObjectID, createError }),
   addTerms: makeAddTerms({ getDb, ObjectID, createError }),
   validateCreateCategory: makeValidateCreateCategory({ check }),
+  validateUpdateCategory: makeValidateUpdateCategory({ check }),
   validateAddTerms: makeValidateAddTerms({ check })
 })
