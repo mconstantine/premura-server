@@ -1,33 +1,17 @@
 const makeDeleteUser = require('./make-deleteUser')
 const roles = require('../misc/roles')
+const getDb = require('../misc/test-getDb')
+const ObjectID = require('../misc/test-ObjectID')
 
 describe('deleteUser', () => {
   const _id = '1234567890abcdef'
-  let findOneResult = { _id, role: 'maker' }
   const req = { params: { id: _id }, session: { user: { role: 'master' } } }
   const next = jest.fn()
   const createError = (code, message) => [code, message]
-  const findOne = jest.fn(() => findOneResult)
-  const deleteOne = jest.fn()
-  const collection = () => ({ findOne, deleteOne })
-  const getDb = () => ({ collection })
   const res = { status: jest.fn(() => res), send: jest.fn(), end: () => {} }
-
-  class ObjectID {
-    constructor(string) {
-      this.string = string
-    }
-
-    static isValid(string) {
-      return !!string
-    }
-
-    equals(string) {
-      return string === this.string
-    }
-  }
-
   const deleteUser = makeDeleteUser({ createError, getDb, ObjectID, roles })
+
+  getDb.setResult('findOne', { _id, role: 'maker' })
 
   it('Should check that an ID is provided', async () => {
     req.params = {}
@@ -46,25 +30,25 @@ describe('deleteUser', () => {
   })
 
   it('Should check for the user existence', async () => {
-    findOne.mockClear()
+    getDb.functions.findOne.mockClear()
     await deleteUser(req, res, next)
-    expect(findOne).toHaveBeenCalledWith({ _id: new ObjectID(_id) })
+    expect(getDb.functions.findOne).toHaveBeenCalledWith({ _id: new ObjectID(_id) })
   })
 
   it('Should not allow a non master user to delete a user', async () => {
     req.session.user.role = 'manager'
-    findOneResult = { role: 'maker' }
+    getDb.setResult('findOne', { role: 'maker' })
     await deleteUser(req, res, next)
     expect(next).toHaveBeenCalledWith([401, expect.any(String)])
   })
 
   it('Should allow a master user to delete a user', async () => {
     next.mockClear()
-    deleteOne.mockClear()
+    getDb.functions.deleteOne.mockClear()
     req.session.user.role = 'master'
-    findOneResult = { role: 'master' }
+    getDb.setResult('findOne', { role: 'master' })
     await deleteUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(deleteOne).toHaveBeenCalled()
+    expect(getDb.functions.deleteOne).toHaveBeenCalled()
   })
 })

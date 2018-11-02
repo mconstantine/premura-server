@@ -1,34 +1,17 @@
 const makeUpdateUser = require('./make-updateUser')
 const roles = require('../misc/roles')
+const ObjectID = require('../misc/test-ObjectID')
+const getDb = require('../misc/test-getDb')
 
 describe('updateUser', () => {
-  class ObjectID {
-    constructor(string) {
-      this.string = string
-    }
+  getDb.setResult('findOne', true)
 
-    static isValid(string) {
-      return !!string
-    }
-
-    equals(string) {
-      return this.string === string
-    }
-  }
-
-  let findOneResult = true
   const id = '1234567890abcdef'
   const req = { params: { id }, session: {} }
   const next = jest.fn()
   const createError = (code, message) => [code, message]
-  const findOne = () => findOneResult
-  const updateOne = jest.fn()
-  const collection = () => ({ findOne, updateOne })
-  const getDb = () => ({ collection })
-  const trim = jest.fn(s => s)
   const bcrypt = { hash: jest.fn(() => '3ncrypt3d') }
-  const isEmail = jest.fn(() => true)
-  const updateUser = makeUpdateUser({ createError, ObjectID, getDb, roles, trim, bcrypt, isEmail })
+  const updateUser = makeUpdateUser({ createError, ObjectID, getDb, roles, bcrypt })
   const res = { status: jest.fn(() => res), redirect: jest.fn(), send: jest.fn() }
 
   const masterUserData = {
@@ -56,14 +39,14 @@ describe('updateUser', () => {
 
   it('Should check for the user existance', async () => {
     next.mockClear()
-    findOneResult = false
+    getDb.setResult('findOne', false)
     await updateUser(req, null, next)
     expect(next).toHaveBeenLastCalledWith([404, expect.anything()])
-    findOneResult = true
+    getDb.setResult('findOne', true)
   })
 
   it("Should not allow a user with a lower or equal level to change a user's role", async () => {
-    findOneResult = { _id: 'me', role: 'maker' }
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
     req.session.user = { _id: 'me', role: 'maker' }
     req.body = { role: 'master' }
     await updateUser(req, null, next)
@@ -78,12 +61,12 @@ describe('updateUser', () => {
   it("Should allow a user with a higher level to change a user's role", async () => {
     const role = 'master'
     next.mockClear()
-    findOneResult = { _id: 'me', role: 'maker' }
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
     req.session.user = { _id: 'me', role: 'manager' }
     req.body = { role }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.anything(),
       { $set: expect.objectContaining({ role }) }
     )
@@ -92,12 +75,12 @@ describe('updateUser', () => {
   it('Should allow a user to change its own email', async () => {
     const email = 'whatever@example.com'
     next.mockClear()
-    findOneResult = { _id: 'me', role: 'maker' }
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
     req.session.user = { _id: 'me', role: 'maker' }
     req.body = { email }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.anything(),
       { $set: expect.objectContaining({ email }) }
     )
@@ -106,12 +89,12 @@ describe('updateUser', () => {
   it("Should allow a master to change anyone's email", async () => {
     const email = 'whatever@example.com'
     next.mockClear()
-    findOneResult = { _id: 'me', role: 'maker' }
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
     req.session.user = { _id: 'notMe', role: 'master' }
     req.body = { email }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.anything(),
       { $set: expect.objectContaining({ email }) }
     )
@@ -120,12 +103,12 @@ describe('updateUser', () => {
   it('Should allow a user to change its own password', async () => {
     const password = 'password'
     next.mockClear()
-    findOneResult = { _id: 'me', role: 'maker' }
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
     req.session.user = { _id: 'me', role: 'maker' }
     req.body = { password }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.anything(),
       { $set: expect.objectContaining({ password: bcrypt.hash(password) }) }
     )
@@ -134,19 +117,19 @@ describe('updateUser', () => {
   it("Should allow a master to change anyone's password", async () => {
     const password = 'password'
     next.mockClear()
-    findOneResult = { _id: 'me', role: 'maker' }
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
     req.session.user = { _id: 'notMe', role: 'master' }
     req.body = { password }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.anything(),
       { $set: expect.objectContaining({ password: bcrypt.hash(password) }) }
     )
   })
 
   it("Should not allow a non master user to change another user's email", async () => {
-    findOneResult = { _id: 'me', role: 'maker' }
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
     req.session.user = { _id: 'notMe', role: 'manager' }
     req.body = { email: 'whatever@example.com' }
     await updateUser(req, null, next)
@@ -154,7 +137,7 @@ describe('updateUser', () => {
   })
 
   it("Should not allow a non master user to change another user's password", async () => {
-    findOneResult = { _id: 'me', role: 'maker' }
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
     req.session.user = { _id: 'notMe', role: 'manager' }
     req.body = { password: 'password' }
     await updateUser(req, null, next)
@@ -164,7 +147,7 @@ describe('updateUser', () => {
   it("Should not allow a user to change another user's name", async () => {
     const name = 'name'
     next.mockClear()
-    findOneResult = { _id: 'me', role: 'maker', name: 'whatever' }
+    getDb.setResult('findOne', { _id: 'me', role: 'maker', name: 'whatever' })
     req.session.user = { _id: 'notMe', role: 'maker' }
     req.body = { name }
     await updateUser(req, null, next)
@@ -174,12 +157,12 @@ describe('updateUser', () => {
   it('Should allow a user to change its own name', async () => {
     const name = 'name'
     next.mockClear()
-    findOneResult = { _id: 'me', role: 'maker', name: 'whatever' }
+    getDb.setResult('findOne', { _id: 'me', role: 'maker', name: 'whatever' })
     req.session.user = { _id: 'me', role: 'maker' }
     req.body = { name }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.anything(),
       { $set: expect.objectContaining({ name }) }
     )
@@ -187,39 +170,37 @@ describe('updateUser', () => {
 
   it('Should encrypt the password', async () => {
     bcrypt.hash.mockClear()
-    updateOne.mockClear()
+    getDb.functions.updateOne.mockClear()
     const password = 'password'
-    findOneResult = { _id: 'me', role: 'maker' }
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
     req.session.user = { _id: 'me', role: 'master' }
     req.body = { password }
     await updateUser(req, res, next)
     expect(bcrypt.hash).toHaveBeenCalledWith(password, expect.anything())
-    expect(updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.anything(),
       { $set: expect.objectContaining({ password: '3ncrypt3d' }) }
     )
   })
 
   it('Should not save invalid properties', async () => {
-    findOneResult = Object.assign({}, masterUserData)
-    findOneResult.role = 'maker'
+    getDb.setResult('findOne', Object.assign({}, masterUserData, { role: 'maker' }))
     req.session.user = Object.assign({}, masterUserData)
     req.body = Object.assign({}, masterUserData)
     req.body.answer = 41
     await updateUser(req, res, next)
-    expect(updateOne).not.toHaveBeenLastCalledWith(
+    expect(getDb.functions.updateOne).not.toHaveBeenLastCalledWith(
       expect.anything(),
       expect.objectContaining({ answer: 41 })
     )
   })
 
   it('Should not override _id', async () => {
-    findOneResult = Object.assign({}, masterUserData)
-    findOneResult.role = 'maker'
+    getDb.setResult('findOne', Object.assign({}, masterUserData, { role: 'maker' }))
     req.session.user = Object.assign({}, masterUserData)
     req.body = Object.assign({}, masterUserData)
     await updateUser(req, res, next)
-    expect(updateOne).not.toHaveBeenLastCalledWith(
+    expect(getDb.functions.updateOne).not.toHaveBeenLastCalledWith(
       expect.anything(),
       expect.objectContaining({ _id: masterUserData._id })
     )
@@ -227,7 +208,7 @@ describe('updateUser', () => {
 
   it('Should update the session', async () => {
     res.send.mockClear()
-    findOneResult = Object.assign({}, masterUserData)
+    getDb.setResult('findOne', Object.assign({}, masterUserData))
     req.session.user = Object.assign({}, masterUserData)
     req.body = { name: 'whatever' }
     await updateUser(req, res, next)
@@ -236,7 +217,7 @@ describe('updateUser', () => {
 
   it('Should logout if email or password changed', async () => {
     res.redirect.mockClear()
-    findOneResult = Object.assign({}, masterUserData)
+    getDb.setResult('findOne', Object.assign({}, masterUserData))
     req.session.user = Object.assign({}, masterUserData)
 
     req.body = { email: 'whatever@example.com' }
@@ -251,7 +232,7 @@ describe('updateUser', () => {
   it('Should return the updated session', async () => {
     const name = 'New name'
 
-    findOneResult = Object.assign({}, masterUserData)
+    getDb.setResult('findOne', Object.assign({}, masterUserData))
     req.session.user = Object.assign({}, masterUserData)
     req.body = { name }
 

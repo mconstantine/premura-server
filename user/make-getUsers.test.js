@@ -1,13 +1,8 @@
 const makeGetUsers = require('./make-getUsers')
+const getDb = require('../misc/test-getDb')
 
 describe('getUsers', () => {
-  let Collection
-  const findResult = true
-  const toArray = () => findResult
-  const find = jest.fn(() => Collection)
-  Collection = { find, toArray }
-  const collection = () => Collection
-  const getDb = () => ({ collection })
+  getDb.setResult('find', true)
   const cursorify = jest.fn((req, res, collection, options) => options)
   const sensitiveInformationProjection = { test: true }
   const getUsers = makeGetUsers({ getDb, cursorify, sensitiveInformationProjection })
@@ -16,8 +11,8 @@ describe('getUsers', () => {
 
   it('Should work', async () => {
     await(getUsers(req, res))
-    expect(find).toHaveBeenCalled()
-    expect(res.send).toHaveBeenLastCalledWith(findResult)
+    expect(getDb.functions.find).toHaveBeenCalled()
+    expect(res.send).toHaveBeenLastCalledWith(getDb.getResult('find'))
   })
 
   it('Should allow pagination', async () => {
@@ -29,7 +24,7 @@ describe('getUsers', () => {
   it('Should not return sensitive information', async () => {
     await(getUsers(req, res))
 
-    expect(find).toHaveBeenLastCalledWith(
+    expect(getDb.functions.find).toHaveBeenLastCalledWith(
       expect.anything(),
       expect.objectContaining({ projection: sensitiveInformationProjection })
     )

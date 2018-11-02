@@ -1,15 +1,14 @@
 const makeFindUsers = require('./make-findUsers')
+const getDb = require('../misc/test-getDb')
 
 describe('findUsers', () => {
   const q = 'query'
   const req = { query: { q } }
   const createError = (code, message) => [code, message]
   const next = jest.fn()
-  const collection = () => true
-  const getDb = () => ({ collection })
-  const queryResult = { test: true }
-  const find = jest.fn(() => ({ toArray: () => queryResult }))
   const res = { status: jest.fn(() => res), send: jest.fn() }
+  const findResult = { test: true }
+  const find = jest.fn(() => ({ toArray: () => findResult }))
   const sensitiveInformationProjection = { test: true }
   const findUsers = makeFindUsers({ createError, getDb, find, sensitiveInformationProjection })
 
@@ -24,15 +23,17 @@ describe('findUsers', () => {
     req.query = { name }
     await findUsers(req, res, next)
     expect(find).toHaveBeenLastCalledWith(expect.anything(), { name }, expect.anything())
-    expect(res.send).toHaveBeenLastCalledWith(queryResult)
+    expect(res.send).toHaveBeenLastCalledWith(findResult)
   })
 
   it('Should search by user jobRole', async () => {
     const jobRole = 'jobRoleQuery'
     req.query = { jobRole }
     await findUsers(req, res, next)
-    expect(find).toHaveBeenLastCalledWith(expect.anything(), { jobRole }, expect.anything())
-    expect(res.send).toHaveBeenLastCalledWith(queryResult)
+    expect(find).toHaveBeenLastCalledWith(
+      expect.anything(), { jobRole }, expect.anything()
+    )
+    expect(res.send).toHaveBeenLastCalledWith(findResult)
   })
 
   it('Should return nothing by default', async () => {

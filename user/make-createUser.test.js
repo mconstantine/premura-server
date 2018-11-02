@@ -1,8 +1,7 @@
 const makeCreateUser = require('./make-createUser')
 const roles = Array.from(require('../misc/roles'))
+const getDb = require('../misc/test-getDb')
 
-let findOneResult
-let insertOneResult = { insertedId: '1234567890abcdef' }
 
 roles.includes = jest.fn(() => true)
 
@@ -23,20 +22,17 @@ describe('createUser', () => {
   const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
 
-  const findOne = jest.fn(() => findOneResult)
-  const insertOne = jest.fn(() => insertOneResult)
-  const collection = () => ({ findOne, insertOne })
-  const getDb = () => ({ collection })
-
   const createUser = makeCreateUser({
     bcrypt, createError, roles, getDb, sensitiveInformationProjection
   })
 
+  getDb.setResult('insertOne', { insertedId: '1234567890abcdef' })
+
   it('Should check for existing users', async () => {
-    findOne.mockClear()
+    getDb.functions.findOne.mockClear()
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
-    expect(findOne).toHaveBeenCalledWith({ email: data.email }, expect.anything())
+    expect(getDb.functions.findOne).toHaveBeenCalledWith({ email: data.email }, expect.anything())
   })
 
   it("Should check for the logged in user's role", async () => {
@@ -49,7 +45,7 @@ describe('createUser', () => {
   })
 
   it('Should create a new user', async () => {
-    insertOne.mockClear()
+    getDb.functions.insertOne.mockClear()
     req.session.user = Object.assign({}, data)
     req.session.user.role = 'master'
     req.body = Object.assign({}, data)
@@ -57,17 +53,17 @@ describe('createUser', () => {
 
     const result = Object.assign({}, data)
     delete result.passwordConfirmation
-    expect(insertOne).toHaveBeenCalledWith(expect.objectContaining(result))
+    expect(getDb.functions.insertOne).toHaveBeenCalledWith(expect.objectContaining(result))
   })
 
   it('Should save the registration date', async () => {
-    insertOne.mockClear()
+    getDb.functions.insertOne.mockClear()
     req.session.user = Object.assign({}, data)
     req.session.user.role = 'master'
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
 
-    expect(insertOne).toHaveBeenCalledWith(expect.objectContaining({
+    expect(getDb.functions.insertOne).toHaveBeenCalledWith(expect.objectContaining({
       registrationDate: expect.any(Date)
     }))
   })
@@ -82,22 +78,22 @@ describe('createUser', () => {
   })
 
   it('Should report the conflict in case of existing user', async () => {
-    findOneResult = { test: true }
+    getDb.setResult('findOne', { test: true })
     req.session.user = Object.assign({}, data)
     req.session.user.role = 'master'
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([409, JSON.stringify(findOneResult)])
-    findOneResult = null
+    expect(next).toHaveBeenLastCalledWith([409, JSON.stringify(getDb.getResult('findOne'))])
+    getDb.setResult('findOne', null)
   })
 
   it('Should hide sensible information', async () => {
-    findOne.mockClear()
+    getDb.functions.findOne.mockClear()
     req.session.user = Object.assign({}, data)
     req.session.user.role = 'master'
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
-    expect(findOne).toHaveBeenCalledWith(expect.anything(), {
+    expect(getDb.functions.findOne).toHaveBeenCalledWith(expect.anything(), {
       projection: expect.objectContaining(sensitiveInformationProjection)
     })
   })
@@ -107,6 +103,6 @@ describe('createUser', () => {
     req.session.user.role = 'master'
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
-    expect(res.send).toHaveBeenCalledWith({ _id: insertOneResult.insertedId })
+    expect(res.send).toHaveBeenCalledWith({ _id: getDb.getResult('insertOne').insertedId })
   })
 })
