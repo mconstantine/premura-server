@@ -3,8 +3,10 @@ const endpoint = require('./endpoint')
 const catchExceptions = require('../misc/catchExceptions')
 const { validationResult } = require('express-validator/check')
 const { check } = require('express-validator/check')
+const { ObjectID } = require('mongodb')
 const makeSendValidation = require('../misc/make-sendValidation')
 const loginGate = require('../misc/loginGate')
+const createError = require('../misc/createServerError')
 
 const makeCreateCategory = require('./make-createCategory')
 const makeAddTerms = require('./make-addTerms')
@@ -20,7 +22,7 @@ module.exports = endpoint({
   sendValidation,
   catchExceptions,
   createCategory: makeCreateCategory({ getDb }),
-  addTerms: makeAddTerms({ getDb }),
+  addTerms: makeAddTerms({ getDb, ObjectID, createError }),
   validateCreateCategory: makeValidateCreateCategory({ check }),
   validateAddTerms: makeValidateAddTerms({ check })
 })
