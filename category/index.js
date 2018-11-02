@@ -12,6 +12,7 @@ const cursorify = require('../misc/cursorify')
 const makeCreateCategory = require('./make-createCategory')
 const makeGetCategories = require('./make-getCategories')
 const makeUpdateCategory = require('./make-updateCategory')
+const makeDeleteCategory = require('./make-deleteCategory')
 const makeAddTerms = require('./make-addTerms')
 const makeValidateCreateCategory = require('./make-validateCreateCategory')
 const makeValidateUpdateCategory = require('./make-validateUpdateCategory')
@@ -28,6 +29,7 @@ module.exports = endpoint({
   createCategory: makeCreateCategory({ getDb, createError }),
   getCategories: makeGetCategories({ getDb, cursorify }),
   updateCategory: makeUpdateCategory({ getDb, ObjectID, createError }),
+  deleteCategory: makeDeleteCategory({ getDb, ObjectID, createError }),
   addTerms: makeAddTerms({ getDb, ObjectID, createError }),
   validateCreateCategory: makeValidateCreateCategory({ check }),
   validateUpdateCategory: makeValidateUpdateCategory({ check }),
