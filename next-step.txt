@@ -1,3 +1,2 @@
-Do getCategory
 Create a way to add projects to terms
 Create a way to add move projects from a term to another

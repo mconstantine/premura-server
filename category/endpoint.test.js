@@ -16,6 +16,7 @@ describe('category endpoint', () => {
       loginGate: 'loginGate',
       createCategory: 'createCategory',
       getCategories: 'getCategories',
+      getCategory: 'getCategory',
       updateCategory: 'updateCategory',
       deleteCategory: 'deleteCategory',
       addTerms: 'addTerms',
@@ -29,6 +30,7 @@ describe('category endpoint', () => {
 
     expect(router.use.mock.calls[0]).toEqual([paths.loginGate])
     expect(router.get.mock.calls[0]).toEqual(['/categories', paths.getCategories])
+    expect(router.get.mock.calls[1]).toEqual(['/categories/:id', paths.getCategory])
     expect(router.post.mock.calls[0]).toEqual([
       '/categories', paths.validateCreateCategory, paths.sendValidation, paths.createCategory
     ])
