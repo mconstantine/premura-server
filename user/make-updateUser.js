@@ -1,5 +1,5 @@
 module.exports = ({
-  createError, ObjectID, getDb, roles, bcrypt
+  createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection
 }) => async (req, res, next) => {
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
@@ -40,6 +40,15 @@ module.exports = ({
 
     if (currentUser._id != user._id.toString() && currentUser.role !== 'master') {
       return next(createError(401, 'you can change only your own e-mail address'))
+    }
+
+    const alreadyExistingUser = await collection.findOne(
+      { email },
+      { projection: sensitiveInformationProjection }
+    )
+
+    if (alreadyExistingUser) {
+      return next(createError(409, JSON.stringify(alreadyExistingUser)))
     }
 
     update.email = email

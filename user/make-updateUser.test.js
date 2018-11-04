@@ -11,7 +11,10 @@ describe('updateUser', () => {
   const next = jest.fn()
   const createError = (code, message) => [code, message]
   const bcrypt = { hash: jest.fn(() => '3ncrypt3d') }
-  const updateUser = makeUpdateUser({ createError, ObjectID, getDb, roles, bcrypt })
+  const sensitiveInformationProjection = 'sensitiveInformationProjection'
+  const updateUser = makeUpdateUser({
+    createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection
+  })
   const res = { status: jest.fn(() => res), redirect: jest.fn(), send: jest.fn() }
 
   const masterUserData = {
@@ -75,7 +78,14 @@ describe('updateUser', () => {
   it('Should allow a user to change its own email', async () => {
     const email = 'whatever@example.com'
     next.mockClear()
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    const originalFindOne = getDb.functions.findOne
+    getDb.functions.findOne = function(query) {
+      if (query._id) {
+        return { _id: 'me', role: 'maker' }
+      } else {
+        return false
+      }
+    }
     req.session.user = { _id: 'me', role: 'maker' }
     req.body = { email }
     await updateUser(req, res, next)
@@ -84,12 +94,20 @@ describe('updateUser', () => {
       expect.anything(),
       { $set: expect.objectContaining({ email }) }
     )
+    getDb.functions.findOne = originalFindOne
   })
 
   it("Should allow a master to change anyone's email", async () => {
     const email = 'whatever@example.com'
     next.mockClear()
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    const originalFindOne = getDb.functions.findOne
+    getDb.functions.findOne = function(query) {
+      if (query._id) {
+        return { _id: 'me', role: 'maker' }
+      } else {
+        return false
+      }
+    }
     req.session.user = { _id: 'notMe', role: 'master' }
     req.body = { email }
     await updateUser(req, res, next)
@@ -98,6 +116,7 @@ describe('updateUser', () => {
       expect.anything(),
       { $set: expect.objectContaining({ email }) }
     )
+    getDb.functions.findOne = originalFindOne
   })
 
   it('Should allow a user to change its own password', async () => {
@@ -217,8 +236,15 @@ describe('updateUser', () => {
 
   it('Should logout if email or password changed', async () => {
     res.redirect.mockClear()
-    getDb.setResult('findOne', Object.assign({}, masterUserData))
     req.session.user = Object.assign({}, masterUserData)
+    const originalFindOne = getDb.functions.findOne
+    getDb.functions.findOne = function(query) {
+      if (query._id) {
+        return { _id: 'me', role: 'maker' }
+      } else {
+        return false
+      }
+    }
 
     req.body = { email: 'whatever@example.com' }
     await updateUser(req, res, next)
@@ -227,6 +253,7 @@ describe('updateUser', () => {
     await updateUser(req, res, next)
 
     expect(res.redirect).toHaveBeenCalledTimes(2)
+    getDb.functions.findOne = originalFindOne
   })
 
   it('Should return the updated session', async () => {
@@ -238,5 +265,23 @@ describe('updateUser', () => {
 
     await updateUser(req, res, next)
     expect(res.send).toHaveBeenLastCalledWith(expect.objectContaining({ name }))
+  })
+
+  it('Should keep the emails unique', async () => {
+    const email = 'whatever@example.com'
+    next.mockClear()
+    const originalFindOne = getDb.functions.findOne
+    getDb.functions.findOne = function(query) {
+      if (query._id) {
+        return { _id: 'me', role: 'maker' }
+      } else {
+        return { email }
+      }
+    }
+    req.session.user = { _id: 'notMe', role: 'master' }
+    req.body = { email }
+    await updateUser(req, res, next)
+    expect(next).toHaveBeenLastCalledWith([409, JSON.stringify({ email })])
+    getDb.functions.findOne = originalFindOne
   })
 })
