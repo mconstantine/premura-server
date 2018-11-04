@@ -45,20 +45,6 @@ describe('updateTerms', () => {
     expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('term')])
   })
 
-  it('Should check that no term name is duplicated', async () => {
-    res.send.mockClear()
-    const terms = genTerms()
-    terms[0].name = 'Old term one'
-    getDb.setResult('findOne', { terms })
-
-    await updateTerms(req, res, next)
-    expect(res.send).not.toHaveBeenCalled()
-    expect(next).toHaveBeenLastCalledWith([
-      409,
-      JSON.stringify(getDb.getResult('findOne').terms[1])
-    ])
-  })
-
   it('Should not save any extra information', async () => {
     const terms = genTerms()
     const extra = 'I shall not be saved'

@@ -13,19 +13,6 @@ describe('createCategory', () => {
   const res = { status: jest.fn(() => res), send: jest.fn(() => res) }
   const next = jest.fn()
 
-  it('Should not allow two categories with the same name', async () => {
-    insertOne.mockClear()
-    const name = 'name'
-    const allowsMultipleTerms = true
-    findOneResult = ({ name })
-    req.body = { name, allowsMultipleTerms }
-    await createCategory(req, res, next)
-    expect(insertOne).not.toHaveBeenCalled()
-    expect(findOne).toHaveBeenLastCalledWith({ name })
-    expect(next).toHaveBeenCalledWith([409, JSON.stringify(findOneResult)])
-    findOneResult = false
-  })
-
   it('Should save description if available', async () => {
     const name = 'name'
     const description = 'description'

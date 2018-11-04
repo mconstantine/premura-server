@@ -67,15 +67,6 @@ describe('addTerms', () => {
     })
   })
 
-  it('Should not allow terms with identical names', async () => {
-    res.send.mockClear()
-    prepare()
-    req.body.terms[0].name = category.terms[0].name
-    await addTerms(req, res, next)
-    expect(res.send).not.toHaveBeenCalled()
-    expect(next).toHaveBeenLastCalledWith([409, JSON.stringify(category.terms[0])])
-  })
-
   it('Should create an id for each term', async () => {
     prepare()
     await addTerms(req, res, next)

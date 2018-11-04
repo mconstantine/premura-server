@@ -4,12 +4,6 @@ module.exports = ({ getDb, createError }) => async (req, res, next) => {
   const allowsMultipleTerms = req.body.allowsMultipleTerms
 
   const collection = (await getDb()).collection('categories')
-  const existingCategory = await collection.findOne({ name })
-
-  if (existingCategory) {
-    return next(createError(409, JSON.stringify(existingCategory)))
-  }
-
   const category = { name, allowsMultipleTerms, terms: [] }
 
   if (description) {

@@ -17,10 +17,6 @@ module.exports = ({ getDb, ObjectID, createError }) => async (req, res, next) =>
       return next(createError(404, `term ${_id} not found`))
     }
 
-    if (terms.find(term => term.name === name)) {
-      return next(createError(409, JSON.stringify(term)))
-    }
-
     term.name = name
   }
 
