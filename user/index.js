@@ -6,7 +6,7 @@ const roles = require('../misc/roles')
 const getDb = require('../misc/getDb')
 const { ObjectID } = require('mongodb')
 const cursorify = require('../misc/cursorify')
-const find = require('../misc/find')
+const createFindFilters = require('../misc/createFindFilters')
 const sensitiveInformationProjection = require('./sensitiveInformationProjection')
 const catchExceptions = require('../misc/catchExceptions')
 
@@ -32,7 +32,7 @@ module.exports = endpoint({
   router,
   loginGate,
   createUser: makeCreateUser({ bcrypt, createError, roles, getDb, sensitiveInformationProjection }),
-  getUsers: makeGetUsers({ getDb, cursorify, find, sensitiveInformationProjection }),
+  getUsers: makeGetUsers({ getDb, cursorify, createFindFilters, sensitiveInformationProjection }),
   getUser: makeGetUser({ getDb, createError, ObjectID, sensitiveInformationProjection }),
   getJobRoles: makeGetJobRoles({ getDb }),
   updateUser: makeUpdateUser({

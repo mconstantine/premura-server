@@ -5,8 +5,10 @@ describe('getUsers', () => {
   getDb.setResult('find', true)
   const cursorify = jest.fn((req, res, collection, options) => options)
   const sensitiveInformationProjection = { test: true }
-  const find = jest.fn(() => ({ toArray: () => findResult }))
-  const getUsers = makeGetUsers({ getDb, cursorify, find, sensitiveInformationProjection })
+  const createFindFilters = jest.fn(() => ({ toArray: () => findResult }))
+  const getUsers = makeGetUsers({
+    getDb, cursorify, createFindFilters, sensitiveInformationProjection
+  })
   const req = { query: {} }
   const res = { send: jest.fn() }
 
@@ -35,7 +37,7 @@ describe('getUsers', () => {
     const name = 'nameQuery'
     req.query = { name }
     await getUsers(req, res)
-    expect(find).toHaveBeenLastCalledWith({ name })
+    expect(createFindFilters).toHaveBeenLastCalledWith({ name })
     req.query = {}
   })
 
@@ -43,6 +45,6 @@ describe('getUsers', () => {
     const jobRole = 'jobRoleQuery'
     req.query = { jobRole }
     await getUsers(req, res)
-    expect(find).toHaveBeenLastCalledWith({ jobRole })
+    expect(createFindFilters).toHaveBeenLastCalledWith({ jobRole })
   })
 })

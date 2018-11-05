@@ -1,8 +1,8 @@
-const find = require('./find')
+const createFindFilters = require('./createFindFilters')
 
-describe('find', () => {
+describe('createFindFilters', () => {
   it('Should perform a regex search', async () => {
-    const query = find({ name: 'nameQuery', text: 'textQuery' })
+    const query = createFindFilters({ name: 'nameQuery', text: 'textQuery' })
     expect(query).toEqual({
       name: { $regex: /nameQuery/gi },
       text: { $regex: /textQuery/gi }
@@ -10,7 +10,7 @@ describe('find', () => {
   })
 
   it('Should escape regular expressions', async () => {
-    const query = find({ name: '[-]{}()*+?.,\\^$|#' })
+    const query = createFindFilters({ name: '[-]{}()*+?.,\\^$|#' })
 
     expect(query).toEqual({
       name: { $regex: /\[\-\]\{\}\(\)\*\+\?\.\,\\\^\$\|\#/gi }

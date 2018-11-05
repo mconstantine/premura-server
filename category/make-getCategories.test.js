@@ -4,8 +4,8 @@ const getDb = require('../misc/test-getDb')
 describe('getCategories', () => {
   const findResult = { test: true }
   const cursorify = jest.fn((req, res, query, options) => options)
-  const find = jest.fn(() => ({ toArray: () => findResult }))
-  const getCategories = makeGetCategories({ getDb, find, cursorify })
+  const createFindFilters = jest.fn(() => ({ toArray: () => findResult }))
+  const getCategories = makeGetCategories({ getDb, createFindFilters, cursorify })
   const req = { query: {} }
   const res = { send: jest.fn() }
 
@@ -33,7 +33,7 @@ describe('getCategories', () => {
     const name = 'nameQuery'
     req.query = { name }
     await getCategories(req, res)
-    expect(find).toHaveBeenLastCalledWith({ name })
+    expect(createFindFilters).toHaveBeenLastCalledWith({ name })
     req.query = {}
   })
 })

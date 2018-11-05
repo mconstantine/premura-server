@@ -1,7 +1,9 @@
 /**
  * This path allows pagination. See cursorify.js.
  */
-module.exports = ({ getDb, cursorify, find, sensitiveInformationProjection }) => async (req, res) => {
+module.exports = ({
+  getDb, cursorify, createFindFilters, sensitiveInformationProjection
+}) => async (req, res) => {
   const collection = (await getDb()).collection('users')
   let filters = {}
 
@@ -13,7 +15,7 @@ module.exports = ({ getDb, cursorify, find, sensitiveInformationProjection }) =>
     filters.jobRole = req.query.jobRole
   }
 
-  filters = find(filters)
+  filters = createFindFilters(filters)
   const query = collection.find(filters)
   const options = await cursorify(req, res, query, { projection: sensitiveInformationProjection })
   const users = await collection.find(filters, options).toArray()

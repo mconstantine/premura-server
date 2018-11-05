@@ -8,7 +8,7 @@ const makeSendValidation = require('../misc/make-sendValidation')
 const loginGate = require('../misc/loginGate')
 const createError = require('../misc/createServerError')
 const cursorify = require('../misc/cursorify')
-const find = require('../misc/find')
+const createFindFilters = require('../misc/createFindFilters')
 
 const makeCreateCategory = require('./make-createCategory')
 const makeGetCategories = require('./make-getCategories')
@@ -33,7 +33,7 @@ module.exports = endpoint({
   sendValidation,
   catchExceptions,
   createCategory: makeCreateCategory({ getDb, createError }),
-  getCategories: makeGetCategories({ getDb, find, cursorify }),
+  getCategories: makeGetCategories({ getDb, createFindFilters, cursorify }),
   getCategory: makeGetCategory({ getDb, ObjectID, createError }),
   updateCategory: makeUpdateCategory({ getDb, ObjectID, createError }),
   deleteCategory: makeDeleteCategory({ getDb, ObjectID, createError }),

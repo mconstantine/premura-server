@@ -1,4 +1,4 @@
-module.exports = ({ getDb, find, cursorify }) => async (req, res) => {
+module.exports = ({ getDb, createFindFilters, cursorify }) => async (req, res) => {
   const collection = (await getDb()).collection('categories')
   let filters = {}
 
@@ -6,7 +6,7 @@ module.exports = ({ getDb, find, cursorify }) => async (req, res) => {
     filters.name = req.query.name
   }
 
-  filters = find(filters)
+  filters = createFindFilters(filters)
   const query = collection.find(filters)
   const options = await cursorify(req, res, query, { sort: { name: 1 } })
 
