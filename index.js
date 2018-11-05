@@ -11,6 +11,7 @@ const sessionOptions = config.session
 
 const user = require('./user/index')
 const category = require('./category/index')
+const project = require('./project/index')
 
 sessionOptions.store = new MongoDBStore({
   uri: `${config.db.url}/${config.db.dbName}`,
@@ -35,6 +36,7 @@ app
 .use(bodyParser.urlencoded({ extended: false }))
 .use('/users', user)
 .use('/categories', category)
+.use('/projects', project)
 
 app.get('/', (req, res) => res.send('Hello ' + JSON.stringify(req.session)))
 
