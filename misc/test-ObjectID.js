@@ -7,8 +7,8 @@ module.exports = class ObjectID {
     return !!string
   }
 
-  equals(string) {
-    return this.string === string
+  equals(other) {
+    return this.string === (other.string || other)
   }
 
   toString() {
