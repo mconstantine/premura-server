@@ -7,4 +7,5 @@ module.exports = ({ check }) => [
 
   check('terms.*.name').trim()
   .not().isEmpty().withMessage('missing term name')
+  .isString().withMessage('name should be a String')
 ]

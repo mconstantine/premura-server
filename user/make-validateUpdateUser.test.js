@@ -17,6 +17,7 @@ describe('validateUpdateUser', () => {
     expect(call.trim).toHaveBeenCalled()
     expect(call.not).toHaveBeenCalled()
     expect(call.isEmpty).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 
   it('Should validate the email', () => {
@@ -37,6 +38,7 @@ describe('validateUpdateUser', () => {
     expect(call.optional).toHaveBeenCalled()
     expect(call.isLength).toHaveBeenCalled()
     expect(call.custom).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 
   it('Should validate the role', () => {
@@ -45,6 +47,7 @@ describe('validateUpdateUser', () => {
 
     expect(call.optional).toHaveBeenCalled()
     expect(call.isIn).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 
   it('Should validate the jobRole', () => {
@@ -55,5 +58,6 @@ describe('validateUpdateUser', () => {
     expect(call.trim).toHaveBeenCalled()
     expect(call.not).toHaveBeenCalled()
     expect(call.isEmpty).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 })

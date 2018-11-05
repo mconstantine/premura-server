@@ -21,6 +21,7 @@ const check = function(what) {
     optional: jest.fn(function() { return this }),
     isMongoId: jest.fn(function() { return this }),
     isBoolean: jest.fn(function() { return this }),
+    isString: jest.fn(function() { return this }),
     isArray: jest.fn(function() { return this }),
     exists: jest.fn(function() { return this })
   })

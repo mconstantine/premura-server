@@ -16,6 +16,7 @@ describe('validateUpdateCategory', () => {
     expect(call.trim).toHaveBeenCalled()
     expect(call.not).toHaveBeenCalled()
     expect(call.isEmpty).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 
   it('Should validate description', () => {
@@ -24,6 +25,7 @@ describe('validateUpdateCategory', () => {
 
     expect(call.optional).toHaveBeenCalled()
     expect(call.trim).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 
   it('Should validate allowsMultipleTerms', () => {

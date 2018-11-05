@@ -9,6 +9,7 @@ describe('validateCreateCategory', () => {
     expect(call.trim).toHaveBeenCalled()
     expect(call.not).toHaveBeenCalled()
     expect(call.isEmpty).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 
   it('Should validate description', () => {
@@ -19,6 +20,7 @@ describe('validateCreateCategory', () => {
     expect(call.trim).toHaveBeenCalled()
     expect(call.not).toHaveBeenCalled()
     expect(call.isEmpty).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 
   it('Should validate allowsMultipleTerms', () => {

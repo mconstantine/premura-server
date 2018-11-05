@@ -9,7 +9,8 @@ module.exports = ({ check }) => [
   .isMongoId().withMessage('invalid term id'),
 
   check('terms.*.name').trim()
-  .not().isEmpty().withMessage('missing or invalid name'),
+  .not().isEmpty().withMessage('missing or invalid name')
+  .isString().withMessage('name should be a String'),
 
   check('terms.*.projects')
   .not().exists().withMessage('this endpoint cannot operate on projects')

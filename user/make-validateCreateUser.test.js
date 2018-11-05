@@ -10,6 +10,7 @@ describe('validateCreateUser', () => {
     expect(call.trim).toHaveBeenCalled()
     expect(call.not).toHaveBeenCalled()
     expect(call.isEmpty).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 
   it('Should validate the email', () => {
@@ -28,6 +29,7 @@ describe('validateCreateUser', () => {
 
     expect(call.isLength).toHaveBeenCalled()
     expect(call.custom).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 
   it('Should validate the role', () => {
@@ -35,6 +37,7 @@ describe('validateCreateUser', () => {
     const call = getCheckCall('role')
 
     expect(call.isIn).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 
   it('Should validate the jobRole', () => {
@@ -44,5 +47,6 @@ describe('validateCreateUser', () => {
     expect(call.trim).toHaveBeenCalled()
     expect(call.not).toHaveBeenCalled()
     expect(call.isEmpty).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 })

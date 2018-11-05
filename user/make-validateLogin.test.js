@@ -18,5 +18,6 @@ describe('validateLogin', () => {
 
     expect(call.not).toHaveBeenCalled()
     expect(call.isEmpty).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 })

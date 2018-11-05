@@ -4,5 +4,6 @@ module.exports = ({ check }) => [
   .isEmail().withMessage('invalid email format'),
 
   check('password')
+  .isString().withMessage('password should be a String')
   .not().isEmpty().withMessage('password is empty')
 ]

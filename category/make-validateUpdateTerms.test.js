@@ -26,6 +26,7 @@ describe('validateUpdateTerms', () => {
     expect(call.trim).toHaveBeenCalled()
     expect(call.not).toHaveBeenCalled()
     expect(call.isEmpty).toHaveBeenCalled()
+    expect(call.isString).toHaveBeenCalled()
   })
 
   it('Should ensure that the user is not trying to update projects', () => {
