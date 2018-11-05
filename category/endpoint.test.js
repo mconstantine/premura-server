@@ -34,24 +34,24 @@ describe('category endpoint', () => {
     endpoint(Object.assign(paths, { router, catchExceptions }))
 
     expect(router.use.mock.calls[0]).toEqual([paths.loginGate])
-    expect(router.get.mock.calls[0]).toEqual(['/categories', paths.getCategories])
-    expect(router.get.mock.calls[1]).toEqual(['/categories/find', paths.findCategories])
-    expect(router.get.mock.calls[2]).toEqual(['/categories/:id', paths.getCategory])
+    expect(router.get.mock.calls[0]).toEqual(['/', paths.getCategories])
+    expect(router.get.mock.calls[1]).toEqual(['/find', paths.findCategories])
+    expect(router.get.mock.calls[2]).toEqual(['/:id', paths.getCategory])
     expect(router.post.mock.calls[0]).toEqual([
-      '/categories', paths.validateCreateCategory, paths.sendValidation, paths.createCategory
+      '/', paths.validateCreateCategory, paths.sendValidation, paths.createCategory
     ])
     expect(router.post.mock.calls[1]).toEqual([
-      '/categories/:id/terms', paths.validateAddTerms, paths.sendValidation, paths.addTerms
+      '/:id/terms', paths.validateAddTerms, paths.sendValidation, paths.addTerms
     ])
     expect(router.put.mock.calls[0]).toEqual([
-      '/categories/:id', paths.validateUpdateCategory, paths.sendValidation, paths.updateCategory
+      '/:id', paths.validateUpdateCategory, paths.sendValidation, paths.updateCategory
     ])
     expect(router.put.mock.calls[1]).toEqual([
-      '/categories/:id/terms', paths.validateUpdateTerms, paths.sendValidation, paths.updateTerms
+      '/:id/terms', paths.validateUpdateTerms, paths.sendValidation, paths.updateTerms
     ])
-    expect(router.delete.mock.calls[0]).toEqual(['/categories/:id', paths.deleteCategory])
+    expect(router.delete.mock.calls[0]).toEqual(['/:id', paths.deleteCategory])
     expect(router.delete.mock.calls[1]).toEqual([
-      '/categories/:id/terms', paths.validateRemoveTerms, paths.sendValidation, paths.removeTerms
+      '/:id/terms', paths.validateRemoveTerms, paths.sendValidation, paths.removeTerms
     ])
   })
 })

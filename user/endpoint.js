@@ -17,13 +17,13 @@ module.exports = ({
   catchExceptions
 }) =>
 router
-.post('/users/login', validateLogin, sendValidation, catchExceptions(login))
+.post('/login', validateLogin, sendValidation, catchExceptions(login))
 .use(loginGate)
-.post('/users', validateCreateUser, sendValidation, catchExceptions(createUser))
-.get('/users', catchExceptions(getUsers))
-.get('/users/find', catchExceptions(findUsers))
-.get('/users/roles', catchExceptions(getJobRoles))
-.get('/users/:id', catchExceptions(getUser))
-.put('/users/:id', validateUpdateUser, sendValidation, catchExceptions(updateUser))
-.delete('/users/:id', catchExceptions(deleteUser))
-.post('/users/logout', logout)
+.post('/', validateCreateUser, sendValidation, catchExceptions(createUser))
+.get('/', catchExceptions(getUsers))
+.get('/find', catchExceptions(findUsers))
+.get('/roles', catchExceptions(getJobRoles))
+.get('/:id', catchExceptions(getUser))
+.put('/:id', validateUpdateUser, sendValidation, catchExceptions(updateUser))
+.delete('/:id', catchExceptions(deleteUser))
+.post('/logout', logout)

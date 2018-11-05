@@ -32,21 +32,21 @@ describe('user endpoint', () => {
     endpoint(Object.assign(paths, { router, catchExceptions }))
 
     expect(router.use.mock.calls[0]).toEqual([paths.loginGate])
-    expect(router.get.mock.calls[0]).toEqual(['/users', paths.getUsers])
-    expect(router.get.mock.calls[1]).toEqual(['/users/find', paths.findUsers])
-    expect(router.get.mock.calls[2]).toEqual(['/users/roles', paths.getJobRoles])
-    expect(router.get.mock.calls[3]).toEqual(['/users/:id', paths.getUser])
+    expect(router.get.mock.calls[0]).toEqual(['/', paths.getUsers])
+    expect(router.get.mock.calls[1]).toEqual(['/find', paths.findUsers])
+    expect(router.get.mock.calls[2]).toEqual(['/roles', paths.getJobRoles])
+    expect(router.get.mock.calls[3]).toEqual(['/:id', paths.getUser])
     expect(router.post.mock.calls[0]).toEqual([
-      '/users/login', paths.validateLogin, paths.sendValidation, paths.login
+      '/login', paths.validateLogin, paths.sendValidation, paths.login
     ])
     expect(router.post.mock.calls[1]).toEqual([
-      '/users', paths.validateCreateUser, paths.sendValidation, paths.createUser
+      '/', paths.validateCreateUser, paths.sendValidation, paths.createUser
     ])
-    expect(router.post.mock.calls[2]).toEqual(['/users/logout', paths.logout])
+    expect(router.post.mock.calls[2]).toEqual(['/logout', paths.logout])
     expect(router.put.mock.calls[0]).toEqual([
-      '/users/:id', paths.validateUpdateUser, paths.sendValidation, paths.updateUser
+      '/:id', paths.validateUpdateUser, paths.sendValidation, paths.updateUser
     ])
-    expect(router.delete.mock.calls[0]).toEqual(['/users/:id', paths.deleteUser])
+    expect(router.delete.mock.calls[0]).toEqual(['/:id', paths.deleteUser])
   })
 
   it('Should allow login before using loginGate', () => {

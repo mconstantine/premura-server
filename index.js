@@ -33,8 +33,8 @@ app
 .use(session(sessionOptions))
 .use(bodyParser.json())
 .use(bodyParser.urlencoded({ extended: false }))
-.use(user)
-.use(category)
+.use('/users', user)
+.use('/categories', category)
 
 app.get('/', (req, res) => res.send('Hello ' + JSON.stringify(req.session)))
 
