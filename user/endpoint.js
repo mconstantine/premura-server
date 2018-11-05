@@ -4,7 +4,6 @@ module.exports = ({
   createUser,
   getUsers,
   getUser,
-  findUsers,
   updateUser,
   deleteUser,
   login,
@@ -21,7 +20,6 @@ router
 .use(loginGate)
 .post('/', validateCreateUser, sendValidation, catchExceptions(createUser))
 .get('/', catchExceptions(getUsers))
-.get('/find', catchExceptions(findUsers))
 .get('/roles', catchExceptions(getJobRoles))
 .get('/:id', catchExceptions(getUser))
 .put('/:id', validateUpdateUser, sendValidation, catchExceptions(updateUser))

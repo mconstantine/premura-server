@@ -1,4 +1,4 @@
-module.exports = async (collection, query, options) => {
+module.exports = query => {
   const dbQuery = {}
 
   for (let i in query) {
@@ -10,5 +10,5 @@ module.exports = async (collection, query, options) => {
     }
   }
 
-  return await collection.find(dbQuery, options)
+  return dbQuery
 }

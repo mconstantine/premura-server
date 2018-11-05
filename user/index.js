@@ -17,7 +17,6 @@ const loginGate = require('../misc/loginGate')
 const makeCreateUser = require('./make-createUser')
 const makeGetUsers = require('./make-getUsers')
 const makeGetUser = require('./make-getUser')
-const makeFindUsers = require('./make-findUsers')
 const makeGetJobRoles = require('./make-getJobRoles')
 const makeUpdateUser = require('./make-updateUser')
 const makeDeleteUser = require('./make-deleteUser')
@@ -33,9 +32,8 @@ module.exports = endpoint({
   router,
   loginGate,
   createUser: makeCreateUser({ bcrypt, createError, roles, getDb, sensitiveInformationProjection }),
-  getUsers: makeGetUsers({ getDb, cursorify, sensitiveInformationProjection }),
+  getUsers: makeGetUsers({ getDb, cursorify, find, sensitiveInformationProjection }),
   getUser: makeGetUser({ getDb, createError, ObjectID, sensitiveInformationProjection }),
-  findUsers: makeFindUsers({ getDb, find, sensitiveInformationProjection }),
   getJobRoles: makeGetJobRoles({ getDb }),
   updateUser: makeUpdateUser({
     createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection

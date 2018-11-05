@@ -5,7 +5,6 @@ module.exports = ({
   catchExceptions,
   createCategory,
   getCategories,
-  findCategories,
   getCategory,
   updateCategory,
   deleteCategory,
@@ -21,7 +20,6 @@ module.exports = ({
 router
 .use(loginGate)
 .get('/', catchExceptions(getCategories))
-.get('/find', catchExceptions(findCategories))
 .get('/:id', catchExceptions(getCategory))
 .post('/', validateCreateCategory, sendValidation, catchExceptions(createCategory))
 .put('/:id', validateUpdateCategory, sendValidation, catchExceptions(updateCategory))

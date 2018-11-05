@@ -1,7 +1,14 @@
-module.exports = ({ getDb, cursorify }) => async (req, res) => {
+module.exports = ({ getDb, find, cursorify }) => async (req, res) => {
   const collection = (await getDb()).collection('categories')
-  const query = collection.find({})
+  let filters = {}
+
+  if (req.query.name) {
+    filters.name = req.query.name
+  }
+
+  filters = find(filters)
+  const query = collection.find(filters)
   const options = await cursorify(req, res, query, { sort: { name: 1 } })
 
-  return res.send(await collection.find({}, options).toArray())
+  return res.send(await collection.find(filters, options).toArray())
 }
