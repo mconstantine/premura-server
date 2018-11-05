@@ -5,6 +5,7 @@ module.exports = ({ getDb, createError, ObjectID }) => async (req, res, next) =>
   const people = req.body.people
   const budget = req.body.budget
   const deadlines = req.body.deadlines
+  const status = req.body.status
 
   const project = { name }
 
@@ -64,6 +65,7 @@ module.exports = ({ getDb, createError, ObjectID }) => async (req, res, next) =>
   }
 
   project.deadlines = deadlines || []
+  project.status = status || 'opened'
 
   const result = await db.collection('projects').insertOne(project)
   res.status(201).send({ _id: result.insertedId })

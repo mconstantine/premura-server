@@ -9,6 +9,7 @@ const { ObjectID } = require('mongodb')
 const loginGate = require('../misc/loginGate')
 const makeSendValidation = require('../misc/make-sendValidation')
 const catchExceptions = require('../misc/catchExceptions')
+const status = require('../misc/status')
 
 const makeCreateProject = require('./make-createProject')
 const makeValidateCreateProject = require('./make-validateCreateProject')
@@ -19,5 +20,5 @@ module.exports = endpoint({
   loginGate,
   sendValidation: makeSendValidation({ validationResult }),
   createProject: makeCreateProject({ getDb, createError, ObjectID }),
-  validateCreateProject: makeValidateCreateProject({ check })
+  validateCreateProject: makeValidateCreateProject({ check, status }),
 })

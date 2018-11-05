@@ -1,4 +1,4 @@
-module.exports = ({ check }) => [
+module.exports = ({ check, status }) => [
   check('name').trim()
   .not().isEmpty().withMessage('name is empty')
   .isString().withMessage('name should be a String'),
@@ -37,6 +37,10 @@ module.exports = ({ check }) => [
   check('deadlines.*').optional()
   .isISO8601().withMessage('deadlines should be valid ISO8601 dates')
   .isAfter(new Date().toISOString()).withMessage('deadlines should be in the future'),
+
+  check('status').optional()
+  .isString().withMessage('status should be a String')
+  .isIn(status).withMessage(`status should be one of ${status.join(', ')}`),
 
   check('terms')
   .not().exists().withMessage('this endpoint cannot operate on terms')
