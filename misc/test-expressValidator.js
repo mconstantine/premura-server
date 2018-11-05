@@ -1,15 +1,11 @@
-let _getCheckCall
+let whats, calls
 
-const getCheckCall = function(what) {
-  return _getCheckCall(what)
-}
+const check = function check(what) {
+  whats = whats || []
+  whats.push(what)
 
-const check = function(what) {
-  this.whats = this.whats || []
-  this.whats.push(what)
-
-  this.calls = this.calls || []
-  this.calls.push({
+  calls = calls || []
+  calls.push({
     trim: jest.fn(function() { return this }),
     not: jest.fn(function() { return this }),
     isEmpty: jest.fn(function() { return this }),
@@ -23,21 +19,35 @@ const check = function(what) {
     isBoolean: jest.fn(function() { return this }),
     isString: jest.fn(function() { return this }),
     isArray: jest.fn(function() { return this }),
+    isNumeric: jest.fn(function() { return this }),
+    isISO8601: jest.fn(function() { return this }),
+    isAfter: jest.fn(function() { return this }),
     exists: jest.fn(function() { return this })
   })
 
-  _getCheckCall = function(what) {
-    const callIndex = this.whats.indexOf(what)
-
-    if (callIndex < 0) {
-      return false
-    }
-
-    return this.calls[callIndex]
-  }
-
-  return this.calls[this.calls.length - 1]
+  return calls[calls.length - 1]
 }
 
-module.exports.check = check
-module.exports.getCheckCall = getCheckCall
+check.validate = function validate(what, ...expected) {
+  const call = getCheckCall(what)
+
+  Object.keys(call).forEach(foo => {
+    if (expected.includes(foo)) {
+      expect(call[foo]).toHaveBeenCalled()
+    } else {
+      expect(call[foo]).not.toHaveBeenCalled()
+    }
+  })
+}
+
+function getCheckCall(what) {
+  const callIndex = whats.indexOf(what)
+
+  if (callIndex < 0) {
+    return false
+  }
+
+  return calls[callIndex]
+}
+
+module.exports = check

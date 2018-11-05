@@ -1,22 +1,19 @@
 const makeValidateRemoveTerms = require('./make-validateRemoveTerms')
-const { check, getCheckCall } = require('../misc/test-expressValidator')
+const check = require('../misc/test-expressValidator')
 
 describe('validateRemoveTerms', () => {
   it('Should validate category ID', () => {
     makeValidateRemoveTerms({ check })
-    const call = getCheckCall('id')
-    expect(call.isMongoId).toHaveBeenCalled()
+    check.validate('id', 'isMongoId', 'withMessage')
   })
 
   it('Should validate terms', () => {
     makeValidateRemoveTerms({ check })
-    const call = getCheckCall('terms')
-    expect(call.isArray).toHaveBeenCalled()
+    check.validate('terms', 'isArray', 'withMessage')
   })
 
   it('Should validate terms IDs', () => {
     makeValidateRemoveTerms({ check })
-    const call = getCheckCall('terms.*._id')
-    expect(call.isMongoId).toHaveBeenCalled()
+    check.validate('terms.*._id', 'isMongoId', 'withMessage')
   })
 })

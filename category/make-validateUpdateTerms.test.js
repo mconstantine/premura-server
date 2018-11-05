@@ -1,38 +1,29 @@
 const makeValidateUpdateTerms = require('./make-validateUpdateTerms')
-const { check, getCheckCall } = require('../misc/test-expressValidator')
+const check = require('../misc/test-expressValidator')
 
 describe('validateUpdateTerms', () => {
   it('Should validate category ID', () => {
     makeValidateUpdateTerms({ check })
-    const call = getCheckCall('id')
-    expect(call.isMongoId).toHaveBeenCalled()
+    check.validate('id', 'isMongoId', 'withMessage')
   })
 
   it('Should validate terms', () => {
     makeValidateUpdateTerms({ check })
-    const call = getCheckCall('terms')
-    expect(call.isArray).toHaveBeenCalled()
+    check.validate('terms', 'isArray', 'withMessage')
   })
 
   it('Should validate terms IDs', () => {
     makeValidateUpdateTerms({ check })
-    const call = getCheckCall('terms.*._id')
-    expect(call.isMongoId).toHaveBeenCalled()
+    check.validate('terms.*._id', 'isMongoId', 'withMessage')
   })
 
   it('Should validate terms names', () => {
     makeValidateUpdateTerms({ check })
-    const call = getCheckCall('terms.*.name')
-    expect(call.trim).toHaveBeenCalled()
-    expect(call.not).toHaveBeenCalled()
-    expect(call.isEmpty).toHaveBeenCalled()
-    expect(call.isString).toHaveBeenCalled()
+    check.validate('terms.*.name', 'trim', 'not', 'isEmpty', 'isString', 'withMessage')
   })
 
   it('Should ensure that the user is not trying to update projects', () => {
     makeValidateUpdateTerms({ check })
-    const call = getCheckCall('terms.*.projects')
-    expect(call.not).toHaveBeenCalled()
-    expect(call.exists).toHaveBeenCalled()
+    check.validate('terms.*.projects', 'not', 'exists', 'withMessage')
   })
 })
