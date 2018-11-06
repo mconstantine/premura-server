@@ -51,4 +51,7 @@ describe('deleteUser', () => {
     expect(next).not.toHaveBeenCalled()
     expect(getDb.functions.deleteOne).toHaveBeenCalled()
   })
+
+  it.skip("Should remove user from projects' people", async () => {})
+  it.skip('Should remove projects that have this user as the only person', async () => {})
 })
