@@ -32,55 +32,21 @@ describe('createProject', () => {
   })
 
   it('Should always add the project creator to people', async () => {
-    const _id = 'someone else'
-    req.body = { name, people: [{ _id }] }
+    req.body = { name }
     await createProject(req, res, next)
     expect(getDb.functions.insertOne).toHaveBeenCalledWith(expect.objectContaining({
-      people: [
-        expect.objectContaining({ _id }),
-        expect.objectContaining({ _id: req.session.user._id })
-      ]
+      people: [expect.objectContaining({ _id: req.session.user._id })]
     }))
   })
 
-  it('Should check that people exist', async () => {
-    const _id = 'someone else'
-    req.body = { name, people: [{ _id }] }
+  it('Should assign the budget to the project creator if needed', async () => {
+    req.body = { name, budget: 42 }
     await createProject(req, res, next)
-    expect(getDb.functions.find).toHaveBeenLastCalledWith(
-      { _id: { $in: [new ObjectID(_id)] } },
-      expect.any(Object)
-    )
-  })
-
-  it('Should divide the budget between people if provided and not already divided', async () => {
-    // Not divided budget. We also test that odd numbers result in the first person having +1 budget
-    const _id = 'someone else'
-    req.body = {
-      name,
-      people: [{ _id }, { _id: req.session.user._id }],
-      budget: 21
-    }
-    await createProject(req, res, next)
-    expect(getDb.functions.insertOne).toHaveBeenLastCalledWith(expect.objectContaining({
-      people: [
-        expect.objectContaining({ budget: 11 }),
-        expect.objectContaining({ budget: 10 })
-      ]
-    }))
-
-    // Already divided budget
-    req.body = {
-      name,
-      people: [{ _id, budget: 5 }, { _id: req.session.user._id, budget: 16 }],
-      budget: 21
-    }
-    await createProject(req, res, next)
-    expect(getDb.functions.insertOne).toHaveBeenLastCalledWith(expect.objectContaining({
-      people: [
-        expect.objectContaining({ budget: 5 }),
-        expect.objectContaining({ budget: 16 })
-      ]
+    expect(getDb.functions.insertOne).toHaveBeenCalledWith(expect.objectContaining({
+      people: [expect.objectContaining({
+        _id: req.session.user._id,
+        budget: 42
+      })]
     }))
   })
 
