@@ -66,6 +66,14 @@ describe('createProject', () => {
     }))
   })
 
+  it('Should set the status to opened by default', async () => {
+    req.body = { name }
+    await createProject(req, res, next)
+    expect(getDb.functions.insertOne).toHaveBeenLastCalledWith(expect.objectContaining({
+      status: 'opened'
+    }))
+  })
+
   it('Should return the inserted ID', async () => {
     res.send.mockClear()
     req.body = { name }

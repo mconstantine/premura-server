@@ -37,4 +37,9 @@ describe('validateCreateProject', () => {
     makeValidateCreateProject({ check, status })
     check.validate('terms', 'not', 'exists', 'withMessage')
   })
+
+  it('Should validate status', () => {
+    makeValidateCreateProject({ check, status })
+    check.validate('status', 'optional', 'isIn', 'isString', 'withMessage')
+  })
 })
