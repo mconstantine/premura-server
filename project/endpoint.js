@@ -7,6 +7,7 @@ module.exports = ({
   getProject,
   createProject,
   updateProject,
+  deleteProject,
   validateCreateProject,
   validateUpdateProject,
   validateGetProjects
@@ -17,3 +18,4 @@ router
 .get('/:id', catchExceptions(getProject))
 .post('/', validateCreateProject, sendValidation, catchExceptions(createProject))
 .put('/:id', validateUpdateProject, sendValidation, catchExceptions(updateProject))
+.delete('/:id', catchExceptions(deleteProject))
