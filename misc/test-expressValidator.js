@@ -30,6 +30,7 @@ const check = function check(what) {
 
 check.validate = function validate(what, ...expected) {
   const call = getCheckCall(what)
+  expect(call).toEqual(expect.any(Object))
 
   Object.keys(call).forEach(foo => {
     if (expected.includes(foo)) {

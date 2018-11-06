@@ -15,7 +15,9 @@ describe('project endpoint', () => {
     const paths = {
       loginGate: 'loginGate',
       createProject: 'createProject',
+      updateProject: 'updateProject',
       validateCreateProject: 'validateCreateProject',
+      validateUpdateProject: 'validateUpdateProject',
       sendValidation: 'sendValidation'
     }
 
@@ -24,6 +26,9 @@ describe('project endpoint', () => {
     expect(router.use.mock.calls[0]).toEqual([paths.loginGate])
     expect(router.post.mock.calls[0]).toEqual([
       '/', paths.validateCreateProject, paths.sendValidation, paths.createProject
+    ])
+    expect(router.put.mock.calls[0]).toEqual([
+      '/:id', paths.validateUpdateProject, paths.sendValidation, paths.updateProject
     ])
   })
 })

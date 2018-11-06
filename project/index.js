@@ -12,7 +12,9 @@ const catchExceptions = require('../misc/catchExceptions')
 const status = require('../misc/status')
 
 const makeCreateProject = require('./make-createProject')
+const makeUpdateProject = require('./make-updateProject')
 const makeValidateCreateProject = require('./make-validateCreateProject')
+const makeValidateUpdateProject = require('./make-validateUpdateProject')
 
 module.exports = endpoint({
   catchExceptions,
@@ -20,5 +22,7 @@ module.exports = endpoint({
   loginGate,
   sendValidation: makeSendValidation({ validationResult }),
   createProject: makeCreateProject({ getDb }),
+  updateProject: makeUpdateProject({ getDb, ObjectID, createError }),
   validateCreateProject: makeValidateCreateProject({ check, status }),
+  validateUpdateProject: makeValidateUpdateProject({ check, status })
 })
