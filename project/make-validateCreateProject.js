@@ -20,10 +20,6 @@ module.exports = ({ check, status }) => [
   check('deadlines')
   .not().exists().withMessage('this endpoint cannot operate on deadlines'),
 
-  check('status').optional()
-  .isString().withMessage('status should be a String')
-  .isIn(status).withMessage(`status should be one of ${status.join(', ')}`),
-
   check('terms')
   .not().exists().withMessage('this endpoint cannot operate on terms')
 ]
