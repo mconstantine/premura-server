@@ -1,4 +1,4 @@
-module.exports = ({ getDb, createError, ObjectID }) => async (req, res, next) => {
+module.exports = ({ getDb }) => async (req, res) => {
   const db = await getDb()
   const name = req.body.name
   const description = req.body.description

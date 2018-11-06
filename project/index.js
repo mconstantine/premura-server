@@ -19,6 +19,6 @@ module.exports = endpoint({
   router,
   loginGate,
   sendValidation: makeSendValidation({ validationResult }),
-  createProject: makeCreateProject({ getDb, createError, ObjectID }),
+  createProject: makeCreateProject({ getDb }),
   validateCreateProject: makeValidateCreateProject({ check, status }),
 })
