@@ -5,9 +5,8 @@ const ObjectID = require('../misc/test-ObjectID')
 describe('getProject', () => {
   const createError = (code, message) => [code, message]
   const sensitiveInformationProjection = { test: true }
-  const schema = []
   const getProject = makeGetProject({
-    getDb, ObjectID, createError, sensitiveInformationProjection, schema
+    getDb, ObjectID, createError, sensitiveInformationProjection
   })
   const id = '1234567890abcdef'
   const req = { params: { id } }

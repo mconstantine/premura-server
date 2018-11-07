@@ -33,17 +33,16 @@ module.exports = ({
       res, { [`users.${key}`]: sensitiveInformationProjection[key] }
     ), {})
   }, {
-    $group: Object.assign({
+    $group: {
       _id: '$_id',
       people: { $push: '$people' },
       users: { $push: '$users' },
-    }, schema.reduce((res, key) => {
-      if (key !== '_id' && key !== 'people') {
-        res[key] = { $first: '$' + key }
-      }
-
-      return res
-    }, {}))
+      name: { $first: '$name' },
+      description: { $first: '$description' },
+      deadlines: { $first: '$deadlines' },
+      status: { $first: '$status' },
+      budget: { $first: '$budget' }
+    }
   }])
   .toArray()
 
