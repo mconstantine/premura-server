@@ -1,5 +1,5 @@
 const results = {}
-let lastResult
+let lastResult, currentCollection
 
 const Collection = {
   find: jest.fn(() => Collection),
@@ -12,14 +12,21 @@ const Collection = {
   toArray: jest.fn(() => results[lastResult])
 }
 
-const collection = () => Collection
+const collection = (collectionName) => {
+  currentCollection = collectionName
+  return Collection
+}
+
 const getDb = () => ({ collection })
 
 getDb.functions = Collection
 getDb.getResult = key => results[key]
+
 getDb.setResult = (key, value) => {
   lastResult = key
   results[key] = value
 }
+
+getDb.getCurrentCollection = () => currentCollection
 
 module.exports = getDb

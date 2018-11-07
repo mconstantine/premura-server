@@ -13,17 +13,19 @@ const status = require('../misc/status')
 const cursorify = require('../misc/cursorify')
 const createFindFilters = require('../misc/createFindFilters')
 const sensitiveInformationProjection = require('../user/sensitiveInformationProjection')
-const makeGetProjectFromDB = require('./make-getProjectFromDb')
+const makeGetProjectFromDb = require('./make-getProjectFromDb')
+const getProjectFromDb = makeGetProjectFromDb({ sensitiveInformationProjection })
 
-const getProjectFromDB = makeGetProjectFromDB({ sensitiveInformationProjection })
 const makeGetProjects = require('./make-getProjects')
 const makeGetProject = require('./make-getProject')
 const makeCreateProject = require('./make-createProject')
 const makeUpdateProject = require('./make-updateProject')
 const makeDeleteProject = require('./make-deleteProject')
+const makeAddPeople = require('./make-addPeople')
 const makeValidateCreateProject = require('./make-validateCreateProject')
 const makeValidateUpdateProject = require('./make-validateUpdateProject')
 const makeValidateGetProjects = require('./make-validateGetProjects')
+const makeValidateAddPeople = require('./make-validateAddPeople')
 
 module.exports = endpoint({
   catchExceptions,
@@ -31,11 +33,13 @@ module.exports = endpoint({
   loginGate,
   sendValidation: makeSendValidation({ validationResult }),
   getProjects: makeGetProjects({ getDb, ObjectID, cursorify, createFindFilters }),
-  getProject: makeGetProject({ getDb, ObjectID, createError, getProjectFromDB }),
+  getProject: makeGetProject({ getDb, ObjectID, createError, getProjectFromDb }),
   createProject: makeCreateProject({ getDb }),
   updateProject: makeUpdateProject({ getDb, ObjectID, createError }),
   deleteProject: makeDeleteProject({ getDb, ObjectID, createError }),
+  addPeople: makeAddPeople({ getDb, ObjectID, createError, getProjectFromDb }),
   validateCreateProject: makeValidateCreateProject({ check, status }),
   validateUpdateProject: makeValidateUpdateProject({ check, status }),
-  validateGetProjects: makeValidateGetProjects({ check, status })
+  validateGetProjects: makeValidateGetProjects({ check, status }),
+  validateAddPeople: makeValidateAddPeople({ check })
 })
