@@ -4,10 +4,10 @@ const ObjectID = require('../misc/test-ObjectID')
 
 describe('getProject', () => {
   const createError = (httpCode, message) => [httpCode, message]
-  let getProjectFromDBResult = { test: true }
-  const getProjectFromDB = jest.fn(() => getProjectFromDBResult)
+  let getProjectFromDbResult = { test: true }
+  const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
   const getProject = makeGetProject({
-    getDb, ObjectID, createError, getProjectFromDB
+    getDb, ObjectID, createError, getProjectFromDb
   })
   const id = '1234567890abcdef'
   const req = { params: { id } }
@@ -31,15 +31,15 @@ describe('getProject', () => {
 
   it('Should check that the project exist', async () => {
     next.mockClear()
-    getProjectFromDBResult = false
+    getProjectFromDbResult = false
     await getProject(req, res, next)
     expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
-    getProjectFromDBResult = { test: true }
+    getProjectFromDbResult = { test: true }
   })
 
   it('Should return the project', async () => {
     res.send.mockClear()
     await getProject(req, res, next)
-    expect(res.send).toHaveBeenLastCalledWith(getProjectFromDBResult)
+    expect(res.send).toHaveBeenLastCalledWith(getProjectFromDbResult)
   })
 })
