@@ -5,7 +5,10 @@ const ObjectID = require('../misc/test-ObjectID')
 describe('getProject', () => {
   const createError = (code, message) => [code, message]
   const sensitiveInformationProjection = { test: true }
-  const getProject = makeGetProject({ getDb, ObjectID, createError, sensitiveInformationProjection })
+  const schema = []
+  const getProject = makeGetProject({
+    getDb, ObjectID, createError, sensitiveInformationProjection, schema
+  })
   const id = '1234567890abcdef'
   const req = { params: { id } }
   const res = { status: jest.fn(() => res), send: jest.fn() }

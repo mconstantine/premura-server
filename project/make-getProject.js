@@ -1,5 +1,5 @@
 module.exports = ({
-  getDb, ObjectID, createError, sensitiveInformationProjection
+  getDb, ObjectID, createError, sensitiveInformationProjection, schema
 }) => async (req, res, next) => {
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
@@ -33,11 +33,17 @@ module.exports = ({
       res, { [`users.${key}`]: sensitiveInformationProjection[key] }
     ), {})
   }, {
-    $group: {
+    $group: Object.assign({
       _id: '$_id',
       people: { $push: '$people' },
-      users: { $push: '$users' }
-    }
+      users: { $push: '$users' },
+    }, schema.reduce((res, key) => {
+      if (key !== '_id' && key !== 'people') {
+        res[key] = { $first: '$' + key }
+      }
+
+      return res
+    }, {}))
   }])
   .toArray()
 
