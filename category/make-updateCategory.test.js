@@ -3,7 +3,7 @@ const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
 
 describe('updateCategory', () => {
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   const category = {
     _id: '1234567890abcdef',
     name: 'category name',

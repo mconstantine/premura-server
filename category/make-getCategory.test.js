@@ -3,7 +3,7 @@ const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
 
 describe('getCategory', () => {
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   const req = { params: { id: '1234567890abcdef' } }
   const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()

@@ -45,22 +45,22 @@ app.get('/', (req, res) => res.send('Hello ' + JSON.stringify(req.session)))
   if (error instanceof Error) {
     res.setHeader('Content-Type', 'text/plain')
 
-    if (error.code || error.message) {
-      const code = !isNaN(parseInt(error.code)) ? error.code : 500
+    if (error.httpCode || error.message) {
+      const httpCode = !isNaN(parseInt(error.httpCode)) ? error.httpCode : 500
 
-      if (code !== 500 || error.send) {
+      if (httpCode !== 500 || error.send) {
         // Code and message
         return res
-          .status(error.code)
+          .status(error.httpCode)
           .send(error.message + (error.body ? `\n${JSON.stringify(error.body)}` : ''))
       } else {
         // Message only, probably a Node error
         console.log(error.message)
-        return res.status(code).end()
+        return res.status(httpCode).end()
       }
     }
 
-    // No code, no message
+    // No httpCode, no message
     console.log(error)
     return res.status(500).end()
   }

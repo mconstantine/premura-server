@@ -3,7 +3,7 @@ const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
 
 describe('getProject', () => {
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   let getProjectFromDBResult = { test: true }
   const getProjectFromDB = jest.fn(() => getProjectFromDBResult)
   const getProject = makeGetProject({

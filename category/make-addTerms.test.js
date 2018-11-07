@@ -6,7 +6,7 @@ describe('addTerms', () => {
   const updateOne = jest.fn()
   const collection = () => ({ findOne, updateOne })
   const getDb = () => ({ collection })
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
 
   class ObjectID {
     constructor(string) {

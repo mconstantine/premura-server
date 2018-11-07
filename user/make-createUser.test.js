@@ -17,7 +17,7 @@ describe('createUser', () => {
   }
 
   const bcrypt = { hash: jest.fn(x => x) }
-  const createError = jest.fn((code, message) => [code, message])
+  const createError = jest.fn((httpCode, message) => [httpCode, message])
   const req = { session: { user: { role: 'master' } } }
   const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()

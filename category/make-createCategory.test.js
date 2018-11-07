@@ -7,7 +7,7 @@ describe('createCategory', () => {
   const findOne = jest.fn(() => findOneResult)
   const collection = () => ({ insertOne, findOne })
   const getDb = () => ({ collection })
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   const createCategory = makeCreateCategory({ getDb, createError })
   const req = {}
   const res = { status: jest.fn(() => res), send: jest.fn(() => res) }

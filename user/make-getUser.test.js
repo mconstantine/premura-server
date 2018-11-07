@@ -3,7 +3,7 @@ const makeGetUser = require('./make-getUser')
 const ObjectID = require('../misc/test-ObjectID')
 
 describe('getUser', () => {
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   const sensitiveInformationProjection = { test: true }
 
   const id = '1234567890abcdef'

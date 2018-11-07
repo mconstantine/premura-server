@@ -7,7 +7,7 @@ describe('deleteUser', () => {
   const _id = '1234567890abcdef'
   const req = { params: { id: _id }, session: { user: { role: 'master' } } }
   const next = jest.fn()
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   const res = { status: jest.fn(() => res), send: jest.fn(), end: () => {} }
   const deleteUser = makeDeleteUser({ createError, getDb, ObjectID, roles })
 

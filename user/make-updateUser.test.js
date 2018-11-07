@@ -9,7 +9,7 @@ describe('updateUser', () => {
   const id = '1234567890abcdef'
   const req = { params: { id }, session: {} }
   const next = jest.fn()
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   const bcrypt = { hash: jest.fn(() => '3ncrypt3d') }
   const sensitiveInformationProjection = 'sensitiveInformationProjection'
   const updateUser = makeUpdateUser({

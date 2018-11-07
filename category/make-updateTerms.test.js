@@ -3,7 +3,7 @@ const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
 
 describe('updateTerms', () => {
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   const genTerms = () => [{
     _id: 'termoneid',
     name: 'Term one'

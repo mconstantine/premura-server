@@ -3,7 +3,7 @@ const makeLogin = require('./make-login')
 
 describe('login', () => {
   let compareReturnValue
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   const bcrypt = { compare: jest.fn(() => compareReturnValue) }
   const login = makeLogin({ bcrypt, createError, getDb })
 

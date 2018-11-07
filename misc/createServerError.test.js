@@ -6,10 +6,10 @@ describe('createServerError', () => {
     expect(error).toBeInstanceOf(Error)
   })
 
-  it('Should create an error with a code', () => {
+  it('Should create an error with an httpCode', () => {
     const error = createServerError(42, 'The question is wrong.')
-    expect(error).toHaveProperty('code')
-    expect(error.code).toBe(42)
+    expect(error).toHaveProperty('httpCode')
+    expect(error.httpCode).toBe(42)
   })
 
   it('Should create an error with a message', () => {

@@ -4,7 +4,7 @@ const ObjectID = require('../misc/test-ObjectID')
 
 describe('addPeople', () => {
   let getProjectFromDbResult = { test: true }
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   const getProjectFromDb = () => getProjectFromDbResult
   const addPeople = makeAddPeople({ getDb, ObjectID, createError, getProjectFromDb })
   const id = '1234567890abcdef'

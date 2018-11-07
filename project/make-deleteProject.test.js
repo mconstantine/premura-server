@@ -3,7 +3,7 @@ const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
 
 describe('deleteProject', () => {
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   const deleteProject = makeDeleteProject({ getDb, ObjectID, createError })
   const id = '1234567890abcdef'
   const req = { params: { id } }
