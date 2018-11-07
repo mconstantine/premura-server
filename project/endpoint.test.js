@@ -19,6 +19,7 @@ describe('project endpoint', () => {
       createProject: 'createProject',
       updateProject: 'updateProject',
       deleteProject: 'deleteProject',
+      addPeople: 'addPeople',
       validateCreateProject: 'validateCreateProject',
       validateUpdateProject: 'validateUpdateProject',
       validateGetProjects: 'validateGetProjects',
