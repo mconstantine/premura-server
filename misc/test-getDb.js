@@ -3,6 +3,7 @@ let lastResult
 
 const Collection = {
   find: jest.fn(() => Collection),
+  aggregate: jest.fn(() => Collection),
   findOne: jest.fn(() => results.findOne),
   updateOne: jest.fn(() => results.updateOne),
   insertOne: jest.fn(() => results.insertOne),
