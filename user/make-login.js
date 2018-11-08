@@ -7,7 +7,7 @@ module.exports = ({ bcrypt, createError, getDb }) => async (req, res, next) => {
   })
 
   if (!user) {
-    return next(createError(400, 'user not found'))
+    return next(createError(404, 'user not found'))
   }
 
   if (!await bcrypt.compare(password, user.password)) {
