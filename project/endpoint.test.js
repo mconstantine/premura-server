@@ -23,7 +23,7 @@ describe('project endpoint', () => {
       validateCreateProject: 'validateCreateProject',
       validateUpdateProject: 'validateUpdateProject',
       validateGetProjects: 'validateGetProjects',
-      validateAddPeople: 'validateAddPeople',
+      validateEditPeople: 'validateEditPeople',
       sendValidation: 'sendValidation'
     }
 
@@ -38,7 +38,7 @@ describe('project endpoint', () => {
       '/', paths.validateCreateProject, paths.sendValidation, paths.createProject
     ])
     expect(router.post.mock.calls[1]).toEqual([
-      '/:id/people', paths.validateAddPeople, paths.sendValidation, paths.addPeople
+      '/:id/people', paths.validateEditPeople, paths.sendValidation, paths.addPeople
     ])
     expect(router.put.mock.calls[0]).toEqual([
       '/:id', paths.validateUpdateProject, paths.sendValidation, paths.updateProject

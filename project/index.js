@@ -22,10 +22,11 @@ const makeCreateProject = require('./make-createProject')
 const makeUpdateProject = require('./make-updateProject')
 const makeDeleteProject = require('./make-deleteProject')
 const makeAddPeople = require('./make-addPeople')
+const makeUpdatePeople = require('./make-updatePeople')
 const makeValidateCreateProject = require('./make-validateCreateProject')
 const makeValidateUpdateProject = require('./make-validateUpdateProject')
 const makeValidateGetProjects = require('./make-validateGetProjects')
-const makeValidateAddPeople = require('./make-validateAddPeople')
+const makeValidateEditPeople = require('./make-validateEditPeople')
 
 module.exports = endpoint({
   catchExceptions,
@@ -41,5 +42,5 @@ module.exports = endpoint({
   validateCreateProject: makeValidateCreateProject({ check, status }),
   validateUpdateProject: makeValidateUpdateProject({ check, status }),
   validateGetProjects: makeValidateGetProjects({ check, status }),
-  validateAddPeople: makeValidateAddPeople({ check })
+  validateEditPeople: makeValidateEditPeople({ check })
 })
