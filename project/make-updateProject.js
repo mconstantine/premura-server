@@ -33,7 +33,7 @@ module.exports = ({ getDb, ObjectID, createError }) => async (req, res, next) =>
 
     const isBudgetOk = doPeopleHaveBudget && (() => {
       const expected = update.budget
-      const actual = project.people.reduce((res, person) => res + person.budget, 0)
+      const actual = project.people.reduce((res, person) => res + person.budget || 0, 0)
       return expected === actual
     })()
 
