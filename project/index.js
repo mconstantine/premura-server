@@ -23,6 +23,7 @@ const makeUpdateProject = require('./make-updateProject')
 const makeDeleteProject = require('./make-deleteProject')
 const makeAddPeople = require('./make-addPeople')
 const makeUpdatePeople = require('./make-updatePeople')
+const makeRemovePeople = require('./make-removePeople')
 const makeValidateCreateProject = require('./make-validateCreateProject')
 const makeValidateUpdateProject = require('./make-validateUpdateProject')
 const makeValidateGetProjects = require('./make-validateGetProjects')
@@ -40,6 +41,7 @@ module.exports = endpoint({
   deleteProject: makeDeleteProject({ getDb, ObjectID, createError }),
   addPeople: makeAddPeople({ getDb, ObjectID, createError, getProjectFromDb }),
   updatePeople: makeUpdatePeople({ getDb, ObjectID, createError, getProjectFromDb }),
+  removePeople: makeRemovePeople({ getDb, ObjectID, createError, getProjectFromDb }),
   validateCreateProject: makeValidateCreateProject({ check, status }),
   validateUpdateProject: makeValidateUpdateProject({ check, status }),
   validateGetProjects: makeValidateGetProjects({ check, status }),
