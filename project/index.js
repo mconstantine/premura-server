@@ -15,6 +15,8 @@ const createFindFilters = require('../misc/createFindFilters')
 const sensitiveInformationProjection = require('../user/sensitiveInformationProjection')
 const makeGetProjectFromDb = require('./make-getProjectFromDb')
 const getProjectFromDb = makeGetProjectFromDb({ sensitiveInformationProjection })
+const makeUserCanReadProject = require('./make-userCanReadProject')
+const userCanReadProject = makeUserCanReadProject({ ObjectID })
 
 const makeGetProjects = require('./make-getProjects')
 const makeGetProject = require('./make-getProject')
@@ -35,7 +37,7 @@ module.exports = endpoint({
   loginGate,
   sendValidation: makeSendValidation({ validationResult }),
   getProjects: makeGetProjects({ getDb, ObjectID, cursorify, createFindFilters }),
-  getProject: makeGetProject({ getDb, ObjectID, createError, getProjectFromDb }),
+  getProject: makeGetProject({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject }),
   createProject: makeCreateProject({ getDb }),
   updateProject: makeUpdateProject({ getDb, ObjectID, createError }),
   deleteProject: makeDeleteProject({ getDb, ObjectID, createError }),

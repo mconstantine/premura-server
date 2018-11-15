@@ -1,5 +1,5 @@
 module.exports = ({
-  getDb, ObjectID, createError, getProjectFromDb
+  getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
 }) => async (req, res, next) => {
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
@@ -21,8 +21,7 @@ module.exports = ({
     return next(createError(404, 'project not found'))
   }
 
-  const currentUserId = new ObjectID(req.session.user._id)
-  if (!project.people.find(person => person._id.equals(currentUserId))) {
+  if (!userCanReadProject(req.session.user, project)) {
     return next(createError(404, 'project not found'))
   }
 
