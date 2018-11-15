@@ -3,10 +3,12 @@ const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
 
 describe('deleteProject', () => {
+  let userCanReadProjectResult = true
+  const userCanReadProject = () => userCanReadProjectResult
   const createError = (httpCode, message) => [httpCode, message]
-  const deleteProject = makeDeleteProject({ getDb, ObjectID, createError })
+  const deleteProject = makeDeleteProject({ getDb, ObjectID, createError, userCanReadProject })
   const id = '1234567890abcdef'
-  const req = { params: { id } }
+  const req = { session: { user: { _id: 'me' } }, params: { id } }
   const res = { status: jest.fn(() => res), send: jest.fn(), end: jest.fn() }
   const next = jest.fn()
 
@@ -45,6 +47,14 @@ describe('deleteProject', () => {
     res.end.mockClear()
     await deleteProject(req, res, next)
     expect(res.end).toHaveBeenCalled()
+  })
+
+  it("Should return 404 if the user can't read the project", async () => {
+    userCanReadProjectResult = false
+    next.mockClear()
+    await deleteProject(req, res, next)
+    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
+    userCanReadProjectResult = true
   })
 
   it.skip("Should remove project from the terms' projects", async () => {})

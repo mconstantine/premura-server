@@ -1,4 +1,4 @@
-module.exports = ({ getDb, ObjectID, createError }) => async (req, res, next) => {
+module.exports = ({ getDb, ObjectID, createError, userCanReadProject }) => async (req, res, next) => {
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
       errors: [{
@@ -15,6 +15,10 @@ module.exports = ({ getDb, ObjectID, createError }) => async (req, res, next) =>
   const project = await collection.findOne({ _id })
 
   if (!project) {
+    return next(createError(404, 'project not found'))
+  }
+
+  if (!userCanReadProject(req.session.user, project)) {
     return next(createError(404, 'project not found'))
   }
 
