@@ -39,7 +39,7 @@ module.exports = endpoint({
   getProjects: makeGetProjects({ getDb, ObjectID, cursorify, createFindFilters }),
   getProject: makeGetProject({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject }),
   createProject: makeCreateProject({ getDb }),
-  updateProject: makeUpdateProject({ getDb, ObjectID, createError }),
+  updateProject: makeUpdateProject({ getDb, ObjectID, createError, userCanReadProject }),
   deleteProject: makeDeleteProject({ getDb, ObjectID, createError, userCanReadProject }),
   addPeople: makeAddPeople({ getDb, ObjectID, createError, getProjectFromDb }),
   updatePeople: makeUpdatePeople({ getDb, ObjectID, createError, getProjectFromDb }),

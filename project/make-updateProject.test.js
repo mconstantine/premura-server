@@ -3,10 +3,12 @@ const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
 
 describe('updateProject', () => {
+  let userCanReadProjectResult = true
+  const userCanReadProject = () => userCanReadProjectResult
   const createError = (httpCode, message) => [httpCode, message]
-  const updateProject = makeUpdateProject({ getDb, ObjectID, createError })
+  const updateProject = makeUpdateProject({ getDb, ObjectID, createError, userCanReadProject })
   const id = '1234567890abcdef'
-  const req = { params: { id }, body: {} }
+  const req = { session: { user: { _id: 'me' } }, params: { id }, body: {} }
   const res = { send: jest.fn() }
   const next = jest.fn()
 
@@ -25,6 +27,14 @@ describe('updateProject', () => {
     expect(getDb.functions.findOne).toHaveBeenLastCalledWith({ _id: new ObjectID(id) })
     expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
     getDb.setResult('findOne', project)
+  })
+
+  it("Should return 404 if the user can't read the project", async () => {
+    userCanReadProjectResult = false
+    next.mockClear()
+    await updateProject(req, res, next)
+    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
+    userCanReadProjectResult = true
   })
 
   it('Should not update if no update is provided', async () => {
