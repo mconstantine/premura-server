@@ -26,6 +26,13 @@ module.exports = ({ getDb, ObjectID, cursorify, createFindFilters }) => async (r
     filters.deadlines = { $gte: new Date(req.query.after) }
   }
 
+  filters = {
+    $and: [
+      { 'people._id': { $all: [new ObjectID(req.session.user._id)] } },
+      filters
+    ]
+  }
+
   const query = collection.find(filters)
   const options = await cursorify(req, res, query)
   const projects = await collection.find(filters, options).toArray()
