@@ -9,7 +9,7 @@ describe('getProject', () => {
   let getProjectFromDbResult = { test: true }
 
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
-  const userCanReadProject = jest.fn(() => userCanReadProjectResult)
+  const userCanReadProject = () => userCanReadProjectResult
   const getProject = makeGetProject({
     getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
   })
