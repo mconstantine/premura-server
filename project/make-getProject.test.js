@@ -4,13 +4,18 @@ const ObjectID = require('../misc/test-ObjectID')
 
 describe('getProject', () => {
   const createError = (httpCode, message) => [httpCode, message]
-  let getProjectFromDbResult = { test: true }
+
+  const projectPerson = new ObjectID('me')
+  let getProjectFromDbResult = {
+    people: [{ _id: projectPerson }]
+  }
+
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
   const getProject = makeGetProject({
     getDb, ObjectID, createError, getProjectFromDb
   })
   const id = '1234567890abcdef'
-  const req = { params: { id } }
+  const req = { session: { user: { _id: 'me' } }, params: { id } }
   const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
 
@@ -31,15 +36,24 @@ describe('getProject', () => {
 
   it('Should check that the project exist', async () => {
     next.mockClear()
+    const originalGetProjectFromDbResult = getProjectFromDbResult
     getProjectFromDbResult = false
     await getProject(req, res, next)
     expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
-    getProjectFromDbResult = { test: true }
+    getProjectFromDbResult = originalGetProjectFromDbResult
   })
 
   it('Should return the project', async () => {
     res.send.mockClear()
     await getProject(req, res, next)
     expect(res.send).toHaveBeenLastCalledWith(getProjectFromDbResult)
+  })
+
+  it('Should return 404 if the current user is not assigned to the project', async () => {
+    next.mockClear()
+    getProjectFromDbResult.people[0]._id = new ObjectID('not me')
+    await getProject(req, res, next)
+    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
+    getProjectFromDbResult.people[0]._id = projectPerson
   })
 })

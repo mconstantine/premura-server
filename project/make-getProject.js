@@ -21,5 +21,10 @@ module.exports = ({
     return next(createError(404, 'project not found'))
   }
 
+  const currentUserId = new ObjectID(req.session.user._id)
+  if (!project.people.find(person => person._id.equals(currentUserId))) {
+    return next(createError(404, 'project not found'))
+  }
+
   return res.send(project)
 }
