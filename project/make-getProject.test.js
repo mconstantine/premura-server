@@ -6,10 +6,7 @@ describe('getProject', () => {
   const createError = (httpCode, message) => [httpCode, message]
 
   let userCanReadProjectResult = true
-  const projectPerson = new ObjectID('me')
-  let getProjectFromDbResult = {
-    people: [{ _id: projectPerson }]
-  }
+  let getProjectFromDbResult = { test: true }
 
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
   const userCanReadProject = jest.fn(() => userCanReadProjectResult)
@@ -54,10 +51,8 @@ describe('getProject', () => {
   it("Should return 404 if the current user can't read the project", async () => {
     next.mockClear()
     userCanReadProjectResult = false
-    getProjectFromDbResult.people[0]._id = new ObjectID('not me')
     await getProject(req, res, next)
     expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
-    getProjectFromDbResult.people[0]._id = projectPerson
     userCanReadProjectResult = true
   })
 })
