@@ -3,10 +3,14 @@ const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
 
 describe('updatePeople', () => {
+  let userCanReadProjectResult = true
+  const userCanReadProject = () => userCanReadProjectResult
   const createError = (httpCode, message) => [httpCode, message]
   const getProjectFromDbResult = { test: true }
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
-  const updatePeople = makeUpdatePeople({ getDb, ObjectID, createError, getProjectFromDb })
+  const updatePeople = makeUpdatePeople({
+    getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
+  })
 
   const people = [
     { _id: 'personone' },
@@ -14,7 +18,7 @@ describe('updatePeople', () => {
   ]
 
   const id = '1234567890abcdef'
-  const req = { params: { id }, body: { people } }
+  const req = { session: { user: { _id: 'me' } }, params: { id }, body: { people } }
   const res = { send: jest.fn() }
   const next = jest.fn()
 
@@ -31,6 +35,14 @@ describe('updatePeople', () => {
     expect(getDb.functions.findOne).toHaveBeenLastCalledWith({
       _id: new ObjectID(id)
     })
+  })
+
+  it("Should return 404 if the user can't read the project", async () => {
+    userCanReadProjectResult = false
+    next.mockClear()
+    await updatePeople(req, res, next)
+    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
+    userCanReadProjectResult = true
   })
 
   it('Should check that the people are assigned to the project', async () => {

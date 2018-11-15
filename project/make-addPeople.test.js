@@ -3,19 +3,21 @@ const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
 
 describe('addPeople', () => {
+  let userCanReadProjectResult = true
   let getProjectFromDbResult = { test: true }
+  const userCanReadProject = () => userCanReadProjectResult
   const createError = (httpCode, message) => [httpCode, message]
   const getProjectFromDb = () => getProjectFromDbResult
-  const addPeople = makeAddPeople({ getDb, ObjectID, createError, getProjectFromDb })
+  const addPeople = makeAddPeople({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject })
   const id = '1234567890abcdef'
   const req = {
+    session: { user: { _id: 'me' } },
     params: { id },
     body: {
-      people: [{
-        _id: 'someuserid'
-      }, {
-        _id: 'anotheruserid'
-      }]
+      people: [
+        { _id: 'someuserid' },
+        { _id: 'anotheruserid' }
+      ]
     }
   }
 
@@ -35,6 +37,14 @@ describe('addPeople', () => {
     await addPeople(req, res, next)
     expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
     getDb.setResult('findOne', project)
+  })
+
+  it("Should return 404 if the user can't read the project", async () => {
+    userCanReadProjectResult = false
+    next.mockClear()
+    await addPeople(req, res, next)
+    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
+    userCanReadProjectResult = true
   })
 
   it('Should check that people exist', async () => {

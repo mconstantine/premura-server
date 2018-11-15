@@ -3,10 +3,14 @@ const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
 
 describe('removePeople', () => {
+  let userCanReadProjectResult = true
+  const userCanReadProject = () => userCanReadProjectResult
   const createError = (code, message) => [code, message]
   const getProjectFromDbResult = { test: true }
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
-  const removePeople = makeRemovePeople({ getDb, ObjectID, createError, getProjectFromDb })
+  const removePeople = makeRemovePeople({
+    getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
+  })
 
   const people = [
     { _id: 'someuserid' },
@@ -25,7 +29,7 @@ describe('removePeople', () => {
   const prepare = () => getDb.setResult('findOne', getProject())
   const next = jest.fn()
   const id = '1234567890abcdef'
-  const req = { params: { id }, body: { people } }
+  const req = { session: { user: { _id: 'me' } }, params: { id }, body: { people } }
   const res = { send: jest.fn() }
 
   it('Should work', async () => {
@@ -44,6 +48,15 @@ describe('removePeople', () => {
     await removePeople(req, res, next)
     expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
     expect(res.send).not.toHaveBeenCalled()
+    getDb.setResult('findOne', getProject())
+  })
+
+  it("Should return 404 if the user can't read the project", async () => {
+    userCanReadProjectResult = false
+    next.mockClear()
+    await removePeople(req, res, next)
+    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
+    userCanReadProjectResult = true
   })
 
   it('Should ensure that at least one person is assigned', async () => {
