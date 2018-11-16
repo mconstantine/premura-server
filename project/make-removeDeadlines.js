@@ -29,5 +29,5 @@ module.exports = ({
     $set: { deadlines: remainingDeadlines }
   })
 
-  return res.send(await getProjectFromDb(collection, _id))
+  return res.send(await getProjectFromDb(db, _id))
 }

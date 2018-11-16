@@ -72,5 +72,5 @@ module.exports = ({
     })
   }
 
-  return res.send(await getProjectFromDb(projectsCollection, project_id))
+  return res.send(await getProjectFromDb(db, project_id))
 }

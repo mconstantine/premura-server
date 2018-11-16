@@ -14,8 +14,7 @@ module.exports = ({
 
   const _id = new ObjectID(req.params.id)
   const db = await getDb()
-  const collection = db.collection('projects')
-  const project = await getProjectFromDb(collection, _id)
+  const project = await getProjectFromDb(db, _id)
 
   if (!project) {
     return next(createError(404, 'project not found'))

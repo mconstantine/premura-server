@@ -1,5 +1,5 @@
-module.exports = ({ sensitiveInformationProjection }) => async (collection, _id) => {
-  const projects = await collection.aggregate([{
+module.exports = ({ sensitiveInformationProjection }) => async (db, _id) => {
+  const projects = await db.collection('projects').aggregate([{
     $match: { _id }
   }, {
     $unwind: '$people'
@@ -34,5 +34,24 @@ module.exports = ({ sensitiveInformationProjection }) => async (collection, _id)
     return false
   }
 
-  return projects[0]
+  const project = projects[0]
+  const categories = await db.collection('categories').aggregate([{
+    $unwind: '$terms'
+  }, {
+    $match: {
+      'terms.projects': project._id
+    }
+  }, {
+    $group: {
+      _id: '$_id',
+      terms: { $push: '$terms' },
+      name: { $first: '$name' },
+      description: { $first: '$description' },
+      allowsMultipleTerms: { $first: '$allowsMultipleTerms' }
+    }
+  }])
+  .toArray()
+
+  project.categories = categories
+  return project
 }

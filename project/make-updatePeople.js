@@ -2,7 +2,8 @@ module.exports = ({
   getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
 }) => async (req, res, next) => {
   const _id = new ObjectID(req.params.id)
-  const collection = (await getDb()).collection('projects')
+  const db = await getDb()
+  const collection = db.collection('projects')
   const project = await collection.findOne({ _id })
 
   if (!project) {
@@ -59,6 +60,6 @@ module.exports = ({
     $set: { people: project.people }
   })
 
-  const projectFromDb = await getProjectFromDb(collection, _id)
+  const projectFromDb = await getProjectFromDb(db, _id)
   return res.send(projectFromDb)
 }
