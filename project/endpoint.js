@@ -12,6 +12,7 @@ module.exports = ({
   updatePeople,
   removePeople,
   addDeadlines,
+  removeDeadlines,
   validateCreateProject,
   validateUpdateProject,
   validateGetProjects,
@@ -29,3 +30,4 @@ router
 .put('/:id/people', validateEditPeople, sendValidation, catchExceptions(updatePeople))
 .delete('/:id', catchExceptions(deleteProject))
 .delete('/:id/people', validateEditPeople, sendValidation, catchExceptions(removePeople))
+.delete('/:id/deadlines', validateEditDeadlines, sendValidation, catchExceptions(removeDeadlines))

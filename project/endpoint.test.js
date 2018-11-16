@@ -23,6 +23,7 @@ describe('project endpoint', () => {
       updatePeople: 'updatePeople',
       removePeople: 'removePeople',
       addDeadlines: 'addDeadlines',
+      removeDeadlines: 'removeDeadlines',
       validateCreateProject: 'validateCreateProject',
       validateUpdateProject: 'validateUpdateProject',
       validateGetProjects: 'validateGetProjects',
@@ -56,6 +57,9 @@ describe('project endpoint', () => {
     expect(router.delete.mock.calls[0]).toEqual(['/:id', paths.deleteProject])
     expect(router.delete.mock.calls[1]).toEqual([
       '/:id/people', paths.validateEditPeople, paths.sendValidation, paths.removePeople
+    ])
+    expect(router.delete.mock.calls[2]).toEqual([
+      '/:id/deadlines', paths.validateEditDeadlines, paths.sendValidation, paths.removeDeadlines
     ])
   })
 })
