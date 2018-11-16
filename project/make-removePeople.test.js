@@ -5,7 +5,7 @@ const ObjectID = require('../misc/test-ObjectID')
 describe('removePeople', () => {
   let userCanReadProjectResult = true
   const userCanReadProject = () => userCanReadProjectResult
-  const createError = (code, message) => [code, message]
+  const createError = (httpCode, message) => [httpCode, message]
   const getProjectFromDbResult = { test: true }
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
   const removePeople = makeRemovePeople({
