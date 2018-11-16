@@ -1,6 +1,4 @@
-const { check } = require('express-validator/check')
-
-module.exports = ({}) => [
+module.exports = ({ check }) => [
   check('id')
   .isMongoId().withMessage('invalid project id'),
 
