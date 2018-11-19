@@ -1,18 +1,26 @@
 const results = {}
-let lastResult, currentCollection
+let lastResult, lastArgs, currentCollection
+
+const getResult = (value, ...args) => value instanceof Function ? value(...args) : value
 
 const Collection = {
-  find: jest.fn(() => Collection),
-  aggregate: jest.fn(() => Collection),
-  findOne: jest.fn(() => results.findOne),
-  updateOne: jest.fn(() => results.updateOne),
-  insertOne: jest.fn(() => results.insertOne),
-  deleteOne: jest.fn(() => results.deleteOne),
-  distinct: jest.fn(() => results.distinct),
-  toArray: jest.fn(() => results[lastResult])
+  find: jest.fn((...args) => {
+    lastArgs = args
+    return Collection
+  }),
+  aggregate: jest.fn((...args) => {
+    lastArgs = args
+    return Collection
+  }),
+  findOne: jest.fn((...args) => getResult(results.findOne, ...args)),
+  updateOne: jest.fn((...args) => getResult(results.updateOne, ...args)),
+  insertOne: jest.fn((...args) => getResult(results.insertOne, ...args)),
+  deleteOne: jest.fn((...args) => getResult(results.deleteOne, ...args)),
+  distinct: jest.fn((...args) => getResult(results.distinct, ...args)),
+  toArray: jest.fn(() => getResult(results[lastResult], ...lastArgs))
 }
 
-const collection = (collectionName) => {
+const collection = collectionName => {
   currentCollection = collectionName
   return Collection
 }
