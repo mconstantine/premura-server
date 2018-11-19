@@ -1,6 +1,3 @@
-const ejson = require('ejson')
-const base64Url = require('base64-url')
-
 /**
  * How does it work (client side):
  * - send a `page` and `perPage` keys into a GET request to get the pagination
@@ -10,9 +7,11 @@ const base64Url = require('base64-url')
  * - use the `X-Pages-Count` and `X-Current-Page` headers to know where you are
  * - if you neither use the `page` and `perPage` GET parameters nor a cursor, you don't get pagination
  */
-module.exports = async (req, res, query, options = {}) => {
+module.exports = ({ ejson, base64Url, Cursor }) => async (req, res, query, options = {}, collection) => {
+  const isCursorQuery = query instanceof Cursor
   const paginationOptions = {}
   const cursor = req.get('X-Page-Cursor')
+  let count = 0
 
   if (cursor) {
     try {
@@ -20,6 +19,7 @@ module.exports = async (req, res, query, options = {}) => {
 
       paginationOptions.limit = parseInt(parsedCursor.limit || 10)
       paginationOptions.skip = parseInt(parsedCursor.skip || 0)
+      count = parseInt(parsedCursor.count || 0)
     } catch (ex) {
       console.error('Unable to parse a page cursor', cursor)
       return options
@@ -35,13 +35,22 @@ module.exports = async (req, res, query, options = {}) => {
     paginationOptions.limit = perPage
     paginationOptions.skip = perPage * (page - 1)
   } else {
-    return options
+    return isCursorQuery ? options : query
   }
 
   options.limit = paginationOptions.limit
   options.skip = paginationOptions.skip
 
-  const count = await query.count()
+  if (!count) {
+    if (isCursorQuery) {
+      count = await query.count()
+    } else {
+      query.push({ $count: 'count' })
+      const docs = await collection.aggregate(query).toArray()
+      count = docs[0].count
+    }
+  }
+
   const pagesCount = Math.ceil(count / options.limit)
   const currentPage = Math.floor(options.skip / options.limit)
 
@@ -50,6 +59,7 @@ module.exports = async (req, res, query, options = {}) => {
 
   if (currentPage > 0) {
     res.setHeader('X-Prev-Page-Cursor', base64Url.encode(ejson.stringify({
+      count,
       limit: options.limit,
       skip: currentPage * options.limit - options.limit
     })))
@@ -57,10 +67,19 @@ module.exports = async (req, res, query, options = {}) => {
 
   if (currentPage < pagesCount - 1) {
     res.setHeader('X-Next-Page-Cursor', base64Url.encode(ejson.stringify({
+      count,
       limit: options.limit,
       skip: currentPage * options.limit + options.limit
     })))
   }
 
-  return options
+  if (isCursorQuery) {
+    return options
+  } else {
+    query.pop()
+    query.push({ $skip: options.skip })
+    query.push({ $limit: options.limit })
+
+    return query
+  }
 }

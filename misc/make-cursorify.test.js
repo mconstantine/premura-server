@@ -1,21 +1,27 @@
 const ejson = require('ejson')
 const base64Url = require('base64-url')
-const cursorify = require('./cursorify')
-
-const createCursor = (limit, skip) => base64Url.encode(ejson.stringify({ limit, skip }))
 
 describe('cursorify', () => {
+  const createCursor = (limit, skip) => base64Url.encode(ejson.stringify({ limit, skip }))
   let headers = {}, documentsCount = 100
   const req = { get: key => headers[key], query: {} }
   const res = { setHeader: jest.fn() }
-  const collection = { count: () => documentsCount }
+
+  class Cursor {
+    count() {
+      return documentsCount
+    }
+  }
+
+  const collection = new Cursor()
+  const cursorify = require('./make-cursorify')({ ejson, base64Url, Cursor })
 
   it('Should be optional', async () => {
     headers = {}
     req.query = {}
     res.setHeader.mockClear()
 
-    const result = await cursorify(req, null, null)
+    const result = await cursorify(req, null, new Cursor())
 
     expect(result).not.toHaveProperty('limit')
     expect(result).not.toHaveProperty('skip')
@@ -126,5 +132,29 @@ describe('cursorify', () => {
 
     expect(res.setHeader).toHaveBeenCalledWith('X-Pages-Count', 2)
     expect(res.setHeader).toHaveBeenCalledWith('X-Current-Page', 2)
+  })
+
+  it('Should work with aggregations', async () => {
+    res.setHeader.mockClear()
+    req.query = { page: 5, perPage: 10 }
+
+    const mongoCollection = {
+      aggregate: () => mongoCollection,
+      toArray: () => [{ count: 100 }]
+    }
+
+    const aggregation = await cursorify(req, res, [], {}, mongoCollection)
+
+    expect(res.setHeader).toHaveBeenCalledWith('X-Prev-Page-Cursor', expect.anything())
+    expect(res.setHeader).toHaveBeenCalledWith('X-Next-Page-Cursor', expect.anything())
+    expect(res.setHeader).toHaveBeenCalledWith('X-Pages-Count', 10)
+    expect(res.setHeader).toHaveBeenCalledWith('X-Current-Page', 5)
+    expect(aggregation).toEqual([{
+      $skip: 40
+    }, {
+      $limit: 10
+    }])
+
+    req.query = {}
   })
 })
