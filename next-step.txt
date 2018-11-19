@@ -1,3 +1,4 @@
-Create a way to add projects to terms
-Create a way to remove projects from terms
-Create a way to add move projects from a term to another
+if userCanReadProject fails, we should return 401 instead of 404
+
+getProjects should search by category (categories?)
+getProjects should search by term (terms?)
