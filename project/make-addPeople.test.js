@@ -39,11 +39,11 @@ describe('addPeople', () => {
     getDb.setResult('findOne', project)
   })
 
-  it("Should return 404 if the user can't read the project", async () => {
+  it("Should return 401 if the user can't read the project", async () => {
     userCanReadProjectResult = false
     next.mockClear()
     await addPeople(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
+    expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
     userCanReadProjectResult = true
   })
 

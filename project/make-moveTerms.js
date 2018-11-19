@@ -11,7 +11,7 @@ module.exports = ({
   }
 
   if (!userCanReadProject(req.session.user, project)) {
-    return next(createError(404, 'project not found'))
+    return next(createError(401, 'you cannot access this project'))
   }
 
   const destinationProject_id = new ObjectID(req.body.destination)
@@ -22,7 +22,7 @@ module.exports = ({
   }
 
   if (!userCanReadProject(req.session.user, destinationProject)) {
-    return next(createError(404, 'destination project not found'))
+    return next(createError(401, 'you cannot access destination project'))
   }
 
   const categoriesCollection = db.collection('categories')

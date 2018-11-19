@@ -53,11 +53,11 @@ describe('moveTerms', () => {
     getDb.setResult('find', getCategories)
   })
 
-  it("Should return 404 if the user can't read the project", async () => {
+  it("Should return 401 if the user can't read the project", async () => {
     next.mockClear()
     userCanReadProjectResult = (user, { _id }) => !_id.equals(new ObjectID(id))
     await moveTerms(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('project')])
+    expect(next).toHaveBeenLastCalledWith([401, expect.stringContaining('project')])
     userCanReadProjectResult = () => true
   })
 
@@ -74,11 +74,11 @@ describe('moveTerms', () => {
     getDb.setResult('find', getCategories)
   })
 
-  it("Should return 404 if the user can't read the destination project", async () => {
+  it("Should return 401 if the user can't read the destination project", async () => {
     next.mockClear()
     userCanReadProjectResult = (user, { _id }) => !_id.equals(new ObjectID(destination))
     await moveTerms(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('destination')])
+    expect(next).toHaveBeenLastCalledWith([401, expect.stringContaining('destination')])
     userCanReadProjectResult = () => true
   })
 

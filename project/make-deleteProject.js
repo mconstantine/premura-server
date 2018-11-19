@@ -19,7 +19,7 @@ module.exports = ({ getDb, ObjectID, createError, userCanReadProject }) => async
   }
 
   if (!userCanReadProject(req.session.user, project)) {
-    return next(createError(404, 'project not found'))
+    return next(createError(401, 'you cannot access this project'))
   }
 
   await collection.deleteOne({ _id })

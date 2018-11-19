@@ -58,11 +58,11 @@ describe('addTerms', () => {
     getDb.setResult('find', categories)
   })
 
-  it("Should return 404 if the user can't read the project", async () => {
+  it("Should return 401 if the user can't read the project", async () => {
     next.mockClear()
     userCanReadProjectResult = false
     await removeTerms(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('project')])
+    expect(next).toHaveBeenLastCalledWith([401, expect.stringContaining('project')])
     userCanReadProjectResult = true
   })
 

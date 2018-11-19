@@ -1,4 +1,2 @@
-if userCanReadProject fails, we should return 401 instead of 404
-
 getProjects should search by category (categories?)
 getProjects should search by term (terms?)

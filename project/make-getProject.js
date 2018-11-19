@@ -21,7 +21,7 @@ module.exports = ({
   }
 
   if (!userCanReadProject(req.session.user, project)) {
-    return next(createError(404, 'project not found'))
+    return next(createError(401, 'you cannot access this project'))
   }
 
   return res.send(project)
