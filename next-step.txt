@@ -1,3 +1,2 @@
-Update deleteProject to do terms
 Handle user deactivation
 Do activities

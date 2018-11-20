@@ -12,8 +12,21 @@ describe('deleteProject', () => {
   const res = { status: jest.fn(() => res), send: jest.fn(), end: jest.fn() }
   const next = jest.fn()
 
-  const findOneResult = { test: true }
+  const findOneResult = { _id: new ObjectID(id) }
+  const getCategories = () => [{
+    _id: new ObjectID('categoryoneid'),
+    terms: [{
+      projects: [new ObjectID(id)]
+    }]
+  }, {
+    _id: new ObjectID('categorytwoid'),
+    terms: [{
+      projects: [new ObjectID(id), new ObjectID('somethingelse')]
+    }]
+  }]
+
   getDb.setResult('findOne', findOneResult)
+  getDb.setResult('find', getCategories)
 
   it('Should check that the id is valid', async () => {
     res.end.mockClear()
@@ -36,11 +49,13 @@ describe('deleteProject', () => {
     next.mockClear()
     res.end.mockClear()
     getDb.setResult('findOne', false)
+    getDb.setResult('find', getCategories)
     await deleteProject(req, res, next)
     expect(res.end).not.toHaveBeenCalled()
     expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
     expect(getDb.functions.findOne).toHaveBeenLastCalledWith({ _id: new ObjectID(id) })
     getDb.setResult('findOne', findOneResult)
+    getDb.setResult('find', getCategories)
   })
 
   it('Should work', async () => {
@@ -57,5 +72,25 @@ describe('deleteProject', () => {
     userCanReadProjectResult = true
   })
 
-  it.skip("Should remove project from the terms' projects", async () => {})
+  it("Should remove project from the terms' projects", async () => {
+    const categories = getCategories()
+    getDb.functions.updateOne.mockClear()
+    await deleteProject(req, res, next)
+
+    expect(getDb.functions.updateOne).toHaveBeenCalledWith({ _id: categories[0]._id }, {
+      $set: {
+        terms: [{
+          projects: []
+        }]
+      }
+    })
+
+    expect(getDb.functions.updateOne).toHaveBeenCalledWith({ _id: categories[1]._id }, {
+      $set: {
+        terms: [{
+          projects: [categories[1].terms[0].projects[1]]
+        }]
+      }
+    })
+  })
 })
