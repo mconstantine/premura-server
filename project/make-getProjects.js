@@ -33,9 +33,41 @@ module.exports = ({ getDb, ObjectID, cursorify, createFindFilters }) => async (r
     ]
   }
 
-  const query = collection.find(filters)
-  const options = await cursorify(req, res, query)
-  const projects = await collection.find(filters, options).toArray()
+  let aggregation = [{
+    $match: filters
+  }]
+
+  aggregation.push({
+    $lookup: {
+      from: 'categories',
+      localField: '_id',
+      foreignField: 'terms.projects',
+      as: 'categories'
+    }
+  })
+
+  if (req.query.categories) {
+    const categories = req.query.categories.map(_id => new ObjectID(_id))
+
+    aggregation.push({
+      $match: {
+        'categories._id': { $in: categories }
+      }
+    })
+  }
+
+  if (req.query.terms) {
+    const terms = req.query.terms.map(_id => new ObjectID(_id))
+
+    aggregation.push({
+      $match: {
+        'categories.terms._id': { $in: terms }
+      }
+    })
+  }
+
+  aggregation = await cursorify(req, res, aggregation, {}, collection)
+  const projects = await collection.aggregate(aggregation).toArray()
 
   return res.send(projects)
 }

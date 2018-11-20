@@ -1,2 +1,3 @@
-getProjects should search by category (categories?)
-getProjects should search by term (terms?)
+Update deleteProject to do terms
+Handle user deactivation
+Do activities

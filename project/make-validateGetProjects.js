@@ -18,5 +18,17 @@ module.exports = ({ check, status }) => [
   .isISO8601().withMessage('before should be an ISO8601 Date.'),
 
   check('after').optional()
-  .isISO8601().withMessage('before should be an ISO8601 Date.')
+  .isISO8601().withMessage('before should be an ISO8601 Date.'),
+
+  check('categories').optional()
+  .isArray().withMessage('categories should be an Array'),
+
+  check('categories.*')
+  .isMongoId().withMessage('invalid category ID'),
+
+  check('terms').optional()
+  .isArray().withMessage('terms should be an Array'),
+
+  check('terms.*')
+  .isMongoId().withMessage('invalid term ID')
 ]

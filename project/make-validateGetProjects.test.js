@@ -32,4 +32,24 @@ describe('validateGetProjects', () => {
     makeValidateGetProjects({ check, status })
     check.validate('after', 'optional', 'isISO8601', 'withMessage')
   })
+
+  it('should check categories', () => {
+    makeValidateGetProjects({ check, status })
+    check.validate('categories', 'optional', 'isArray', 'withMessage')
+  })
+
+  it('should check categories IDs', () => {
+    makeValidateGetProjects({ check, status })
+    check.validate('categories.*', 'isMongoId', 'withMessage')
+  })
+
+  it('should check terms', () => {
+    makeValidateGetProjects({ check, status })
+    check.validate('terms', 'optional', 'isArray', 'withMessage')
+  })
+
+  it('should check terms IDs', () => {
+    makeValidateGetProjects({ check, status })
+    check.validate('terms.*', 'isMongoId', 'withMessage')
+  })
 })
