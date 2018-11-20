@@ -26,5 +26,8 @@ module.exports = ({ check, roles }) => [
 
   check('jobRole').optional().trim()
   .not().isEmpty().withMessage('jobRole is empty')
-  .isString().withMessage('jobRole should be a String')
+  .isString().withMessage('jobRole should be a String'),
+
+  check('isActive').optional()
+  .isBoolean().withMessage('isActive should be a Boolean')
 ]

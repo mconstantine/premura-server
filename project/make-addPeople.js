@@ -16,15 +16,15 @@ module.exports = ({
 
   let people = req.body.people.map(({ _id }) => ({ _id: new ObjectID(_id) }))
   const peopleIDs = people.map(({ _id }) => _id)
-  const peopleIDsFromDB = (
-    await db
+  const peopleFromDB = await db
     .collection('users')
     .find(
       { _id: { $in: peopleIDs } },
-      { projection: { _id: 1 } }
+      { projection: { _id: 1, isActive: 1 } }
     )
     .toArray()
-  ).map(({ _id }) => _id)
+
+  const peopleIDsFromDB = peopleFromDB.map(({ _id }) => _id)
 
   if (peopleIDsFromDB.length !== peopleIDs.length) {
     for (let _id of peopleIDs) {
@@ -32,6 +32,23 @@ module.exports = ({
         return next(createError(404, `user ${_id} not found`))
       }
     }
+  }
+
+  const errors = []
+
+  peopleFromDB.forEach(user => {
+    if (!user.isActive) {
+      errors.push({
+        location: 'body',
+        param: 'people[' + peopleIDs.findIndex(_id => _id.equals(user._id)) + ']',
+        value: user._id.toString(),
+        msg: 'user not active'
+      })
+    }
+  })
+
+  if (errors.length) {
+    return res.status(422).send({ errors })
   }
 
   { // To be sure that peopleIDsStrings and projectPeopleIDsStrings will not be used anymore

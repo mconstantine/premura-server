@@ -10,6 +10,10 @@ module.exports = ({ bcrypt, createError, getDb }) => async (req, res, next) => {
     return next(createError(404, 'user not found'))
   }
 
+  if (!user.isActive) {
+    return next(createError(401, 'user not active'))
+  }
+
   if (!await bcrypt.compare(password, user.password)) {
     return next(createError(401, 'invalid password'))
   }

@@ -32,4 +32,9 @@ describe('validateUpdateUser', () => {
     makeValidateUpdateUser({ check, roles })
     check.validate('jobRole', 'optional', 'trim', 'not', 'isEmpty', 'isString', 'withMessage')
   })
+
+  it('Should validate isActive', () => {
+    makeValidateUpdateUser({ check, roles })
+    check.validate('isActive', 'optional', 'isBoolean', 'withMessage')
+  })
 })

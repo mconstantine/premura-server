@@ -24,7 +24,8 @@ module.exports = ({
   const result = await collection.insertOne({
     name, email, role, jobRole,
     password: await bcrypt.hash(password, 10),
-    registrationDate: new Date()
+    registrationDate: new Date(),
+    isActive: true
   })
 
   res.status(201).send({ _id: result.insertedId })

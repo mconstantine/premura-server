@@ -68,6 +68,18 @@ describe('createUser', () => {
     }))
   })
 
+  it('Should activate the user', async () => {
+    getDb.functions.insertOne.mockClear()
+    req.session.user = Object.assign({}, data)
+    req.session.user.role = 'master'
+    req.body = Object.assign({}, data)
+    await createUser(req, res, next)
+
+    expect(getDb.functions.insertOne).toHaveBeenCalledWith(expect.objectContaining({
+      isActive: true
+    }))
+  })
+
   it('Should encrypt the password', async () => {
     bcrypt.hash.mockClear()
     req.session.user = Object.assign({}, data)

@@ -1,2 +1,2 @@
-Handle user deactivation
 Do activities
+Do projects conversations

@@ -21,16 +21,18 @@ describe('addPeople', () => {
     }
   }
 
-  const res = { send: jest.fn() }
+  const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
   const project = { people: [] }
-  const users = [{
-    _id: 'someuserid'
+  const getUsers = () => [{
+    _id: new ObjectID('someuserid'),
+    isActive: true
   }, {
-    _id: 'anotheruserid'
+    _id: new ObjectID('anotheruserid'),
+    isActive: true
   }]
 
-  getDb.setResult('find', users)
+  getDb.setResult('find', getUsers())
 
   it('Should check that the project exist', async () => {
     getDb.setResult('findOne', false)
@@ -49,20 +51,39 @@ describe('addPeople', () => {
 
   it('Should check that people exist', async () => {
     getDb.functions.find.mockClear()
-    getDb.setResult('find', users)
+    getDb.setResult('find', getUsers())
     await addPeople(req, res, next)
     expect(getDb.functions.find).toHaveBeenLastCalledWith({
       _id: { $in: req.body.people.map(({ _id }) => new ObjectID(_id)) }
     }, expect.anything())
   })
 
+  it('Should check that users are active', async () => {
+    const users = getUsers()
+    users[1].isActive = false
+    getDb.functions.find.mockClear()
+    getDb.setResult('find', users)
+    await addPeople(req, res, next)
+    expect(res.status).toHaveBeenLastCalledWith(422)
+    expect(res.send).toHaveBeenLastCalledWith({
+      errors: [{
+        location: 'body',
+        param: 'people[1]',
+        value: users[1]._id.toString(),
+        msg: 'user not active'
+      }]
+    })
+  })
+
   it('Should not save the same person twice', async () => {
     getDb.functions.updateOne.mockClear()
-    project.people = users
+    project.people = getUsers()
+    getDb.setResult('findOne', project)
+    getDb.setResult('find', getUsers())
     await addPeople(req, res, next)
     expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.any(Object),
-      { $set: { people: users } }
+      { $set: { people: getUsers() } }
     )
     project.people = []
   })

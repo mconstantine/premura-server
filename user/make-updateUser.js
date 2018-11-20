@@ -65,6 +65,17 @@ module.exports = ({
     update.password = await bcrypt.hash(password, 10)
   }
 
+  if (req.body.isActive !== undefined) {
+    const isActive = req.body.isActive
+    delete req.body.isActive
+
+    if (currentUser.role !== 'master') {
+      return next(createError(401, 'only master users can change the active state'))
+    }
+
+    update.isActive = isActive
+  }
+
   for (let i in req.body) {
     if (i === '_id') {
       continue
@@ -84,18 +95,22 @@ module.exports = ({
     }
   }
 
-  await collection.updateOne({ _id }, { $set: update })
+  const result = await collection.findOneAndUpdate({ _id }, { $set: update }, {
+    projection: sensitiveInformationProjection
+  })
 
-  if (update.email || update.password) {
-    return res.redirect('/users/logout')
-  }
+  if (result.value._id.equals(currentUser._id)) {
+    if (update.email || update.password) {
+      return res.redirect('/users/logout')
+    }
 
-  for (let i in update) {
-    // This if statement is why we don't need to hide sensitive information
-    if (req.session.user[i]) {
-      req.session.user[i] = update[i]
+    for (let i in update) {
+      // This if statement is why we don't need to hide sensitive information
+      if (req.session.user[i]) {
+        req.session.user[i] = update[i]
+      }
     }
   }
 
-  return res.send(req.session.user)
+  return res.send(result.value)
 }

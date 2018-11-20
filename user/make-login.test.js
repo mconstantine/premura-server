@@ -9,7 +9,8 @@ describe('login', () => {
 
   const data = {
     email: 'john.doe@example.com',
-    password: 'password'
+    password: 'password',
+    isActive: true
   }
 
   const req = { session: {} }
@@ -21,6 +22,13 @@ describe('login', () => {
     req.body = Object.assign({}, data)
     await login(req, res, next)
     expect(getDb.functions.findOne).toHaveBeenCalledWith({ email: data.email }, expect.anything())
+  })
+
+  it('Should check that the user in active', async () => {
+    req.body = Object.assign({}, data)
+    getDb.setResult('findOne', Object.assign({}, data, { isActive: false }))
+    await login(req, res, next)
+    expect(next).toHaveBeenCalledWith([401, expect.stringContaining('active')])
   })
 
   it('Should compare the encrypted password', async () => {

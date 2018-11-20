@@ -18,12 +18,16 @@ describe('updateUser', () => {
   const res = { status: jest.fn(() => res), redirect: jest.fn(), send: jest.fn() }
 
   const masterUserData = {
-    _id: 'me',
+    _id: new ObjectID('me'),
     name: 'name',
     email: 'email@example.com',
     password: 'password',
     role: 'master'
   }
+
+  getDb.setResult('findOneAndUpdate', (filter, update) => {
+    return { value: Object.assign(masterUserData, update.$set) }
+  })
 
   it('Should check that a user ID is provided', async () => {
     req.params = {}
@@ -69,9 +73,10 @@ describe('updateUser', () => {
     req.body = { role }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenLastCalledWith(
       expect.anything(),
-      { $set: expect.objectContaining({ role }) }
+      { $set: expect.objectContaining({ role }) },
+      expect.anything()
     )
   })
 
@@ -90,9 +95,10 @@ describe('updateUser', () => {
     req.body = { email }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenLastCalledWith(
       expect.anything(),
-      { $set: expect.objectContaining({ email }) }
+      { $set: expect.objectContaining({ email }) },
+      expect.anything()
     )
     getDb.functions.findOne = originalFindOne
   })
@@ -112,9 +118,10 @@ describe('updateUser', () => {
     req.body = { email }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenLastCalledWith(
       expect.anything(),
-      { $set: expect.objectContaining({ email }) }
+      { $set: expect.objectContaining({ email }) },
+      expect.anything()
     )
     getDb.functions.findOne = originalFindOne
   })
@@ -127,9 +134,10 @@ describe('updateUser', () => {
     req.body = { password }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenLastCalledWith(
       expect.anything(),
-      { $set: expect.objectContaining({ password: bcrypt.hash(password) }) }
+      { $set: expect.objectContaining({ password: bcrypt.hash(password) }) },
+      expect.anything()
     )
   })
 
@@ -141,9 +149,25 @@ describe('updateUser', () => {
     req.body = { password }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenLastCalledWith(
       expect.anything(),
-      { $set: expect.objectContaining({ password: bcrypt.hash(password) }) }
+      { $set: expect.objectContaining({ password: bcrypt.hash(password) }) },
+      expect.anything()
+    )
+  })
+
+  it("Should allow a master to change anyone's active state", async () => {
+    const isActive = false
+    next.mockClear()
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    req.session.user = { _id: 'notMe', role: 'master' }
+    req.body = { isActive }
+    await updateUser(req, res, next)
+    expect(next).not.toHaveBeenCalled()
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenLastCalledWith(
+      expect.anything(),
+      { $set: expect.objectContaining({ isActive }) },
+      expect.anything()
     )
   })
 
@@ -161,6 +185,14 @@ describe('updateUser', () => {
     req.body = { password: 'password' }
     await updateUser(req, null, next)
     expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
+  })
+
+  it("Should not allow a non master user to change another user's active state", async () => {
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    req.session.user = { _id: 'notMe', role: 'manager' }
+    req.body = { isActive: false }
+    await updateUser(req, null, next)
+    expect(next).toHaveBeenLastCalledWith([401, expect.stringContaining('active')])
   })
 
   it("Should not allow a user to change another user's name", async () => {
@@ -181,24 +213,26 @@ describe('updateUser', () => {
     req.body = { name }
     await updateUser(req, res, next)
     expect(next).not.toHaveBeenCalled()
-    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenLastCalledWith(
       expect.anything(),
-      { $set: expect.objectContaining({ name }) }
+      { $set: expect.objectContaining({ name }) },
+      expect.anything()
     )
   })
 
   it('Should encrypt the password', async () => {
     bcrypt.hash.mockClear()
-    getDb.functions.updateOne.mockClear()
+    getDb.functions.findOneAndUpdate.mockClear()
     const password = 'password'
     getDb.setResult('findOne', { _id: 'me', role: 'maker' })
     req.session.user = { _id: 'me', role: 'master' }
     req.body = { password }
     await updateUser(req, res, next)
     expect(bcrypt.hash).toHaveBeenCalledWith(password, expect.anything())
-    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenLastCalledWith(
       expect.anything(),
-      { $set: expect.objectContaining({ password: '3ncrypt3d' }) }
+      { $set: expect.objectContaining({ password: '3ncrypt3d' }) },
+      expect.anything()
     )
   })
 
@@ -208,9 +242,10 @@ describe('updateUser', () => {
     req.body = Object.assign({}, masterUserData)
     req.body.answer = 41
     await updateUser(req, res, next)
-    expect(getDb.functions.updateOne).not.toHaveBeenLastCalledWith(
+    expect(getDb.functions.findOneAndUpdate).not.toHaveBeenLastCalledWith(
       expect.anything(),
-      expect.objectContaining({ answer: 41 })
+      expect.objectContaining({ answer: 41 }),
+      expect.anything()
     )
   })
 
@@ -219,19 +254,29 @@ describe('updateUser', () => {
     req.session.user = Object.assign({}, masterUserData)
     req.body = Object.assign({}, masterUserData)
     await updateUser(req, res, next)
-    expect(getDb.functions.updateOne).not.toHaveBeenLastCalledWith(
+    expect(getDb.functions.findOneAndUpdate).not.toHaveBeenLastCalledWith(
       expect.anything(),
-      expect.objectContaining({ _id: masterUserData._id })
+      expect.objectContaining({ _id: masterUserData._id }),
+      expect.anything()
     )
   })
 
-  it('Should update the session', async () => {
+  it('Should update the session if needed (same user)', async () => {
     res.send.mockClear()
     getDb.setResult('findOne', Object.assign({}, masterUserData))
     req.session.user = Object.assign({}, masterUserData)
     req.body = { name: 'whatever' }
     await updateUser(req, res, next)
-    expect(res.send).toHaveBeenCalled()
+    expect(req.session.user.name).toBe('whatever')
+  })
+
+  it('Should not update the session if not needed', async () => {
+    res.send.mockClear()
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    req.session.user = { _id: 'me', role: 'master' }
+    req.body = { name: 'whatever' }
+    await updateUser(req, res, next)
+    expect(req.session.user.name).not.toBe('whatever')
   })
 
   it('Should logout if email or password changed', async () => {
@@ -256,7 +301,7 @@ describe('updateUser', () => {
     getDb.functions.findOne = originalFindOne
   })
 
-  it('Should return the updated session', async () => {
+  it('Should return the updated user', async () => {
     const name = 'New name'
 
     getDb.setResult('findOne', Object.assign({}, masterUserData))
