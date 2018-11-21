@@ -36,7 +36,10 @@ module.exports = ({
     })
 
     await categoriesCollection.updateOne({ _id: category._id }, {
-      $set: { terms: category.terms }
+      $set: {
+        terms: category.terms,
+        lastUpdateDate: new Date()
+      }
     })
   })
 

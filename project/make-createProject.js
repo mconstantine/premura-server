@@ -26,6 +26,8 @@ module.exports = ({ getDb }) => async (req, res) => {
   project.people = [creatorUser]
   project.deadlines = []
   project.status = status || 'opened'
+  project.creationDate = new Date()
+  project.lastUpdateDate = new Date()
 
   const result = await db.collection('projects').insertOne(project)
   res.status(201).send({ _id: result.insertedId })

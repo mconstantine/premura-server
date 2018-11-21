@@ -83,7 +83,7 @@ describe('addPeople', () => {
     await addPeople(req, res, next)
     expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.any(Object),
-      { $set: { people: getUsers() } }
+      { $set: expect.objectContaining({ people: getUsers() }) }
     )
     project.people = []
   })
@@ -94,10 +94,10 @@ describe('addPeople', () => {
     await addPeople(req, res, next)
     expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.any(Object),
-      { $set: { people: [
+      { $set: expect.objectContaining({ people: [
         expect.objectContaining({ budget: 21 }),
         expect.objectContaining({ budget: 20 })
-      ] } }
+      ] }) }
     )
     delete project.budget
   })
@@ -106,5 +106,15 @@ describe('addPeople', () => {
     res.send.mockClear()
     await addPeople(req, res, next)
     expect(res.send).toHaveBeenLastCalledWith(getProjectFromDbResult)
+  })
+
+  it('Should update the last update Date', async () => {
+    getDb.functions.updateOne.mockClear()
+    await addPeople(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(expect.any(Object), {
+      $set: expect.objectContaining({
+        lastUpdateDate: expect.any(Date)
+      })
+    })
   })
 })

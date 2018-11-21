@@ -82,7 +82,10 @@ module.exports = ({
 
   project.people = people
   await collection.updateOne({ _id }, {
-    $set: { people }
+    $set: {
+      people,
+      lastUpdateDate: new Date()
+    }
   })
 
   return res.send(await getProjectFromDb(db, _id))

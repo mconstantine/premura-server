@@ -25,7 +25,9 @@ module.exports = ({ sensitiveInformationProjection }) => async (db, _id) => {
       description: { $first: '$description' },
       deadlines: { $first: '$deadlines' },
       status: { $first: '$status' },
-      budget: { $first: '$budget' }
+      budget: { $first: '$budget' },
+      creationDate: { $first: '$creationDate' },
+      lastUpdateDate: { $first: '$lastUpdateDate' }
     }
   }])
   .toArray()

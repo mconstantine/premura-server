@@ -109,4 +109,21 @@ describe('moveTerms', () => {
       }
     })
   })
+
+  it('Should update the last update dates for both the projects', async () => {
+    getDb.functions.updateOne.mockClear()
+    await moveTerms(req, res, next)
+
+    expect(getDb.functions.updateOne).toHaveBeenCalledWith({
+      _id: new ObjectID(id)
+    }, {
+      $set: { lastUpdateDate: expect.any(Date) }
+    })
+
+    expect(getDb.functions.updateOne).toHaveBeenCalledWith({
+      _id: new ObjectID(destination)
+    }, {
+      $set: { lastUpdateDate: expect.any(Date) }
+    })
+  })
 })

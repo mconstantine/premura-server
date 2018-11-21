@@ -94,4 +94,14 @@ describe('addTerms', () => {
     expect(next).not.toHaveBeenCalled()
     expect(res.send).toHaveBeenLastCalledWith(getProjectFromDbResult)
   })
+
+  it('Should update the last update Date', async () => {
+    getDb.functions.updateOne.mockClear()
+    await addTerms(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(expect.any(Object), {
+      $set: expect.objectContaining({
+        lastUpdateDate: expect.any(Date)
+      })
+    })
+  })
 })

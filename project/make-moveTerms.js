@@ -46,5 +46,17 @@ module.exports = ({
     })
   })
 
+  await projectsCollection.updateOne({ _id }, {
+    $set: {
+      lastUpdateDate: new Date()
+    }
+  })
+
+  await projectsCollection.updateOne({ _id: destinationProject_id }, {
+    $set: {
+      lastUpdateDate: new Date()
+    }
+  })
+
   return res.send(await getProjectFromDb(db, destinationProject._id))
 }

@@ -126,4 +126,12 @@ describe('updateProject', () => {
       { $set: expect.not.objectContaining({ extra }) }
     )
   })
+
+  it('Should update the last update date', async () => {
+    getDb.functions.updateOne.mockClear()
+    await updateProject(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenCalledWith(expect.any(Object), {
+      $set: expect.objectContaining({ lastUpdateDate: expect.any(Date) })
+    })
+  })
 })

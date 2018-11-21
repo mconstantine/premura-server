@@ -51,7 +51,10 @@ module.exports = ({
   deadlines = project.deadlines.concat(uniqueDeadlines)
 
   await collection.updateOne({ _id }, {
-    $set: { deadlines }
+    $set: {
+      deadlines,
+      lastUpdateDate: new Date()
+    }
   })
 
   return res.send(await getProjectFromDb(db, _id))

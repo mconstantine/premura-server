@@ -53,6 +53,15 @@ describe('createProject', () => {
     }))
   })
 
+  it('Should save the creation and last update Dates', async () => {
+    req.body = { name }
+    await createProject(req, res)
+    expect(getDb.functions.insertOne).toHaveBeenLastCalledWith(expect.objectContaining({
+      creationDate: expect.any(Date),
+      lastUpdateDate: expect.any(Date)
+    }))
+  })
+
   it('Should set the status to opened by default', async () => {
     req.body = { name }
     await createProject(req, res)

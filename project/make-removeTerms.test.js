@@ -77,19 +77,23 @@ describe('addTerms', () => {
     expect(getDb.functions.updateOne).toHaveBeenCalledWith({
       _id: new ObjectID('categoryoneid')
     }, {
-      $set: { terms: [{
-        _id: new ObjectID('termoneid'),
-        projects: []
-      }] }
+      $set: expect.objectContaining({
+        terms: [{
+          _id: new ObjectID('termoneid'),
+          projects: []
+        }]
+      })
     })
 
     expect(getDb.functions.updateOne).toHaveBeenCalledWith({
       _id: new ObjectID('categorytwoid')
     }, {
-      $set: { terms: [{
-        _id: new ObjectID('termtwoid'),
-        projects: []
-      }] }
+      $set: expect.objectContaining({
+        terms: [{
+          _id: new ObjectID('termtwoid'),
+          projects: []
+        }]
+      })
     })
   })
 
@@ -99,5 +103,13 @@ describe('addTerms', () => {
     await removeTerms(req, res, next)
     expect(next).not.toHaveBeenCalled()
     expect(res.send).toHaveBeenLastCalledWith(getProjectFromDbResult)
+  })
+
+  it('Should update the last update date', async () => {
+    getDb.functions.updateOne.mockClear()
+    await removeTerms(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenCalledWith(expect.any(Object), {
+      $set: expect.objectContaining({ lastUpdateDate: expect.any(Date) })
+    })
   })
 })

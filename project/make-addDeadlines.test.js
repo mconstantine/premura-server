@@ -27,7 +27,8 @@ describe('addDeadlines', () => {
   }
 
   const getProject = () => ({
-    deadlines: []
+    deadlines: [],
+    lastUpdateDate: new Date(Date.now() - 1000)
   })
 
   const res = { status: jest.fn(() => res), send: jest.fn() }
@@ -90,5 +91,17 @@ describe('addDeadlines', () => {
     res.send.mockClear()
     await addDeadlines(req, res, next)
     expect(res.send).toHaveBeenLastCalledWith(getProjectFromDbResult)
+  })
+
+  it('Should update the last update Date', async () => {
+    const project = getProject()
+    getDb.functions.updateOne.mockClear()
+    await addDeadlines(req, res, next)
+
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(expect.any(Object), {
+      $set: expect.objectContaining({
+        lastUpdateDate: expect.any(Date)
+      })
+    })
   })
 })

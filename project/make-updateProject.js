@@ -61,6 +61,7 @@ module.exports = ({ getDb, ObjectID, createError, userCanReadProject }) => async
   }
 
   if (Object.keys(update).length) {
+    update.lastUpdateDate = new Date()
     await collection.updateOne({ _id }, { $set: update })
   }
 

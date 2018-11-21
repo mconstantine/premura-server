@@ -57,7 +57,10 @@ module.exports = ({
   }
 
   await collection.updateOne({ _id }, {
-    $set: { people: project.people }
+    $set: {
+      people: project.people,
+      lastUpdateDate: new Date()
+    }
   })
 
   const projectFromDb = await getProjectFromDb(db, _id)

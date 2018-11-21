@@ -64,7 +64,17 @@ describe('removeDeadlines', () => {
     expect(getDb.functions.updateOne).toHaveBeenLastCalledWith({
       _id: new ObjectID(id)
     }, {
-      $set: { deadlines: [getProject().deadlines[2]] }
+      $set: expect.objectContaining({ deadlines: [getProject().deadlines[2]] })
+    })
+  })
+
+  it('Should update the last update date', async () => {
+    getDb.functions.updateOne.mockClear()
+    await removeDeadlines(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith({
+      _id: new ObjectID(id)
+    }, {
+      $set: expect.objectContaining({ lastUpdateDate: expect.any(Date) })
     })
   })
 })

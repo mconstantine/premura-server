@@ -26,7 +26,10 @@ module.exports = ({
   })
 
   await collection.updateOne({ _id }, {
-    $set: { deadlines: remainingDeadlines }
+    $set: {
+      deadlines: remainingDeadlines,
+      lastUpdateDate: new Date()
+    }
   })
 
   return res.send(await getProjectFromDb(db, _id))

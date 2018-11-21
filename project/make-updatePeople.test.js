@@ -100,4 +100,12 @@ describe('updatePeople', () => {
     expect(getProjectFromDb).toHaveBeenCalled()
     expect(res.send).toHaveBeenLastCalledWith(getProjectFromDbResult)
   })
+
+  it('Should update the last update date', async () => {
+    getDb.functions.updateOne.mockClear()
+    await updatePeople(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenCalledWith(expect.any(Object), {
+      $set: expect.objectContaining({ lastUpdateDate: expect.any(Date) })
+    })
+  })
 })
