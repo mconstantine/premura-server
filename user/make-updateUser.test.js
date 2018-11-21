@@ -11,7 +11,7 @@ describe('updateUser', () => {
   const next = jest.fn()
   const createError = (httpCode, message) => [httpCode, message]
   const bcrypt = { hash: jest.fn(() => '3ncrypt3d') }
-  const sensitiveInformationProjection = 'sensitiveInformationProjection'
+  const sensitiveInformationProjection = {}
   const updateUser = makeUpdateUser({
     createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection
   })
@@ -22,7 +22,8 @@ describe('updateUser', () => {
     name: 'name',
     email: 'email@example.com',
     password: 'password',
-    role: 'master'
+    role: 'master',
+    isActive: true
   }
 
   getDb.setResult('findOneAndUpdate', (filter, update) => {
@@ -302,14 +303,14 @@ describe('updateUser', () => {
   })
 
   it('Should return the updated user', async () => {
-    const name = 'New name'
+    const isActive = false
 
     getDb.setResult('findOne', Object.assign({}, masterUserData))
     req.session.user = Object.assign({}, masterUserData)
-    req.body = { name }
+    req.body = { isActive }
 
     await updateUser(req, res, next)
-    expect(res.send).toHaveBeenLastCalledWith(expect.objectContaining({ name }))
+    expect(res.send).toHaveBeenLastCalledWith(expect.objectContaining({ isActive }))
   })
 
   it('Should keep the emails unique', async () => {

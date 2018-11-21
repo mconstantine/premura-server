@@ -112,5 +112,11 @@ module.exports = ({
     }
   }
 
+  for (let i in update) {
+    if (i !== '_id' && sensitiveInformationProjection[i] !== 0) {
+      result.value[i] = update[i]
+    }
+  }
+
   return res.send(result.value)
 }
