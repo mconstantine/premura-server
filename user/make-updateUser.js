@@ -95,6 +95,10 @@ module.exports = ({
     }
   }
 
+  if (Object.keys(update).length) {
+    update.lastUpdateDate = new Date()
+  }
+
   const result = await collection.findOneAndUpdate({ _id }, { $set: update }, {
     projection: sensitiveInformationProjection
   })

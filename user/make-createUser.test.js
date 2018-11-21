@@ -56,7 +56,7 @@ describe('createUser', () => {
     expect(getDb.functions.insertOne).toHaveBeenCalledWith(expect.objectContaining(result))
   })
 
-  it('Should save the registration date', async () => {
+  it('Should save the registration and last update dates', async () => {
     getDb.functions.insertOne.mockClear()
     req.session.user = Object.assign({}, data)
     req.session.user.role = 'master'
@@ -64,7 +64,8 @@ describe('createUser', () => {
     await createUser(req, res, next)
 
     expect(getDb.functions.insertOne).toHaveBeenCalledWith(expect.objectContaining({
-      registrationDate: expect.any(Date)
+      registrationDate: expect.any(Date),
+      lastUpdateDate: expect.any(Date)
     }))
   })
 

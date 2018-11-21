@@ -330,4 +330,17 @@ describe('updateUser', () => {
     expect(next).toHaveBeenLastCalledWith([409, JSON.stringify({ email })])
     getDb.functions.findOne = originalFindOne
   })
+
+  it('Should update the last update date', async () => {
+    getDb.setResult('findOne', Object.assign({}, masterUserData))
+    req.session.user = Object.assign({}, masterUserData)
+    req.body = { isActive: true }
+    getDb.functions.findOneAndUpdate.mockClear()
+    await updateUser(req, res, next)
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenCalledWith(expect.any(Object), {
+      $set: expect.objectContaining({
+        lastUpdateDate: expect.any(Date)
+      })
+    }, expect.any(Object))
+  })
 })

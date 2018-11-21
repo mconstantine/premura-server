@@ -25,6 +25,7 @@ module.exports = ({
     name, email, role, jobRole,
     password: await bcrypt.hash(password, 10),
     registrationDate: new Date(),
+    lastUpdateDate: new Date(),
     isActive: true
   })
 
