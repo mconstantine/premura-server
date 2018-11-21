@@ -39,11 +39,16 @@ describe('project endpoint', () => {
 
     endpoint(Object.assign(paths, { router, catchExceptions }))
 
+    expect(router.use).toHaveBeenCalledTimes(1)
     expect(router.use.mock.calls[0]).toEqual([paths.loginGate])
+
+    expect(router.get).toHaveBeenCalledTimes(2)
     expect(router.get.mock.calls[0]).toEqual([
       '/', paths.validateGetProjects, paths.sendValidation, paths.getProjects
     ])
     expect(router.get.mock.calls[1]).toEqual(['/:id', paths.getProject])
+
+    expect(router.post).toHaveBeenCalledTimes(4)
     expect(router.post.mock.calls[0]).toEqual([
       '/', paths.validateCreateProject, paths.sendValidation, paths.createProject
     ])
@@ -56,6 +61,8 @@ describe('project endpoint', () => {
     expect(router.post.mock.calls[3]).toEqual([
       '/:id/terms', paths.validateEditTerms, paths.sendValidation, paths.addTerms
     ])
+
+    expect(router.put).toHaveBeenCalledTimes(3)
     expect(router.put.mock.calls[0]).toEqual([
       '/:id', paths.validateUpdateProject, paths.sendValidation, paths.updateProject
     ])
@@ -65,6 +72,8 @@ describe('project endpoint', () => {
     expect(router.put.mock.calls[2]).toEqual([
       '/:id/terms', paths.validateMoveTerms, paths.sendValidation, paths.moveTerms
     ])
+
+    expect(router.delete).toHaveBeenCalledTimes(4)
     expect(router.delete.mock.calls[0]).toEqual(['/:id', paths.deleteProject])
     expect(router.delete.mock.calls[1]).toEqual([
       '/:id/people', paths.validateEditPeople, paths.sendValidation, paths.removePeople
