@@ -14,6 +14,9 @@ module.exports = ({ getDb, ObjectID, createError }) => async (req, res, next) =>
   }))
 
   await collection.updateOne({ _id: categoryId }, {
+    $set: {
+      lastUpdateDate: new Date()
+    },
     $push: { terms: { $each: terms } }
   })
 

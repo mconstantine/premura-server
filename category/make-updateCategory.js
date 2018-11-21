@@ -22,9 +22,13 @@ module.exports = ({ getDb, ObjectID, createError }) => async (req, res, next) =>
     update.allowsMultipleTerms = data.allowsMultipleTerms
   }
 
-  await collection.updateOne({ _id: categoryId }, {
-    $set: update
-  })
+  if (Object.keys(update).length) {
+    update.lastUpdateDate = new Date()
+
+    await collection.updateOne({ _id: categoryId }, {
+      $set: update
+    })
+  }
 
   return res.send(Object.assign(category, update))
 }

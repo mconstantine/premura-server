@@ -58,19 +58,19 @@ describe('addTerms', () => {
     prepare()
     req.body.terms[0].extra = extra
     await addTerms(req, res, next)
-    expect(updateOne).toHaveBeenLastCalledWith(expect.anything(), {
+    expect(updateOne).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({
       $push: {
         terms: {
           $each: [expect.not.objectContaining({ extra }), expect.any(Object)]
         }
       }
-    })
+    }))
   })
 
   it('Should create an id for each term', async () => {
     prepare()
     await addTerms(req, res, next)
-    expect(updateOne).toHaveBeenLastCalledWith(expect.anything(), {
+    expect(updateOne).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({
       $push: {
         terms: {
           $each: [
@@ -79,13 +79,13 @@ describe('addTerms', () => {
           ]
         }
       }
-    })
+    }))
   })
 
   it('Should create an empty projects array for each term', async () => {
     prepare()
     await addTerms(req, res, next)
-    expect(updateOne).toHaveBeenLastCalledWith(expect.anything(), {
+    expect(updateOne).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({
       $push: {
         terms: {
           $each: [
@@ -94,14 +94,14 @@ describe('addTerms', () => {
           ]
         }
       }
-    })
+    }))
   })
 
   it('Should override an eventually provided term ID', async () => {
     prepare()
     req.body.terms[0]._id = new ObjectID('something')
     await addTerms(req, res, next)
-    expect(updateOne).toHaveBeenLastCalledWith(expect.anything(), {
+    expect(updateOne).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({
       $push: {
         terms: {
           $each: [
@@ -110,14 +110,14 @@ describe('addTerms', () => {
           ]
         }
       }
-    })
+    }))
   })
 
   it('Should override an eventually provided projects array', async () => {
     prepare()
     req.body.terms[0].projects = 'whatever'
     await addTerms(req, res, next)
-    expect(updateOne).toHaveBeenLastCalledWith(expect.anything(), {
+    expect(updateOne).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({
       $push: {
         terms: {
           $each: [
@@ -126,7 +126,7 @@ describe('addTerms', () => {
           ]
         }
       }
-    })
+    }))
   })
 
   it('Should return the updated category', async () => {
@@ -138,6 +138,17 @@ describe('addTerms', () => {
         _id: new ObjectID,
         projects: []
       })))
+    }))
+  })
+
+  it('Should update the last update date', async () => {
+    prepare()
+    updateOne.mockClear()
+    await addTerms(req, res, next)
+    expect(updateOne).toHaveBeenLastCalledWith(expect.any(Object), expect.objectContaining({
+      $set: {
+        lastUpdateDate: expect.any(Date)
+      }
     }))
   })
 })

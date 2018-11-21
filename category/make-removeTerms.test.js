@@ -26,7 +26,9 @@ describe('removeTerms', () => {
   it('Should work', async () => {
     await removeTerms(req, res, next)
     expect(getDb.functions.updateOne).toHaveBeenLastCalledWith({ _id: category._id }, {
-      $set: { terms: [expect.objectContaining(category.terms[2])] }
+      $set: expect.objectContaining({
+        terms: [expect.objectContaining(category.terms[2])]
+      })
     })
   })
 
@@ -56,5 +58,13 @@ describe('removeTerms', () => {
     expect(res.send).not.toHaveBeenCalled()
     expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('term')])
     req.body.terms[1]._id = '2'
+  })
+
+  it('Should update the last update date', async () => {
+    getDb.functions.updateOne.mockClear()
+    await removeTerms(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(expect.any(Object), {
+      $set: expect.objectContaining({ lastUpdateDate: expect.any(Date) })
+    })
   })
 })

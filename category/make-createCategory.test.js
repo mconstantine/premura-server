@@ -57,4 +57,16 @@ describe('createCategory', () => {
     await createCategory(req, res, next)
     expect(insertOne).toHaveBeenLastCalledWith(expect.objectContaining({ terms: [] }))
   })
+
+  it('Should save creation and last update dates', async () => {
+    const name = 'name'
+    const allowsMultipleTerms = true
+
+    req.body = { name, allowsMultipleTerms }
+    await createCategory(req, res, next)
+    expect(insertOne).toHaveBeenLastCalledWith(expect.objectContaining({
+      creationDate: expect.any(Date),
+      lastUpdateDate: expect.any(Date)
+    }))
+  })
 })

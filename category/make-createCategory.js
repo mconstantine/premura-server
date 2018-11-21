@@ -10,6 +10,9 @@ module.exports = ({ getDb, createError }) => async (req, res, next) => {
     category.description = description
   }
 
+  category.creationDate = new Date()
+  category.lastUpdateDate = new Date()
+
   const result = await collection.insertOne(category)
   res.status(201).send({ _id: result.insertedId })
 }

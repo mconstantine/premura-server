@@ -54,12 +54,12 @@ describe('updateTerms', () => {
     req.body.terms[0].extra = extra
     await updateTerms(req, res, next)
     expect(getDb.functions.updateOne).toHaveBeenCalledWith(expect.any(Object), {
-      $set: {
+      $set: expect.objectContaining({
         terms: [
           expect.not.objectContaining({ extra }),
           expect.any(Object)
         ]
-      }
+      })
     })
 
     delete req.body.terms[0].extra
@@ -73,7 +73,15 @@ describe('updateTerms', () => {
     await updateTerms(req, res, next)
 
     expect(getDb.functions.updateOne).toHaveBeenCalledWith(expect.any(Object), {
-      $set: { terms: genTerms() }
+      $set: expect.objectContaining({ terms: genTerms() })
+    })
+  })
+
+  it('Should update the last update date', async () => {
+    getDb.functions.updateOne.mockClear()
+    await updateTerms(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenCalledWith(expect.any(Object), {
+      $set: expect.objectContaining({ lastUpdateDate: expect.any(Date) })
     })
   })
 })

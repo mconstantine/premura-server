@@ -50,6 +50,15 @@ describe('updateCategory', () => {
 
   it('Should return the updated category', async () => {
     await updateCategory(req, res, next)
-    expect(res.send).toHaveBeenCalledWith(Object.assign(category, req.body))
+    expect(res.send).toHaveBeenCalledWith(expect.objectContaining(Object.assign(category, req.body)))
+  })
+
+  it('Should update the last update date', async () => {
+    getDb.functions.updateOne.mockClear()
+    await updateCategory(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
+      expect.anything(),
+      { $set: expect.objectContaining({ lastUpdateDate: expect.any(Date) }) }
+    )
   })
 })
