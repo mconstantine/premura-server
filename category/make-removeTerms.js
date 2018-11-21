@@ -19,7 +19,7 @@ module.exports = ({ getDb, ObjectID, createError }) => async (req, res, next) =>
   }
 
   await collection.updateOne({ _id: categoryId }, {
-    $pull: { terms: { _id: { $in: termsToBeDeleted } } }
+    $set: { terms: remainingTerms }
   })
 
   return res.send(Object.assign({}, category, { terms: remainingTerms }))

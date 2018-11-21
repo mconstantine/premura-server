@@ -26,7 +26,7 @@ describe('removeTerms', () => {
   it('Should work', async () => {
     await removeTerms(req, res, next)
     expect(getDb.functions.updateOne).toHaveBeenLastCalledWith({ _id: category._id }, {
-      $pull: { terms: { _id: { $in: req.body.terms.map(({ _id }) => _id) } } }
+      $set: { terms: [expect.objectContaining(category.terms[2])] }
     })
   })
 
