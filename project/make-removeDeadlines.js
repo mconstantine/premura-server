@@ -14,16 +14,9 @@ module.exports = ({
     return next(createError(401, 'you cannot access this project'))
   }
 
-  let deadlines = req.body.deadlines
-  const remainingDeadlines = []
-
-  project.deadlines.forEach(deadline => {
-    if (deadlines.includes(deadline.toISOString())) {
-      return
-    }
-
-    remainingDeadlines.push(deadline)
-  })
+  const remainingDeadlines = project.deadlines.filter(
+    deadline => !req.body.deadlines.includes(deadline.toISOString())
+  )
 
   await collection.updateOne({ _id }, {
     $set: {

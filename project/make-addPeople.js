@@ -51,21 +51,9 @@ module.exports = ({
     return res.status(422).send({ errors })
   }
 
-  { // To be sure that peopleIDsStrings and projectPeopleIDsStrings will not be used anymore
-    // Array.indexOf seems not to work with ObjectIDs
-    const peopleIDsStrings = peopleIDs.map(x => x.toString())
-    const projectPeopleIDsStrings = project.people.map(({ _id }) => _id.toString())
-
-    for (let projectPersonIDString of projectPeopleIDsStrings) {
-      const index = peopleIDsStrings.indexOf(projectPersonIDString.toString())
-
-      if (index >= 0) {
-        peopleIDsStrings.splice(index, 1)
-        peopleIDs.splice(index, 1)
-        people.splice(index, 1)
-      }
-    }
-  }
+  people = people.filter(
+    person => !peopleFromDB.find(personFromDB => person._id.equals(personFromDB._id))
+  )
 
   people = project.people.concat(people)
 

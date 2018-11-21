@@ -36,10 +36,7 @@ module.exports = ({
     }
   }
 
-  const doPeopleHaveBudget = people.reduce(
-    (res, person) => res || Number.isInteger(person.budget),
-    false
-  )
+  const doPeopleHaveBudget = people.filter(person => Number.isInteger(person.budget)).length
 
   if (project.budget && doPeopleHaveBudget) {
     const expected = project.budget

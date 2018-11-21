@@ -14,19 +14,13 @@ module.exports = ({
     return next(createError(401, 'you cannot access this project'))
   }
 
-  {
-    const peopleIDsStrings = req.body.people.map(({ _id }) => _id)
-    const projectPeopleIDsStrings = project.people.map(({ _id }) => _id.toString())
+  req.body.people.forEach(person => {
+    person._id = new ObjectID(person._id)
+  })
 
-    peopleIDsStrings.forEach(personIDString => {
-      const index = projectPeopleIDsStrings.indexOf(personIDString)
-
-      if (index >= 0) {
-        projectPeopleIDsStrings.splice(index, 1)
-        project.people.splice(index, 1)
-      }
-    })
-  }
+  project.people = project.people.filter(
+    person => req.body.people.find(personToRemove => person._id.equals(personToRemove._id))
+  )
 
   if (!project.people.length) {
     return next(createError(422, 'a project cannot be assigned to no one'))

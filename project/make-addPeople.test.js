@@ -91,7 +91,13 @@ describe('addPeople', () => {
   it('Should redistribute budget if needed', async () => {
     getDb.functions.updateOne.mockClear()
     project.budget = 41
+
+    project.people = getUsers()
+    getDb.setResult('findOne', project)
+    getDb.setResult('find', getUsers())
+
     await addPeople(req, res, next)
+
     expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.any(Object),
       { $set: expect.objectContaining({ people: [
@@ -99,6 +105,7 @@ describe('addPeople', () => {
         expect.objectContaining({ budget: 20 })
       ] }) }
     )
+
     delete project.budget
   })
 

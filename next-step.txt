@@ -1,3 +1,2 @@
-Forgot the existance of Array.filter?
 Do createActivity
 Do projects conversations

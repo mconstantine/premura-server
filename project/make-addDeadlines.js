@@ -38,15 +38,9 @@ module.exports = ({
   }
 
   const projectDeadlinesStrings = project.deadlines.map(deadline => deadline.toISOString())
-  const uniqueDeadlines = []
-
-  deadlines.forEach(deadline => {
-    if (projectDeadlinesStrings.includes(deadline.toISOString())) {
-      return
-    }
-
-    uniqueDeadlines.push(deadline)
-  })
+  const uniqueDeadlines = deadlines.filter(
+    deadline => !projectDeadlinesStrings.includes(deadline.toISOString())
+  )
 
   deadlines = project.deadlines.concat(uniqueDeadlines)
 

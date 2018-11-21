@@ -12,28 +12,27 @@ describe('removePeople', () => {
     getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
   })
 
-  const people = [
+  const getPeople = () => [
     { _id: 'someuserid' },
     { _id: 'anotheruserid' }
   ]
 
-  const project = {
+  const getProject = () => ({
     people: [
-      { _id: 'someuserid' },
-      { _id: 'anotheruserid' },
-      { _id: 'athirduserid' }
+      { _id: new ObjectID('someuserid') },
+      { _id: new ObjectID('anotheruserid') },
+      { _id: new ObjectID('athirduserid') }
     ]
-  }
+  })
 
-  const getProject = () => JSON.parse(JSON.stringify(project))
-  const prepare = () => getDb.setResult('findOne', getProject())
   const next = jest.fn()
   const id = '1234567890abcdef'
-  const req = { session: { user: { _id: 'me' } }, params: { id }, body: { people } }
+  const req = { session: { user: { _id: 'me' } }, params: { id }, body: { people: getPeople() } }
   const res = { send: jest.fn() }
 
+  getDb.setResult('findOne', getProject)
+
   it('Should work', async () => {
-    prepare()
     next.mockClear()
     res.send.mockClear()
     getDb.functions.updateOne.mockClear()
@@ -48,7 +47,7 @@ describe('removePeople', () => {
     await removePeople(req, res, next)
     expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
     expect(res.send).not.toHaveBeenCalled()
-    getDb.setResult('findOne', getProject())
+    getDb.setResult('findOne', getProject)
   })
 
   it("Should return 401 if the user can't read the project", async () => {
@@ -60,8 +59,8 @@ describe('removePeople', () => {
   })
 
   it('Should ensure that at least one person is assigned', async () => {
-    prepare()
     res.send.mockClear()
+    const project = getProject()
     people.push(project.people[2])
     await removePeople(req, res, next)
     expect(res.send).not.toHaveBeenCalled()
@@ -69,16 +68,18 @@ describe('removePeople', () => {
     people.pop()
   })
 
-  it('Should redistribute budget if needed (floating budget)', async () => {
-    prepare()
-    const project = getDb.getResult('findOne')
-    const secondPerson = people.pop()
+  it.only('Should redistribute budget if needed (floating budget)', async () => {
+    const project = getProject()
+
     project.budget = 41
     project.people[0].budget = 15
     project.people[1].budget = 15
     project.people[2].budget = 11
 
+    getDb.setResult('findOne', project)
+
     await removePeople(req, res, next)
+
     expect(getDb.functions.updateOne).toHaveBeenLastCalledWith({
       _id: new ObjectID(id)
     }, {
@@ -90,11 +91,10 @@ describe('removePeople', () => {
       })
     })
 
-    people.push(secondPerson)
+    getDb.setResult('findOne', getProject)
   })
 
   it('Should return the updated project', async () => {
-    prepare()
     getProjectFromDb.mockClear()
     await removePeople(req, res, next)
     expect(getProjectFromDb).toHaveBeenCalled()
@@ -102,7 +102,6 @@ describe('removePeople', () => {
   })
 
   it('Should update the last update date', async () => {
-    prepare()
     getDb.functions.updateOne.mockClear()
     await removePeople(req, res, next)
     expect(getDb.functions.updateOne).toHaveBeenCalledWith(expect.any(Object), {
