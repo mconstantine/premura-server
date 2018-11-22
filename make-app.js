@@ -6,10 +6,10 @@ const bodyParser = require('body-parser')
 
 const app = express()
 
-const user = require('./user/index')
-const category = require('./category/index')
-const project = require('./project/index')
-const activity = require('./activity/index')
+const makeUser = require('./user/make-index')
+const makeCategory = require('./category/make-index')
+const makeProject = require('./project/make-index')
+const makeActivity = require('./activity/make-index')
 
 module.exports = ({ config }) => {
   const sessionOptions = config.session
@@ -35,10 +35,10 @@ module.exports = ({ config }) => {
   .use(session(sessionOptions))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: false }))
-  .use('/users', user)
-  .use('/categories', category)
-  .use('/projects', project)
-  .use('/activities', activity)
+  .use('/users', makeUser({ config }))
+  .use('/categories', makeCategory({ config }))
+  .use('/projects', makeProject({ config }))
+  .use('/activities', makeActivity({ config }))
 
   app.get('/', (req, res) => res.send('Hello ' + JSON.stringify(req.session)))
 
