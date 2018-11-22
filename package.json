@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --watch",
     "start": "nodemon .",
-    "test-all": "jest --testPathPattern \\.spec\\.js$ --watch"
+    "test-dev": "jest --testPathPattern \\.spec\\.js$ --watch",
+    "test-all": "jest --testPathPattern \\.spec\\.js$"
   },
   "repository": {
     "type": "git",
