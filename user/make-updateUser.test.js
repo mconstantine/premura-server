@@ -15,7 +15,8 @@ describe('updateUser', () => {
   const updateUser = makeUpdateUser({
     createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection
   })
-  const res = { status: jest.fn(() => res), redirect: jest.fn(), send: jest.fn() }
+
+  const res = { status: jest.fn(() => res), end: jest.fn(), send: jest.fn() }
 
   const masterUserData = {
     _id: new ObjectID('me'),
@@ -188,6 +189,19 @@ describe('updateUser', () => {
     expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
   })
 
+  it("Should allow a master user to change another user's password", async () => {
+    const password = 'password'
+    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    req.session.user = { _id: 'notMe', role: 'master' }
+    req.body = { password }
+    await updateUser(req, res, next)
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenLastCalledWith(
+      expect.anything(),
+      { $set: expect.objectContaining({ password: '3ncrypt3d' }) },
+      expect.anything()
+    )
+  })
+
   it("Should not allow a non master user to change another user's active state", async () => {
     getDb.setResult('findOne', { _id: 'me', role: 'maker' })
     req.session.user = { _id: 'notMe', role: 'manager' }
@@ -281,7 +295,6 @@ describe('updateUser', () => {
   })
 
   it('Should logout if email or password changed', async () => {
-    res.redirect.mockClear()
     req.session.user = Object.assign({}, masterUserData)
     const originalFindOne = getDb.functions.findOne
     getDb.functions.findOne = function(query) {
@@ -294,11 +307,13 @@ describe('updateUser', () => {
 
     req.body = { email: 'whatever@example.com' }
     await updateUser(req, res, next)
+    expect(req.session.user).not.toBeDefined()
 
+    req.session.user = Object.assign({}, masterUserData)
     req.body = { password: 'password' }
     await updateUser(req, res, next)
 
-    expect(res.redirect).toHaveBeenCalledTimes(2)
+    expect(req.session.user).not.toBeDefined()
     getDb.functions.findOne = originalFindOne
   })
 

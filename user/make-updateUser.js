@@ -57,6 +57,7 @@ module.exports = ({
   if (req.body.password) {
     const password = req.body.password
     delete req.body.password
+    delete req.body.passwordConfirmation
 
     if (currentUser._id != user._id.toString() && currentUser.role !== 'master') {
       return next(createError(401, 'you can change only your own password'))
@@ -105,7 +106,8 @@ module.exports = ({
 
   if (result.value._id.equals(currentUser._id)) {
     if (update.email || update.password) {
-      return res.redirect('/users/logout')
+      delete req.session.user
+      return res.end()
     }
 
     for (let i in update) {
