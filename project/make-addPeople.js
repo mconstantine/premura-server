@@ -14,7 +14,10 @@ module.exports = ({
     return next(createError(401, 'you cannot access this project'))
   }
 
-  let people = req.body.people.map(({ _id }) => ({ _id: new ObjectID(_id) }))
+  let people = req.body.people.map(
+    person => Object.assign({}, person, { _id: new ObjectID(person._id) })
+  )
+
   const peopleIDs = people.map(({ _id }) => _id)
   const peopleFromDB = await db
     .collection('users')
@@ -52,7 +55,7 @@ module.exports = ({
   }
 
   people = people.filter(
-    person => !peopleFromDB.find(personFromDB => person._id.equals(personFromDB._id))
+    person => !project.people.find(projectPerson => person._id.equals(projectPerson._id))
   )
 
   people = project.people.concat(people)
