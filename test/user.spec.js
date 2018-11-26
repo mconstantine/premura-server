@@ -1,6 +1,4 @@
-const API_URL = 'http://localhost:3000'
-
-const client = require('./getClient')()
+const client = require('./getClient')('http://localhost:3000')
 const faker = require('faker')
 const roles = require('../misc/roles')
 
@@ -11,7 +9,7 @@ describe('user', () => {
     for (let i = 0; i < 10; i++) {
       const password = faker.internet.password()
 
-      const response = await client.post(API_URL + '/users/', {
+      const response = await client.post('/users/', {
         body: {
           name: faker.name.firstName() + ' ' + faker.name.lastName(),
           email: faker.internet.email(),
@@ -32,14 +30,14 @@ describe('user', () => {
   it('Should paginate users', async () => {
     let response, content
 
-    response = await client.get(API_URL + '/users/?perPage=5&page=1')
+    response = await client.get('/users/?perPage=5&page=1')
     content = await response.json()
 
     expect(content.length).toBe(5)
     expect(response.headers.get('X-Pages-Count')).toBe('3')
     expect(response.headers.get('X-Current-Page')).toBe('1')
 
-    response = await client.get(API_URL + '/users/', {
+    response = await client.get('/users/', {
       headers: {
         'X-Page-Cursor': response.headers.get('X-Next-Page-Cursor')
       }
@@ -50,7 +48,7 @@ describe('user', () => {
     expect(response.headers.get('X-Pages-Count')).toBe('3')
     expect(response.headers.get('X-Current-Page')).toBe('2')
 
-    response = await client.get(API_URL + '/users/', {
+    response = await client.get('/users/', {
       headers: {
         'X-Page-Cursor': response.headers.get('X-Prev-Page-Cursor')
       }
@@ -66,7 +64,7 @@ describe('user', () => {
 
   it('Should return single users', async () => {
     const _id = ids[Math.round(Math.random() * (ids.length - 1))]
-    const response = await client.get(API_URL + `/users/${_id}`)
+    const response = await client.get(`/users/${_id}`)
     const content = await response.json()
 
     expect(content).toBeInstanceOf(Object)
@@ -85,7 +83,7 @@ describe('user', () => {
       passwordConfirmation: 'masterupdate'
     }
 
-    response = await client.put(API_URL + `/users/${user._id}`, {
+    response = await client.put(`/users/${user._id}`, {
       body: update
     })
     content = await response.json()
@@ -94,7 +92,7 @@ describe('user', () => {
     expect(new Date(content.lastUpdateDate).getTime())
     .toBeGreaterThan(lastUpdateDate.getTime())
 
-    response = await client.post(API_URL + '/users/login/', {
+    response = await client.post('/users/login/', {
       body: {
         email: update.email,
         password: update.password
@@ -108,7 +106,7 @@ describe('user', () => {
     let response, content
     const lastUpdateDate = new Date()
 
-    response = await client.post(API_URL + '/users/login/', {
+    response = await client.post('/users/login/', {
       body: {
         email: 'masterupdate@example.com',
         password: 'masterupdate'
@@ -125,14 +123,14 @@ describe('user', () => {
       jobRole: 'User Update'
     }
 
-    await client.put(API_URL + `/users/${user._id}`, {
+    await client.put(`/users/${user._id}`, {
       body: update
     })
 
-    response = await client.get(API_URL + `/users/${user._id}`)
+    response = await client.get(`/users/${user._id}`)
     expect(response.status).toBe(401) // Should have been logged out
 
-    response = await client.post(API_URL + '/users/login/', {
+    response = await client.post('/users/login/', {
       body: {
         email: update.email,
         password: update.password
@@ -148,7 +146,7 @@ describe('user', () => {
   })
 
   it('Should find users', async () => {
-    const response = await client.get(API_URL + '/users/?name=User&jobRole=User')
+    const response = await client.get('/users/?name=User&jobRole=User')
     const content = await response.json()
     const user = content.find(
       user => user.name === 'User Update' && user.jobRole === 'User Update'
@@ -158,7 +156,7 @@ describe('user', () => {
   })
 
   it('Should get job roles', async () => {
-    const response = await client.get(API_URL + '/users/roles/')
+    const response = await client.get('/users/roles/')
     const content = await response.json()
 
     expect(content).toEqual(['Master', 'Example', 'User Update'])
@@ -168,8 +166,7 @@ describe('user', () => {
     await client.login()
 
     for (_id of ids) {
-      const response = await client.delete(`http://localhost:3000/users/${_id}`)
-
+      const response = await client.delete(`/users/${_id}`)
       expect(response.status).toBe(200)
     }
   })

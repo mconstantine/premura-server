@@ -1,14 +1,18 @@
 const fetch = require('node-fetch')
 let client
 
-module.exports = () => {
-  client = client || new Client()
+module.exports = apiUrl => {
+  client = client || new Client(apiUrl)
   return client
 }
 
 class Client {
+  constructor(apiUrl) {
+    this.apiUrl = apiUrl
+  }
+
   async login() {
-    const response = await fetch('http://localhost:3000/users/login/', {
+    const response = await fetch(this.apiUrl + '/users/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -18,8 +22,11 @@ class Client {
         password: 'root'
       })
     })
+    const content = await response.json()
 
     this.cookie = response.headers.get('set-cookie')
+
+    return content._id
   }
 
   async get(url, options = {}) {
@@ -59,6 +66,6 @@ class Client {
       httpOptions.body = JSON.stringify(options.body)
     }
 
-    return await fetch(url, httpOptions)
+    return await fetch(this.apiUrl + url, httpOptions)
   }
 }

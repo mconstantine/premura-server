@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb')
 
 const config = require('./config')
 const app = require('../make-app')
-const client = require('./getClient')()
+const client = require('./getClient')('http://localhost:3000')
 const getDb = require('../misc/make-getDb')({ MongoClient, config })
 
 module.exports = async () => {
