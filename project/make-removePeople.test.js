@@ -27,7 +27,11 @@ describe('removePeople', () => {
 
   const next = jest.fn()
   const id = '1234567890abcdef'
-  const req = { session: { user: { _id: 'me' } }, params: { id }, body: { people: getPeople() } }
+  const req = {
+    session: { user: { _id: 'me' } },
+    params: { id },
+    body: { people: getPeople() }
+  }
   const res = { send: jest.fn() }
 
   getDb.setResult('findOne', getProject)
@@ -85,8 +89,7 @@ describe('removePeople', () => {
     }, {
       $set: expect.objectContaining({
         people: [
-          expect.objectContaining({ budget: 21 }),
-          expect.objectContaining({ budget: 20 })
+          expect.objectContaining({ budget: 41 })
         ]
       })
     })

@@ -14,12 +14,12 @@ module.exports = ({
     return next(createError(401, 'you cannot access this project'))
   }
 
-  req.body.people.forEach(person => {
-    person._id = new ObjectID(person._id)
-  })
+  const people = req.body.people.map(person =>
+    Object.assign({}, person, { _id: new ObjectID(person._id) })
+  )
 
   project.people = project.people.filter(
-    person => req.body.people.find(personToRemove => person._id.equals(personToRemove._id))
+    projectPerson => !people.find(person => projectPerson._id.equals(person._id))
   )
 
   if (!project.people.length) {
