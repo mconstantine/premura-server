@@ -38,6 +38,9 @@ describe('addTerms', () => {
     terms: [{
       _id: new ObjectID('termtwoid'),
       projects: []
+    }, {
+      _id: new ObjectID('termthreeid'),
+      projects: []
     }]
   }]
 
@@ -65,14 +68,14 @@ describe('addTerms', () => {
   it('Should check that the terms exist', async () => {
     res.status.mockClear()
     res.send.mockClear()
-    req.body.terms[1] = 'termthreeid'
+    req.body.terms[1] = 'termfourid'
     await addTerms(req, res, next)
     expect(res.status).toHaveBeenLastCalledWith(422)
     expect(res.send).toHaveBeenLastCalledWith({
       errors: [{
         location: 'body',
         param: `terms[1]`,
-        value: 'termthreeid',
+        value: 'termfourid',
         msg: 'term not found'
       }]
     })
@@ -85,6 +88,27 @@ describe('addTerms', () => {
     await addTerms(req, res, next)
     expect(categories[0].terms[0].projects.length).toBe(1)
     expect(categories[1].terms[0].projects.length).toBe(1)
+  })
+
+  it('Should override multiple terms if allowsMultipleTerms is false', async () => {
+    getDb.functions.updateOne.mockClear()
+    const originalTerms = req.body.terms
+    categories[1].terms[0].projects = [new ObjectID(id)]
+    categories[1].terms[1].projects = []
+    req.body.terms = [categories[1].terms[1]._id.toString()]
+    await addTerms(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenNthCalledWith(1, expect.anything(), {
+      $set: {
+        terms: [{
+          _id: categories[1].terms[0]._id,
+          projects: []
+        }, {
+          _id: categories[1].terms[1]._id,
+          projects: [new ObjectID(id)]
+        }]
+      }
+    })
+    req.body.terms = originalTerms
   })
 
   it('Should return the updated project', async () => {

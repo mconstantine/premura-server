@@ -67,6 +67,16 @@ module.exports = ({
 
     term.projects.push(project_id)
 
+    if (!category.allowsMultipleTerms) {
+      category.terms.forEach(t => {
+        if (!t._id.equals(term._id)) {
+          t.projects = t.projects.filter(
+            p_id => !p_id.equals(project_id)
+          )
+        }
+      })
+    }
+
     await categoriesCollection.updateOne({ _id: category._id }, {
       $set: { terms: category.terms }
     })
