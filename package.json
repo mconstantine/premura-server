@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest --testPathPattern \\.test\\.js$ --watch",
     "start": "nodemon .",
-    "test-dev": "jest --testPathPattern \\.spec\\.js$ --watch",
-    "test-all": "jest --testPathPattern \\.spec\\.js$ --forceExit"
+    "test-dev": "jest --testPathPattern \\.spec\\.js$ --globalSetup ./test/setup.js --globalTeardown ./test/teardown.js --watch",
+    "test-all": "jest --testPathPattern \\.spec\\.js$ --globalSetup ./test/setup.js --globalTeardown ./test/teardown.js --forceExit"
   },
   "repository": {
     "type": "git",

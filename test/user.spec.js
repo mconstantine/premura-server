@@ -1,23 +1,8 @@
 const API_URL = 'http://localhost:3000'
 
-const config = require('./config')
-const app = require('../make-app')({ config })
-const { setup, teardown } = require('./init')
 const client = require('./getClient')()
 const faker = require('faker')
 const roles = require('../misc/roles')
-
-let server
-
-beforeAll(async () => {
-  server = await app.listen(3000)
-  await setup()
-})
-
-afterAll(async () => {
-  await teardown()
-  server.close()
-})
 
 describe('user', () => {
   const ids = []

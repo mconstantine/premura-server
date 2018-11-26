@@ -11,7 +11,10 @@ const makeCategory = require('./category/make-index')
 const makeProject = require('./project/make-index')
 const makeActivity = require('./activity/make-index')
 
-module.exports = ({ config }) => {
+let server, nextSocketId = 0
+const sockets = {}
+
+module.exports.open = ({ config, port = 5000 }) => {
   const sessionOptions = config.session
 
   sessionOptions.store = new MongoDBStore({
@@ -72,5 +75,30 @@ module.exports = ({ config }) => {
   // Default to 404
   .use((req, res) => res.status(404).end())
 
+  server = app.listen(port)
+
+  server.on('connection', socket => {
+    const socketId = nextSocketId++
+    sockets[socketId] = socket
+
+    socket.on('close', () => {
+      delete sockets[socketId]
+    })
+  })
+
+  server.on('close', () => {
+    Object.keys(sockets).forEach(socketId => {
+      sockets[socketId].destroy()
+    })
+  })
+
   return app
 }
+
+module.exports.close = () => new Promise(done => {
+  server.close(() => {
+    nextSocketId = 0
+    done()
+    server = null
+  })
+})
