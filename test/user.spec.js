@@ -3,7 +3,7 @@ const faker = require('faker')
 const roles = require('../misc/roles')
 
 describe('user', () => {
-  const ids = []
+  let ids = []
 
   it('Should create users', async () => {
     for (let i = 0; i < 10; i++) {
@@ -60,7 +60,7 @@ describe('user', () => {
     expect(response.headers.get('X-Current-Page')).toBe('1')
   })
 
-  let user
+  let exampleUser
 
   it('Should return single users', async () => {
     const _id = ids[Math.round(Math.random() * (ids.length - 1))]
@@ -69,7 +69,7 @@ describe('user', () => {
 
     expect(content).toBeInstanceOf(Object)
 
-    user = content
+    exampleUser = content
   })
 
   it('Should correctly update a user (master updates user)', async () => {
@@ -83,7 +83,7 @@ describe('user', () => {
       passwordConfirmation: 'masterupdate'
     }
 
-    response = await client.put(`/users/${user._id}`, {
+    response = await client.put(`/users/${exampleUser._id}`, {
       body: update
     })
     content = await response.json()
@@ -123,11 +123,11 @@ describe('user', () => {
       jobRole: 'User Update'
     }
 
-    await client.put(`/users/${user._id}`, {
+    await client.put(`/users/${exampleUser._id}`, {
       body: update
     })
 
-    response = await client.get(`/users/${user._id}`)
+    response = await client.get(`/users/${exampleUser._id}`)
     expect(response.status).toBe(401) // Should have been logged out
 
     response = await client.post('/users/login/', {
@@ -159,7 +159,48 @@ describe('user', () => {
     const response = await client.get('/users/roles/')
     const content = await response.json()
 
-    expect(content).toEqual(['Master', 'Example', 'User Update'])
+    expect(content.length).toBe(3)
+    expect(content).toContain('Master')
+    expect(content).toContain('Example')
+    expect(content).toContain('User Update')
+  })
+
+  it('Should delete a project if a user is deleted', async () => {
+    const userId = await client.login()
+    let response, content
+
+    response = await client.post('/projects', {
+      body: {
+        name: 'A project'
+      }
+    })
+    content = await response.json()
+
+    const projectId = content._id
+
+    response = await client.post(`/projects/${projectId}/people/`, {
+      body : {
+        people: [{
+          _id: exampleUser._id
+        }]
+      }
+    })
+
+    await client.delete(`/projects/${projectId}/people/`, {
+      body: {
+        people: [{
+          _id: userId
+        }]
+      }
+    })
+
+    await client.delete(`/users/${exampleUser._id}`)
+
+    response = await client.get(`/projects/${projectId}`)
+    expect(response.status).toBe(404)
+
+    ids = ids.filter(_id => _id !== exampleUser._id.toString())
+    await client.delete(`/projects/${projectId}`)
   })
 
   it('Should delete users', async () => {
