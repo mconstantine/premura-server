@@ -10,4 +10,5 @@ module.exports = async () => {
     email: 'root@premura.com'
   })
   await app.close()
+  await db.close()
 }
