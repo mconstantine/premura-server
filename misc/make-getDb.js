@@ -1,6 +1,11 @@
-module.exports = ({ MongoClient, config }) => async () => {
-  const { url, dbName } = config.db
-  const client = await MongoClient.connect(`${url}/${dbName}`, { useNewUrlParser: true })
+let db
 
-  return Object.assign(client.db(dbName), { close: client.close })
+module.exports = ({ MongoClient, config }) => async () => {
+  return db || (async () => {
+    const { url, dbName } = config.db
+    const client = await MongoClient.connect(`${url}/${dbName}`, { useNewUrlParser: true })
+
+    db = Object.assign(client.db(dbName), { close: client.close })
+    return db
+  })()
 }
