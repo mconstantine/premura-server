@@ -9,6 +9,7 @@ const app = express()
 const makeUser = require('./user/make-index')
 const makeCategory = require('./category/make-index')
 const makeProject = require('./project/make-index')
+const makeActivity = require('./activity/make-index')
 
 let server, nextSocketId = 0
 const sockets = {}
@@ -40,6 +41,7 @@ module.exports.open = ({ config, port = 5000 }) => {
   .use('/users', makeUser({ config }))
   .use('/categories', makeCategory({ config }))
   .use('/projects', makeProject({ config }))
+  .use('/activities', makeActivity({ config }))
 
   app.get('/', (req, res) => res.send('Hello ' + JSON.stringify(req.session)))
 
