@@ -29,7 +29,7 @@ describe('getCategories', () => {
     }))
   })
 
-  it.only('Should search by category name', async () => {
+  it('Should search by category name', async () => {
     const name = 'nameQuery'
     req.query = { name }
     await getCategories(req, res)

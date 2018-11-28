@@ -65,14 +65,14 @@ describe('removePeople', () => {
   it('Should ensure that at least one person is assigned', async () => {
     res.send.mockClear()
     const project = getProject()
-    people.push(project.people[2])
+    req.body.people.push({ _id: project.people[2]._id.toString() })
     await removePeople(req, res, next)
     expect(res.send).not.toHaveBeenCalled()
     expect(next).toHaveBeenCalledWith([422, expect.any(String)])
-    people.pop()
+    req.body.people.pop()
   })
 
-  it.only('Should redistribute budget if needed (floating budget)', async () => {
+  it('Should redistribute budget if needed (floating budget)', async () => {
     const project = getProject()
 
     project.budget = 41
