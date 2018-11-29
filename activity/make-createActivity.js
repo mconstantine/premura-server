@@ -85,24 +85,26 @@ module.exports = ({
     return next(createError(409, JSON.stringify(conflict)))
   }
 
-  const getBudget = ({ timeFrom, timeTo }) => (timeTo - timeFrom) / (1000 * 60 * 60)
-  const totalBudget = otherActivities.reduce(
-    (res, activity) => res + getBudget(activity),
-    0
-  )
-  const budget = getBudget(activity)
-  const recipientPerson = project.people.find(({ _id }) => _id.equals(recipient_id))
-  const recipientBudget = recipientPerson ? recipientPerson.budget : 0
+  if (project.budget) {
+    const getBudget = ({ timeFrom, timeTo }) => (timeTo - timeFrom) / (1000 * 60 * 60)
+    const totalBudget = otherActivities.reduce(
+      (res, activity) => res + getBudget(activity),
+      0
+    )
+    const budget = getBudget(activity)
+    const recipientPerson = project.people.find(({ _id }) => _id.equals(recipient_id))
+    const recipientBudget = recipientPerson ? recipientPerson.budget : 0
 
-  if (totalBudget + budget > recipientBudget) {
-    return res.status(422).send({
-      errors: [{
-        location: 'body',
-        param: 'timeTo',
-        value: timeTo.toISOString(),
-        message: 'there is no budget left'
-      }]
-    })
+    if (totalBudget + budget > recipientBudget) {
+      return res.status(422).send({
+        errors: [{
+          location: 'body',
+          param: 'timeTo',
+          value: timeTo.toISOString(),
+          message: 'there is no budget left'
+        }]
+      })
+    }
   }
 
   const result = await db.collection('activities').insertOne(activity)
