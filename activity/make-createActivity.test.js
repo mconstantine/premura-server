@@ -61,11 +61,8 @@ describe('createActivity', () => {
 
   getDb.setResult('findOne', findOne)
 
-  let activities = []
-
   getDb.setResult('insertOne', { insertedId: 'activityid' })
-  const getActivities = () => activities
-  getDb.setResult('find', getActivities)
+  getDb.setResult('find', [])
 
   it('Should check that project exists', async () => {
     getDb.functions.findOne.mockClear()
@@ -168,10 +165,10 @@ describe('createActivity', () => {
     const three = new Date(now + 1000 * 60 * 60 * 48)
     const four = new Date(now + 1000 * 60 * 60 * 72)
 
-    activities = [{
+    getDb.setResult('find', [{
       timeFrom: one,
       timeTo: two
-    }]
+    }])
 
     req.body = {
       timeFrom: three.toISOString(),
@@ -191,10 +188,10 @@ describe('createActivity', () => {
     const three = new Date(now + 1000 * 60 * 60 * 48)
     const four = new Date(now + 1000 * 60 * 60 * 72)
 
-    activities = [{
+    getDb.setResult('find', [{
       timeFrom: one,
       timeTo: three
-    }]
+    }])
 
     req.body = {
       timeFrom: two.toISOString(),
@@ -214,10 +211,10 @@ describe('createActivity', () => {
     const three = new Date(now + 1000 * 60 * 60 * 48)
     const four = new Date(now + 1000 * 60 * 60 * 72)
 
-    activities = [{
+    getDb.setResult('find', [{
       timeFrom: two,
       timeTo: four
-    }]
+    }])
 
     req.body = {
       timeFrom: one.toISOString(),
@@ -237,10 +234,10 @@ describe('createActivity', () => {
     const three = new Date(now + 1000 * 60 * 60 * 48)
     const four = new Date(now + 1000 * 60 * 60 * 72)
 
-    activities = [{
+    getDb.setResult('find', [{
       timeFrom: three,
       timeTo: four
-    }]
+    }])
 
     req.body = {
       timeFrom: one.toISOString(),
@@ -258,10 +255,10 @@ describe('createActivity', () => {
     const one = new Date(now)
     const two = new Date(now + 1000 * 60 * 60 * 24)
 
-    activities = [{
+    getDb.setResult('find', [{
       timeFrom: one,
       timeTo: two
-    }]
+    }])
 
     req.body = {
       timeFrom: one.toISOString(),
@@ -331,7 +328,7 @@ describe('createActivity', () => {
     })
 
     getProject = originalGetProject
-    getDb.setResult('find', activities)
+    getDb.setResult('find', [])
   })
 
   it('Should ignore budget if none is set', async () => {
@@ -367,6 +364,14 @@ describe('createActivity', () => {
 
     await createActivity(req, res, next)
     expect(res.status).toHaveBeenLastCalledWith(201)
-    getDb.setResult('find', activities)
+    getDb.setResult('find', [])
+  })
+
+  it('Should create an empty people Array.', async () => {
+    getDb.functions.insertOne.mockClear()
+    await createActivity(req, res, next)
+    expect(getDb.functions.insertOne).toHaveBeenLastCalledWith(expect.objectContaining({
+      people: []
+    }))
   })
 })

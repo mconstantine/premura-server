@@ -107,7 +107,8 @@ module.exports = ({
     }
   }
 
-  const result = await db.collection('activities').insertOne(activity)
+  activity.people = []
 
+  const result = await db.collection('activities').insertOne(activity)
   return res.status(201).send({ _id: result.insertedId })
 }
