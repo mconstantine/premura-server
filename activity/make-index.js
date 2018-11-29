@@ -12,7 +12,9 @@ const makeGetDb = require('../misc/make-getDb')
 const userCanReadProject = require('../project/make-userCanReadProject')({ ObjectID })
 
 const makeCreateActivity = require('./make-createActivity')
+const makeUpdateActivity = require('./make-updateActivity')
 const makeValidateCreateActivity = require('./make-validateCreateActivity')
+const makeValidateUpdateActivity = require('./make-validateUpdateActivity')
 
 const sendValidation = makeSendValidation({ validationResult })
 
@@ -27,6 +29,10 @@ module.exports = ({ config }) => {
     createActivity: makeCreateActivity({
       getDb, ObjectID, createError, userCanReadProject
     }),
-    validateCreateActivity: makeValidateCreateActivity({ check })
+    updateActivity: makeUpdateActivity({
+      getDb, ObjectID, createError, userCanReadProject
+    }),
+    validateCreateActivity: makeValidateCreateActivity({ check }),
+    validateUpdateActivity: makeValidateUpdateActivity({ check })
   })
 }

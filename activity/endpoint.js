@@ -4,8 +4,11 @@ module.exports = ({
   sendValidation,
   catchExceptions,
   createActivity,
-  validateCreateActivity
+  updateActivity,
+  validateCreateActivity,
+  validateUpdateActivity
 }) =>
 router
 .use(loginGate)
 .post('/', validateCreateActivity, sendValidation, catchExceptions(createActivity))
+.put('/:id', validateUpdateActivity, sendValidation, catchExceptions(updateActivity))
