@@ -42,14 +42,13 @@ describe('createActivity', () => {
 
   const next = jest.fn()
 
-  const getProject = () => ({
+  let getProject = () => ({
     _id: new ObjectID('projectid'),
     people: [getMasterUser(), getMakerUser()]
   })
 
   const getUser = ({ _id }) => _id.equals(getMasterUser()._id) ? getMasterUser() : getMakerUser()
-
-  getDb.setResult('findOne', (...args) => {
+  const findOne = (...args) => {
     switch (getDb.getCurrentCollection()) {
       case 'projects':
         return getProject(...args)
@@ -58,7 +57,9 @@ describe('createActivity', () => {
       default:
         return null
     }
-  })
+  }
+
+  getDb.setResult('findOne', findOne)
 
   let activities = []
 
@@ -276,6 +277,16 @@ describe('createActivity', () => {
     res.send.mockClear()
 
     const now = Date.now()
+    const originalGetProject = getProject
+
+    getProject = () => {
+      const project = originalGetProject()
+      project.budget = 10
+      project.people[0].budget = 5
+      project.people[1].budget = 5
+      return project
+    }
+
     const project = getProject()
 
     project.budget = 10
@@ -294,7 +305,6 @@ describe('createActivity', () => {
       timeTo: new Date(now + 1000 * 60 * 60 * 4)
     }]
 
-    getDb.setResult('findOne', project)
     getDb.setResult('find', activitiesWithBudget)
 
     const timeFrom = new Date(now + 1000 * 60 * 60 * 5).toISOString()
@@ -320,7 +330,7 @@ describe('createActivity', () => {
       ]
     })
 
-    getDb.setResult('findOne', getProject)
+    getProject = originalGetProject
     getDb.setResult('find', activities)
   })
 
@@ -332,18 +342,17 @@ describe('createActivity', () => {
     const project = getProject()
 
     const activitiesWithBudget = [{
-      project: project._id.toString(),
-      recipient: getMasterUser()._id.toString(),
+      project: project._id,
+      recipient: getMasterUser()._id,
       timeFrom: new Date(now),
       timeTo: new Date(now + 1000 * 60 * 60 * 1)
     }, {
-      project: project._id.toString(),
-      recipient: getMasterUser()._id.toString(),
+      project: project._id,
+      recipient: getMasterUser()._id,
       timeFrom: new Date(now + 1000 * 60 * 60 * 2),
       timeTo: new Date(now + 1000 * 60 * 60 * 4)
     }]
 
-    getDb.setResult('findOne', project)
     getDb.setResult('find', activitiesWithBudget)
 
     const timeFrom = new Date(now + 1000 * 60 * 60 * 5).toISOString()
@@ -357,10 +366,7 @@ describe('createActivity', () => {
     }
 
     await createActivity(req, res, next)
-
     expect(res.status).toHaveBeenLastCalledWith(201)
-
-    getDb.setResult('findOne', getProject)
     getDb.setResult('find', activities)
   })
 })
