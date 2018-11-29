@@ -1,1 +1,4 @@
-module.exports = (httpCode, message) => Object.assign(new Error(message), { httpCode })
+module.exports = (httpCode, message, ...messages) => {
+  const errors = [message].concat(messages).map(msg => ({ msg }))
+  return Object.assign(new Error(JSON.stringify({ errors })), { httpCode })
+}
