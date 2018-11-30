@@ -24,6 +24,10 @@ module.exports = ({
     _id: activity.project
   })
 
+  if (!userCanReadProject(currentUser, project)) {
+    return next(createError(401, 'you cannot access this project'))
+  }
+
   const peopleIds = req.body.people
   .filter((value, index, self) => self.indexOf(value) === index) // removes duplicates
   .map(id => new ObjectID(id))

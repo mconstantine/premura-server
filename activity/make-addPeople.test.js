@@ -69,6 +69,15 @@ describe('addPeople', () => {
     expect(getDb.functions.findOne).toHaveBeenCalledWith({ _id: getActivity()._id })
   })
 
+  it('Should check that currentUser can access the project', async () => {
+    userCanReadProject.mockClear()
+    await addPeople(req, res, next)
+    expect(userCanReadProject).toHaveBeenCalledWith(
+      req.session.user,
+      getProject()
+    )
+  })
+
   it("Should not allow a maker to edit another user's activity", async () => {
     next.mockClear()
     req.session.user = getMakerUser()
