@@ -16,8 +16,10 @@ describe('activity endpoint', () => {
       loginGate: 'loginGate',
       createActivity: 'createActivity',
       updateActivity: 'updateActivity',
+      addPeople: 'addPeople',
       validateCreateActivity: 'validateCreateActivity',
       validateUpdateActivity: 'validateUpdateActivity',
+      validateEditPeople: 'validateEditPeople',
       sendValidation: 'sendValidation'
     }
 
@@ -26,9 +28,12 @@ describe('activity endpoint', () => {
     expect(router.use).toHaveBeenCalledTimes(1)
     expect(router.use.mock.calls[0]).toEqual([paths.loginGate])
 
-    expect(router.post).toHaveBeenCalledTimes(1)
+    expect(router.post).toHaveBeenCalledTimes(2)
     expect(router.post.mock.calls[0]).toEqual([
       '/', paths.validateCreateActivity, paths.sendValidation, paths.createActivity
+    ])
+    expect(router.post.mock.calls[1]).toEqual([
+      '/:id/people', paths.validateEditPeople, paths.sendValidation, paths.addPeople
     ])
 
     expect(router.put).toHaveBeenCalledTimes(1)

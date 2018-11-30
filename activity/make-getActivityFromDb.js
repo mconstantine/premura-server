@@ -18,6 +18,22 @@ module.exports = ({ sensitiveInformationProjection }) => async (db, _id) => {
       as: 'project.users'
     }
   }, {
+    $lookup: {
+      from: 'users',
+      localField: 'people',
+      foreignField: '_id',
+      as: 'people'
+    }
+  }, {
+    $project: Object
+    .keys(sensitiveInformationProjection)
+    .reduce(
+      (res, key) => Object.assign(
+        res, { [`people.${key}`]: sensitiveInformationProjection[key] }
+      ),
+      {}
+    )
+  }, {
     $project: Object
     .keys(sensitiveInformationProjection)
     .reduce(

@@ -10,11 +10,15 @@ const loginGate = require('../misc/loginGate')
 const createError = require('../misc/createServerError')
 const makeGetDb = require('../misc/make-getDb')
 const userCanReadProject = require('../project/make-userCanReadProject')({ ObjectID })
+const sensitiveInformationProjection = require('../user/sensitiveInformationProjection')
+const getActivityFromDb = require('./make-getActivityFromDb')({ sensitiveInformationProjection })
 
 const makeCreateActivity = require('./make-createActivity')
 const makeUpdateActivity = require('./make-updateActivity')
+const makeAddPeople = require('./make-addPeople')
 const makeValidateCreateActivity = require('./make-validateCreateActivity')
 const makeValidateUpdateActivity = require('./make-validateUpdateActivity')
+const makeValidateEditPeople = require('./make-validateEditPeople')
 
 const sendValidation = makeSendValidation({ validationResult })
 
@@ -30,9 +34,13 @@ module.exports = ({ config }) => {
       getDb, ObjectID, createError, userCanReadProject
     }),
     updateActivity: makeUpdateActivity({
-      getDb, ObjectID, createError, userCanReadProject
+      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+    }),
+    addPeople: makeAddPeople({
+      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
     }),
     validateCreateActivity: makeValidateCreateActivity({ check }),
-    validateUpdateActivity: makeValidateUpdateActivity({ check })
+    validateUpdateActivity: makeValidateUpdateActivity({ check }),
+    validateEditPeople: makeValidateEditPeople({ check })
   })
 }
