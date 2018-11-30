@@ -16,6 +16,7 @@ const getActivityFromDb = require('./make-getActivityFromDb')({ sensitiveInforma
 const makeCreateActivity = require('./make-createActivity')
 const makeUpdateActivity = require('./make-updateActivity')
 const makeAddPeople = require('./make-addPeople')
+const makeRemovePeople = require('./make-removePeople')
 const makeValidateCreateActivity = require('./make-validateCreateActivity')
 const makeValidateUpdateActivity = require('./make-validateUpdateActivity')
 const makeValidateEditPeople = require('./make-validateEditPeople')
@@ -37,6 +38,9 @@ module.exports = ({ config }) => {
       getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
     }),
     addPeople: makeAddPeople({
+      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+    }),
+    removePeople: makeRemovePeople({
       getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
     }),
     validateCreateActivity: makeValidateCreateActivity({ check }),

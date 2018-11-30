@@ -17,6 +17,7 @@ describe('activity endpoint', () => {
       createActivity: 'createActivity',
       updateActivity: 'updateActivity',
       addPeople: 'addPeople',
+      removePeople: 'removePeople',
       validateCreateActivity: 'validateCreateActivity',
       validateUpdateActivity: 'validateUpdateActivity',
       validateEditPeople: 'validateEditPeople',
@@ -39,6 +40,11 @@ describe('activity endpoint', () => {
     expect(router.put).toHaveBeenCalledTimes(1)
     expect(router.put.mock.calls[0]).toEqual([
       '/:id', paths.validateUpdateActivity, paths.sendValidation, paths.updateActivity
+    ])
+
+    expect(router.delete).toHaveBeenCalledTimes(1)
+    expect(router.delete.mock.calls[0]).toEqual([
+      '/:id/people', paths.validateEditPeople, paths.sendValidation, paths.removePeople
     ])
   })
 })

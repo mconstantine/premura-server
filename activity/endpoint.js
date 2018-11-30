@@ -6,6 +6,7 @@ module.exports = ({
   createActivity,
   updateActivity,
   addPeople,
+  removePeople,
   validateCreateActivity,
   validateUpdateActivity,
   validateEditPeople
@@ -15,3 +16,4 @@ router
 .post('/', validateCreateActivity, sendValidation, catchExceptions(createActivity))
 .post('/:id/people', validateEditPeople, sendValidation, catchExceptions(addPeople))
 .put('/:id', validateUpdateActivity, sendValidation, catchExceptions(updateActivity))
+.delete('/:id/people', validateEditPeople, sendValidation, catchExceptions(removePeople))
