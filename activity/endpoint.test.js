@@ -29,29 +29,23 @@ describe('activity endpoint', () => {
     endpoint(Object.assign(paths, { router, catchExceptions }))
 
     expect(router.use).toHaveBeenCalledTimes(1)
-    expect(router.use.mock.calls[0]).toEqual([paths.loginGate])
+    expect(router.use).toHaveBeenNthCalledWith(1, paths.loginGate)
 
-    expect(router.get).toHaveBeenCalledTimes(1)
-    expect(router.get.mock.calls[0]).toEqual([
-      '/', paths.validateGetActivities, paths.sendValidation, paths.getActivities
-    ])
+    expect(router.get).toHaveBeenNthCalledWith(1,
+      '/', paths.validateGetActivities, paths.sendValidation, paths.getActivities)
 
     expect(router.post).toHaveBeenCalledTimes(2)
-    expect(router.post.mock.calls[0]).toEqual([
-      '/', paths.validateCreateActivity, paths.sendValidation, paths.createActivity
-    ])
-    expect(router.post.mock.calls[1]).toEqual([
-      '/:id/people', paths.validateEditPeople, paths.sendValidation, paths.addPeople
-    ])
+    expect(router.post).toHaveBeenNthCalledWith(1,
+      '/', paths.validateCreateActivity, paths.sendValidation, paths.createActivity)
+    expect(router.post).toHaveBeenNthCalledWith(2,
+      '/:id/people', paths.validateEditPeople, paths.sendValidation, paths.addPeople)
 
     expect(router.put).toHaveBeenCalledTimes(1)
-    expect(router.put.mock.calls[0]).toEqual([
-      '/:id', paths.validateUpdateActivity, paths.sendValidation, paths.updateActivity
-    ])
+    expect(router.put).toHaveBeenNthCalledWith(1,
+      '/:id', paths.validateUpdateActivity, paths.sendValidation, paths.updateActivity)
 
     expect(router.delete).toHaveBeenCalledTimes(1)
-    expect(router.delete.mock.calls[0]).toEqual([
-      '/:id/people', paths.validateEditPeople, paths.sendValidation, paths.removePeople
-    ])
+    expect(router.delete).toHaveBeenNthCalledWith(1,
+      '/:id/people', paths.validateEditPeople, paths.sendValidation, paths.removePeople)
   })
 })
