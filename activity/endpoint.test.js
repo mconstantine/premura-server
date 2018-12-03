@@ -15,10 +15,12 @@ describe('activity endpoint', () => {
     const paths = {
       loginGate: 'loginGate',
       createActivity: 'createActivity',
+      getActivities: 'getActivities',
       updateActivity: 'updateActivity',
       addPeople: 'addPeople',
       removePeople: 'removePeople',
       validateCreateActivity: 'validateCreateActivity',
+      validateGetActivities: 'validateGetActivities',
       validateUpdateActivity: 'validateUpdateActivity',
       validateEditPeople: 'validateEditPeople',
       sendValidation: 'sendValidation'
@@ -28,6 +30,11 @@ describe('activity endpoint', () => {
 
     expect(router.use).toHaveBeenCalledTimes(1)
     expect(router.use.mock.calls[0]).toEqual([paths.loginGate])
+
+    expect(router.get).toHaveBeenCalledTimes(1)
+    expect(router.get.mock.calls[0]).toEqual([
+      '/', paths.validateGetActivities, paths.sendValidation, paths.getActivities
+    ])
 
     expect(router.post).toHaveBeenCalledTimes(2)
     expect(router.post.mock.calls[0]).toEqual([
