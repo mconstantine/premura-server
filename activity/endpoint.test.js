@@ -16,6 +16,7 @@ describe('activity endpoint', () => {
       loginGate: 'loginGate',
       createActivity: 'createActivity',
       getActivities: 'getActivities',
+      getActivity: 'getActivity',
       updateActivity: 'updateActivity',
       addPeople: 'addPeople',
       removePeople: 'removePeople',
@@ -31,8 +32,11 @@ describe('activity endpoint', () => {
     expect(router.use).toHaveBeenCalledTimes(1)
     expect(router.use).toHaveBeenNthCalledWith(1, paths.loginGate)
 
+    expect(router.get).toHaveBeenCalledTimes(2)
     expect(router.get).toHaveBeenNthCalledWith(1,
       '/', paths.validateGetActivities, paths.sendValidation, paths.getActivities)
+    expect(router.get).toHaveBeenNthCalledWith(2,
+      '/:id', paths.getActivity)
 
     expect(router.post).toHaveBeenCalledTimes(2)
     expect(router.post).toHaveBeenNthCalledWith(1,

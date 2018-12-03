@@ -19,6 +19,7 @@ const createFindFilters = require('../misc/createFindFilters')
 
 const makeCreateActivity = require('./make-createActivity')
 const makeGetActivities = require('./make-getActivities')
+const makeGetActivity = require('./make-getActivity')
 const makeUpdateActivity = require('./make-updateActivity')
 const makeAddPeople = require('./make-addPeople')
 const makeRemovePeople = require('./make-removePeople')
@@ -42,6 +43,9 @@ module.exports = ({ config }) => {
     }),
     getActivities: makeGetActivities({
       getDb, ObjectID, cursorify, createFindFilters
+    }),
+    getActivity: makeGetActivity({
+      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
     }),
     updateActivity: makeUpdateActivity({
       getDb, ObjectID, createError, userCanReadProject, getActivityFromDb

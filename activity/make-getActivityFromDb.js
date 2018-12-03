@@ -86,5 +86,5 @@ module.exports = ({ sensitiveInformationProjection }) => async (db, _id) => {
   .toArray()
 
   activity.project.categories = categories
-  return activities
+  return activity
 }

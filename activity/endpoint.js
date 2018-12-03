@@ -5,6 +5,7 @@ module.exports = ({
   catchExceptions,
   createActivity,
   getActivities,
+  getActivity,
   updateActivity,
   addPeople,
   removePeople,
@@ -16,6 +17,7 @@ module.exports = ({
 router
 .use(loginGate)
 .get('/', validateGetActivities, sendValidation, catchExceptions(getActivities))
+.get('/:id', catchExceptions(getActivity))
 .post('/', validateCreateActivity, sendValidation, catchExceptions(createActivity))
 .post('/:id/people', validateEditPeople, sendValidation, catchExceptions(addPeople))
 .put('/:id', validateUpdateActivity, sendValidation, catchExceptions(updateActivity))
