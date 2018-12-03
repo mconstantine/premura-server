@@ -21,6 +21,7 @@ const makeCreateActivity = require('./make-createActivity')
 const makeGetActivities = require('./make-getActivities')
 const makeGetActivity = require('./make-getActivity')
 const makeUpdateActivity = require('./make-updateActivity')
+const makeDeleteActivity = require('./make-deleteActivity')
 const makeAddPeople = require('./make-addPeople')
 const makeRemovePeople = require('./make-removePeople')
 const makeValidateCreateActivity = require('./make-validateCreateActivity')
@@ -49,6 +50,9 @@ module.exports = ({ config }) => {
     }),
     updateActivity: makeUpdateActivity({
       getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+    }),
+    deleteActivity: makeDeleteActivity({
+      getDb, ObjectID, createError, userCanReadProject
     }),
     addPeople: makeAddPeople({
       getDb, ObjectID, createError, userCanReadProject, getActivityFromDb

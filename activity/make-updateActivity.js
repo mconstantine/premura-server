@@ -72,7 +72,7 @@ module.exports = ({
   }
 
   if (!currentUser._id.equals(recipient._id) && currentUser.role === 'maker') {
-    return next(createError(401, 'you cannot assign activities to other users'))
+    return next(createError(401, "you cannot edit other user's activities"))
   }
 
   const timeFrom = new Date(req.body.timeFrom || activity.timeFrom)

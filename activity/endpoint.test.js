@@ -18,6 +18,7 @@ describe('activity endpoint', () => {
       getActivities: 'getActivities',
       getActivity: 'getActivity',
       updateActivity: 'updateActivity',
+      deleteActivity: 'deleteActivity',
       addPeople: 'addPeople',
       removePeople: 'removePeople',
       validateCreateActivity: 'validateCreateActivity',
@@ -48,8 +49,9 @@ describe('activity endpoint', () => {
     expect(router.put).toHaveBeenNthCalledWith(1,
       '/:id', paths.validateUpdateActivity, paths.sendValidation, paths.updateActivity)
 
-    expect(router.delete).toHaveBeenCalledTimes(1)
-    expect(router.delete).toHaveBeenNthCalledWith(1,
+    expect(router.delete).toHaveBeenCalledTimes(2)
+    expect(router.delete).toHaveBeenNthCalledWith(1, '/:id', paths.deleteActivity)
+    expect(router.delete).toHaveBeenNthCalledWith(2,
       '/:id/people', paths.validateEditPeople, paths.sendValidation, paths.removePeople)
   })
 })
