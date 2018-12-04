@@ -1,3 +1,2 @@
-When a person is removed from a project, all of its activities within that project should be deleted
 Test that a maker can create its own project and no one else can see it (read, update, delete)
 Do projects conversations

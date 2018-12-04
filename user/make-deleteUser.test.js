@@ -141,4 +141,10 @@ describe('deleteUser', () => {
       })
     }
   )
+
+  it('Should delete user activities', async () => {
+    getDb.functions.deleteMany.mockClear()
+    await deleteUser(req, res, next)
+    expect(getDb.functions.deleteMany).toHaveBeenCalledWith({ recipient: new ObjectID(id) })
+  })
 })
