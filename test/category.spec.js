@@ -140,7 +140,7 @@ describe('category', () => {
   })
 
   it('Should return a single category', async () => {
-    const category = pickRandom(categories)
+    const category = categories[pickRandom(0, categories.length - 1)]
     const response = await client.get(`/categories/${category._id}/`)
     const content = await response.json()
 
