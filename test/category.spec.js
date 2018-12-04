@@ -138,6 +138,15 @@ describe('category', () => {
     expect(content.terms).not.toContainEqual({ _id: term._id })
   })
 
+  it('Should return a single category', async () => {
+    const category = categories[Math.round(Math.random() * (categories.length - 1))]
+    const response = await client.get(`/categories/${category._id}/`)
+    const content = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(content).toMatchObject(category)
+  })
+
   it('Should delete categories', async () => {
     await Promise.all(categories.map(async category => {
       const response = await client.delete(`/categories/${category._id}`)
