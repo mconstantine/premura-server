@@ -54,12 +54,15 @@ describe('getActivities', () => {
     await getActivities(req, res)
     expect(getDb.functions.aggregate).toHaveBeenLastCalledWith(expect.arrayContaining([{
       $match: {
-        recipient: {
-          $in: people.map(_id => new ObjectID(_id)).concat([new ObjectID(recipient)])
-        },
-        people: {
-          $in: people.map(_id => new ObjectID(_id))
-        }
+        $or: [{
+          recipient: {
+            $in: people.map(_id => new ObjectID(_id)).concat([new ObjectID(recipient)])
+          }
+        }, {
+          people: {
+            $in: people.map(_id => new ObjectID(_id))
+          }
+        }]
       }
     }]))
   })
