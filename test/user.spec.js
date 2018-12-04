@@ -1,6 +1,7 @@
 const client = require('./getClient')('http://localhost:3000')
 const faker = require('faker')
 const roles = require('../misc/roles')
+const pickRandom = require('../misc/pickRandom')
 
 describe('user', () => {
   let ids = []
@@ -15,7 +16,7 @@ describe('user', () => {
           email: faker.internet.email(),
           password,
           passwordConfirmation: password,
-          role: roles[Math.round(Math.random() * (roles.length - 2))],
+          role: roles[pickRandom(0, roles.length - 2)],
           jobRole: 'Example'
         }
       })
@@ -63,7 +64,7 @@ describe('user', () => {
   let exampleUser
 
   it('Should return single users', async () => {
-    const _id = ids[Math.round(Math.random() * (ids.length - 1))]
+    const _id = pickRandom(ids)
     const response = await client.get(`/users/${_id}`)
     const content = await response.json()
 

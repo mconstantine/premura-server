@@ -1,5 +1,6 @@
 const client = require('./getClient')('http://localhost:3000')
 const faker = require('faker')
+const pickRandom = require('../misc/pickRandom')
 
 describe('category', () => {
   let categories = []
@@ -7,9 +8,9 @@ describe('category', () => {
   it('Should create categories', async () => {
     for (let i = 0; i < 5; i++) {
       const category = {
-        name: faker.lorem.words(1 + Math.round(Math.random() * 2)),
-        description: faker.lorem.words(5 + Math.round(Math.random() * 25)),
-        allowsMultipleTerms: Math.random() > 0.5
+        name: faker.lorem.words(pickRandom(1, 3)),
+        description: faker.lorem.words(pickRandom(5, 30)),
+        allowsMultipleTerms: pickRandom()
       }
 
       const response = await client.post('/categories/', {
@@ -31,7 +32,7 @@ describe('category', () => {
 
       for (let i = 0; i < 2; i++) {
         terms.push({
-          name: faker.lorem.words(1 + Math.round(Math.random() * 1))
+          name: faker.lorem.words(pickRandom(1, 2))
         })
       }
 
@@ -47,7 +48,7 @@ describe('category', () => {
   })
 
   it('Should update categories', async () => {
-    let category = categories[Math.round(Math.random() * (categories.length - 1))]
+    let category = pickRandom(categories)
     const update = {
       name: 'Updated name',
       description: 'This is an updated description',
@@ -120,8 +121,8 @@ describe('category', () => {
   })
 
   it('Should remove terms', async () => {
-    const category = categories[Math.round(Math.random() * (categories.length - 1))]
-    const term = category.terms[Math.round(Math.random() * (category.terms.length - 1))]
+    const category = categories[pickRandom(0, categories.length - 1)]
+    const term = pickRandom(category.terms)
 
     const response = await client.delete(`/categories/${category._id}/terms/`, {
       body: {
@@ -139,7 +140,7 @@ describe('category', () => {
   })
 
   it('Should return a single category', async () => {
-    const category = categories[Math.round(Math.random() * (categories.length - 1))]
+    const category = pickRandom(categories)
     const response = await client.get(`/categories/${category._id}/`)
     const content = await response.json()
 

@@ -2,6 +2,7 @@ const client = require('./getClient')('http://localhost:3000')
 const faker = require('faker')
 const status = require('../misc/status')
 const roles = require('../misc/roles')
+const pickRandom = require('../misc/pickRandom')
 
 describe('project', () => {
   const now = Date.now()
@@ -24,10 +25,10 @@ describe('project', () => {
   it('Should create projects', async () => {
     for (let i = 0; i < 10; i++) {
       const project = {
-        name: faker.lorem.words(1 + Math.round(Math.random() * 3)),
-        description: faker.lorem.words(2 + Math.round(Math.random() * 28)),
-        budget: 8 + Math.round(Math.random() * 92),
-        status: status[Math.round(Math.random() * (status.length - 1))]
+        name: faker.lorem.words(pickRandom(1, 4)),
+        description: faker.lorem.words(pickRandom(2, 30)),
+        budget: pickRandom(8, 100),
+        status: pickRandom(status)
       }
 
       const response = await client.post('/projects/', {
@@ -42,7 +43,7 @@ describe('project', () => {
 
   it('Should return a single project', async () => {
     let response, content
-    const randomIndex = Math.round(Math.random() * (projectsIds.length - 1))
+    const randomIndex = pickRandom(0, projectsIds.length - 1)
     const randomProjectId = projectsIds[randomIndex]
 
     response = await client.get(`/projects/${randomProjectId}/`)
@@ -69,7 +70,7 @@ describe('project', () => {
         email: faker.internet.email(),
         password,
         passwordConfirmation: password,
-        role: roles[Math.round(Math.random() * (roles.length - 2))],
+        role: roles[pickRandom(0, roles.length - 2)],
         jobRole: 'Example'
       }
 
@@ -150,8 +151,8 @@ describe('project', () => {
 
     for (let i = 0; i < 2; i++) {
       const category = {
-        name: faker.lorem.words(1 + Math.round(Math.random() * 3)),
-        description: faker.lorem.words(2 + Math.round(Math.random() * 28)),
+        name: faker.lorem.words(pickRandom(1, 4)),
+        description: faker.lorem.words(pickRandom(2, 30)),
         allowsMultipleTerms: i % 2 === 0
       }
 
@@ -173,7 +174,7 @@ describe('project', () => {
 
       for (let i = 0; i < 2; i++) {
         terms.push({
-          name: faker.lorem.words(1 + Math.round(Math.random() * 3))
+          name: faker.lorem.words(pickRandom(1, 4))
         })
       }
 
