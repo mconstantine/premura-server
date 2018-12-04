@@ -17,6 +17,7 @@ const Collection = {
   updateOne: jest.fn((...args) => getResult(results.updateOne, ...args)),
   insertOne: jest.fn((...args) => getResult(results.insertOne, ...args)),
   deleteOne: jest.fn((...args) => getResult(results.deleteOne, ...args)),
+  deleteMany: jest.fn((...args) => getResult(results.deleteMany, ...args)),
   distinct: jest.fn((...args) => getResult(results.distinct, ...args)),
   toArray: jest.fn(() => getResult(results[lastResult], ...lastArgs))
 }
