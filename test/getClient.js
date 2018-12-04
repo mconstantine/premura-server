@@ -25,8 +25,13 @@ class Client {
     const content = await response.json()
 
     this.cookie = response.headers.get('set-cookie')
+    this.currentUser = content
 
     return content._id
+  }
+
+  getCurrentUser() {
+    return this.currentUser
   }
 
   async get(url, options = {}) {
