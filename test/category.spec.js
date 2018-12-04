@@ -145,7 +145,7 @@ describe('category', () => {
     const content = await response.json()
 
     expect(response.status).toBe(200)
-    expect(content).toMatchObject(category)
+    expect(content).toMatchObject({ _id: category._id })
   })
 
   it('Should delete categories', async () => {
