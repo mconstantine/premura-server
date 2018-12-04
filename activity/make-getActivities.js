@@ -22,8 +22,14 @@ module.exports = ({
 
   if (req.query.people) {
     const people = req.query.people.map(_id => new ObjectID(_id))
-    filters.recipient = { $in: people.concat(filters.recipient || []) }
-    filters.people = { $in: people }
+
+    filters.$or = [{
+      recipient: { $in: people.concat(filters.recipient || []) }
+    }, {
+      people: { $in: people }
+    }]
+
+    delete filters.recipient
   }
 
   if (req.query.before) {
