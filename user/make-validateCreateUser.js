@@ -1,4 +1,4 @@
-module.exports = ({ check, roles }) => [
+module.exports = ({ check, roles, langs }) => [
   check('name').trim()
   .not().isEmpty().withMessage('name is empty')
   .isString().withMessage('name should be a String'),
@@ -21,6 +21,10 @@ module.exports = ({ check, roles }) => [
   check('role')
   .isString().withMessage('role should be a String')
   .isIn(roles).withMessage(`role should be one of ${roles.join(', ')}`),
+
+  check('lang')
+  .isString().withMessage('lang should be a String')
+  .isIn(langs).withMessage(`lang should be one of ${langs.join(', ')}`),
 
   check('jobRole').trim()
   .not().isEmpty().withMessage('jobRole is empty')

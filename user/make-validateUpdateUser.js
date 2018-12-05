@@ -1,4 +1,4 @@
-module.exports = ({ check, roles }) => [
+module.exports = ({ check, roles, langs }) => [
   check('id').isMongoId().withMessage('invalid user id'),
 
   check('name').optional().trim()
@@ -23,6 +23,10 @@ module.exports = ({ check, roles }) => [
   check('role').optional()
   .isString().withMessage('role should be a String')
   .isIn(roles).withMessage(`role should be one of ${roles.join(', ')}`),
+
+  check('lang').optional()
+  .isString().withMessage('lang should be a String')
+  .isIn(langs).withMessage(`lang should be one of ${langs.join(', ')}`),
 
   check('jobRole').optional().trim()
   .not().isEmpty().withMessage('jobRole is empty')

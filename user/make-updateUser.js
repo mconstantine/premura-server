@@ -1,5 +1,5 @@
 module.exports = ({
-  createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection
+  createError, ObjectID, getDb, roles, langs, bcrypt, sensitiveInformationProjection
 }) => async (req, res, next) => {
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
@@ -32,6 +32,17 @@ module.exports = ({
     }
 
     update.role = role
+  }
+
+  if (req.body.lang) {
+    const lang = req.body.lang
+    delete req.body.lang
+
+    if (currentUser._id != user._id.toString() && currentUser.role !== 'master') {
+      return next(createError(401, 'you can change only your own language'))
+    }
+
+    update.lang = lang
   }
 
   if (req.body.email) {
@@ -106,8 +117,8 @@ module.exports = ({
     result = result.value
   } else {
     result = await collection.findOne({ _id }, {
-    projection: sensitiveInformationProjection
-  })
+      projection: sensitiveInformationProjection
+    })
   }
 
   if (result._id.equals(currentUser._id)) {

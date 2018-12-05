@@ -55,7 +55,7 @@ describe('updateUser', () => {
   })
 
   it("Should not allow a user with a lower or equal level to change a user's role", async () => {
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
     req.session.user = { _id: 'me', role: 'maker' }
     req.body = { role: 'master' }
     await updateUser(req, null, next)
@@ -70,7 +70,7 @@ describe('updateUser', () => {
   it("Should allow a user with a higher level to change a user's role", async () => {
     const role = 'master'
     next.mockClear()
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
     req.session.user = { _id: 'me', role: 'manager' }
     req.body = { role }
     await updateUser(req, res, next)
@@ -105,6 +105,29 @@ describe('updateUser', () => {
     getDb.functions.findOne = originalFindOne
   })
 
+  it('Should allow a user to change its own lang', async () => {
+    const lang = 'lang'
+    next.mockClear()
+    const originalFindOne = getDb.functions.findOne
+    getDb.functions.findOne = function(query) {
+      if (query._id) {
+        return { _id: 'me', role: 'maker' }
+      } else {
+        return false
+      }
+    }
+    req.session.user = { _id: 'me', role: 'maker' }
+    req.body = { lang }
+    await updateUser(req, res, next)
+    expect(next).not.toHaveBeenCalled()
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenLastCalledWith(
+      expect.anything(),
+      { $set: expect.objectContaining({ lang }) },
+      expect.anything()
+    )
+    getDb.functions.findOne = originalFindOne
+  })
+
   it("Should allow a master to change anyone's email", async () => {
     const email = 'whatever@example.com'
     next.mockClear()
@@ -128,10 +151,33 @@ describe('updateUser', () => {
     getDb.functions.findOne = originalFindOne
   })
 
+  it("Should allow a master to change anyone's lang", async () => {
+    const lang = 'lang'
+    next.mockClear()
+    const originalFindOne = getDb.functions.findOne
+    getDb.functions.findOne = function(query) {
+      if (query._id) {
+        return { _id: 'me', role: 'maker' }
+      } else {
+        return false
+      }
+    }
+    req.session.user = { _id: 'notMe', role: 'master' }
+    req.body = { lang }
+    await updateUser(req, res, next)
+    expect(next).not.toHaveBeenCalled()
+    expect(getDb.functions.findOneAndUpdate).toHaveBeenLastCalledWith(
+      expect.anything(),
+      { $set: expect.objectContaining({ lang }) },
+      expect.anything()
+    )
+    getDb.functions.findOne = originalFindOne
+  })
+
   it('Should allow a user to change its own password', async () => {
     const password = 'password'
     next.mockClear()
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
     req.session.user = { _id: 'me', role: 'maker' }
     req.body = { password }
     await updateUser(req, res, next)
@@ -146,7 +192,7 @@ describe('updateUser', () => {
   it("Should allow a master to change anyone's password", async () => {
     const password = 'password'
     next.mockClear()
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
     req.session.user = { _id: 'notMe', role: 'master' }
     req.body = { password }
     await updateUser(req, res, next)
@@ -161,7 +207,7 @@ describe('updateUser', () => {
   it("Should allow a master to change anyone's active state", async () => {
     const isActive = false
     next.mockClear()
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
     req.session.user = { _id: 'notMe', role: 'master' }
     req.body = { isActive }
     await updateUser(req, res, next)
@@ -174,7 +220,7 @@ describe('updateUser', () => {
   })
 
   it("Should not allow a non master user to change another user's email", async () => {
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
     req.session.user = { _id: 'notMe', role: 'manager' }
     req.body = { email: 'whatever@example.com' }
     await updateUser(req, null, next)
@@ -182,16 +228,24 @@ describe('updateUser', () => {
   })
 
   it("Should not allow a non master user to change another user's password", async () => {
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
     req.session.user = { _id: 'notMe', role: 'manager' }
     req.body = { password: 'password' }
     await updateUser(req, null, next)
     expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
   })
 
+  it("Should not allow a non master user to change another user's lang", async () => {
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
+    req.session.user = { _id: 'notMe', role: 'manager' }
+    req.body = { lang: 'lang' }
+    await updateUser(req, null, next)
+    expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
+  })
+
   it("Should allow a master user to change another user's password", async () => {
     const password = 'password'
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
     req.session.user = { _id: 'notMe', role: 'master' }
     req.body = { password }
     await updateUser(req, res, next)
@@ -203,7 +257,7 @@ describe('updateUser', () => {
   })
 
   it("Should not allow a non master user to change another user's active state", async () => {
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
     req.session.user = { _id: 'notMe', role: 'manager' }
     req.body = { isActive: false }
     await updateUser(req, null, next)
@@ -239,7 +293,7 @@ describe('updateUser', () => {
     bcrypt.hash.mockClear()
     getDb.functions.findOneAndUpdate.mockClear()
     const password = 'password'
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
     req.session.user = { _id: 'me', role: 'master' }
     req.body = { password }
     await updateUser(req, res, next)
@@ -287,7 +341,7 @@ describe('updateUser', () => {
 
   it('Should not update the session if not needed', async () => {
     res.send.mockClear()
-    getDb.setResult('findOne', { _id: 'me', role: 'maker' })
+    getDb.setResult('findOne', { _id: new ObjectID('me'), role: 'maker' })
     req.session.user = { _id: 'me', role: 'master' }
     req.body = { name: 'whatever' }
     await updateUser(req, res, next)

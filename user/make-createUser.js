@@ -5,6 +5,7 @@ module.exports = ({
   const email = req.body.email
   const password = req.body.password
   const role = req.body.role
+  const lang = req.body.lang
   const jobRole = req.body.jobRole
   const currentUser = req.session.user
 
@@ -22,7 +23,7 @@ module.exports = ({
   }
 
   const result = await collection.insertOne({
-    name, email, role, jobRole,
+    name, email, role, lang, jobRole,
     password: await bcrypt.hash(password, 10),
     registrationDate: new Date(),
     lastUpdateDate: new Date(),

@@ -7,6 +7,7 @@ const { check } = require('express-validator/check')
 
 const createError = require('../misc/createServerError')
 const roles = require('../misc/roles')
+const langs = require('../misc/langs')
 const makeGetDb = require('../misc/make-getDb')
 const createFindFilters = require('../misc/createFindFilters')
 const sensitiveInformationProjection = require('./sensitiveInformationProjection')
@@ -49,7 +50,7 @@ module.exports = ({ config }) => {
     logout,
     sendValidation: makeSendValidation({ validationResult }),
     validateLogin: makeValidateLogin({ check }),
-    validateCreateUser: makeValidateCreateUser({ check, roles }),
-    validateUpdateUser: makeValidateUpdateUser({ check, roles })
+    validateCreateUser: makeValidateCreateUser({ check, roles, langs }),
+    validateUpdateUser: makeValidateUpdateUser({ check, roles, langs })
   })
 }
