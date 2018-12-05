@@ -112,7 +112,20 @@ describe('removePeople', () => {
     expect(getDb.functions.updateOne).toHaveBeenCalledWith({
       _id: getActivity()._id
     }, {
-      $set: { people: [] }
+      $set: expect.objectContaining({
+        people: []
+      })
+    })
+  })
+
+  it('Should update lastUpdateDate', async () => {
+    await removePeople(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenCalledWith({
+      _id: getActivity()._id
+    }, {
+      $set: expect.objectContaining({
+        lastUpdateDate: expect.any(Date)
+      })
     })
   })
 })

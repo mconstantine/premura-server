@@ -463,8 +463,19 @@ describe('updateActivity', () => {
 
   it('Should call getActivityFromDb', async () => {
     getActivityFromDb.mockClear()
-    req.body = { name: 'Some name' }
+    req.body = { title: 'Some title' }
     await updateActivity(req, res, next)
     expect(getActivityFromDb).toHaveBeenCalled()
+  })
+
+  it('Should update lastUpdateDate', async () => {
+    getDb.functions.updateOne.mockClear()
+    req.body = { title: 'Some title' }
+    await updateActivity(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(expect.any(Object), {
+      $set: expect.objectContaining({
+        lastUpdateDate: expect.any(Date)
+      })
+    })
   })
 })

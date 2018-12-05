@@ -139,7 +139,9 @@ describe('addPeople', () => {
     expect(getDb.functions.updateOne).toHaveBeenLastCalledWith({
       _id: getActivity()._id
     }, {
-      $set: { people: [getMakerUser()._id] }
+      $set: expect.objectContaining({
+        people: [getMakerUser()._id]
+      })
     })
   })
 
@@ -174,5 +176,15 @@ describe('addPeople', () => {
       getMakerUser(),
       getProject()
     )
+  })
+
+  it('Should update lastUpdateDate', async () => {
+    getDb.functions.updateOne.mockClear()
+    await addPeople(req, res, next)
+    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(expect.any(Object), {
+      $set: expect.objectContaining({
+        lastUpdateDate: expect.any(Date)
+      })
+    })
   })
 })

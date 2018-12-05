@@ -1,2 +1,1 @@
-Test that a maker can create its own project and no one else can see it (read, update, delete)
 Do projects conversations

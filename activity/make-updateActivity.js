@@ -143,6 +143,8 @@ module.exports = ({
   }
 
   if (Object.keys(update).length) {
+    update.lastUpdateDate = new Date()
+
     await db.collection('activities').updateOne(
       { _id: activity_id },
       { $set: update }

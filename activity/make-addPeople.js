@@ -62,7 +62,8 @@ module.exports = ({
       _id: activity._id
     }, {
       $set: {
-        people: activity.people
+        people: activity.people,
+        lastUpdateDate: new Date()
       }
     })
   }

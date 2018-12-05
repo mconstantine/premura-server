@@ -28,7 +28,10 @@ module.exports = ({
   await db.collection('activities').updateOne({
     _id
   }, {
-    $set: { people: activity.people }
+    $set: {
+      lastUpdateDate: new Date(),
+      people: activity.people
+    }
   })
 
   return res.send(await getActivityFromDb(db, _id))

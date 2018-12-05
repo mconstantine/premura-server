@@ -374,4 +374,13 @@ describe('createActivity', () => {
       people: []
     }))
   })
+
+  it('Should save the creation and last update dates', async () => {
+    getDb.functions.insertOne.mockClear()
+    await createActivity(req, res, next)
+    expect(getDb.functions.insertOne).toHaveBeenLastCalledWith(expect.objectContaining({
+      creationDate: expect.any(Date),
+      lastUpdateDate: expect.any(Date)
+    }))
+  })
 })

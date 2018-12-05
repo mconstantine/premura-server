@@ -108,6 +108,8 @@ module.exports = ({
   }
 
   activity.people = []
+  activity.creationDate = new Date()
+  activity.lastUpdateDate = new Date()
 
   const result = await db.collection('activities').insertOne(activity)
   return res.status(201).send({ _id: result.insertedId })
