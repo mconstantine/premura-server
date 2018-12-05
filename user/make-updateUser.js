@@ -96,15 +96,21 @@ module.exports = ({
     }
   }
 
+  let result
+
   if (Object.keys(update).length) {
     update.lastUpdateDate = new Date()
-  }
-
-  const result = await collection.findOneAndUpdate({ _id }, { $set: update }, {
+    result = await collection.findOneAndUpdate({ _id }, { $set: update }, {
+      projection: sensitiveInformationProjection
+    })
+    result = result.value
+  } else {
+    result = await collection.findOne({ _id }, {
     projection: sensitiveInformationProjection
   })
+  }
 
-  if (result.value._id.equals(currentUser._id)) {
+  if (result._id.equals(currentUser._id)) {
     if (update.email || update.password) {
       delete req.session.user
       return res.end()
@@ -120,9 +126,9 @@ module.exports = ({
 
   for (let i in update) {
     if (i !== '_id' && sensitiveInformationProjection[i] !== 0) {
-      result.value[i] = update[i]
+      result[i] = update[i]
     }
   }
 
-  return res.send(result.value)
+  return res.send(result)
 }
