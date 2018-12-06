@@ -1,10 +1,11 @@
 const makeRemoveTerms = require('./make-removeTerms')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('removeTerms', () => {
   const createError = (httpCode, message) => [httpCode, message]
-  const removeTerms = makeRemoveTerms({ getDb, ObjectID, createError })
+  const removeTerms = makeRemoveTerms({ getDb, ObjectID, createError, gt })
   const params = { id: '1234567890abcdef' }
 
   const category = {
@@ -47,7 +48,7 @@ describe('removeTerms', () => {
     res.send.mockClear()
     await removeTerms(req, res, next)
     expect(res.send).not.toHaveBeenCalled()
-    expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('category')])
+    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
     getDb.setResult('findOne', category)
   })
 

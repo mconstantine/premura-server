@@ -1,4 +1,5 @@
 const makeAddTerms = require('./make-addTerms')
+const gt = require('../misc/test-gettext')
 
 describe('addTerms', () => {
   let findOneResult
@@ -14,7 +15,7 @@ describe('addTerms', () => {
     }
   }
 
-  const addTerms = makeAddTerms({ getDb, ObjectID, createError })
+  const addTerms = makeAddTerms({ getDb, ObjectID, createError, gt })
   const req = { params: { id: '1234567890abcdef' } }
   const next = jest.fn()
   const res = { send: jest.fn() }

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-06 17:17+0100\n"
-"PO-Revision-Date: 2018-12-06 17:17+0100\n"
+"POT-Creation-Date: 2018-12-06 17:37+0100\n"
+"PO-Revision-Date: 2018-12-06 17:37+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -84,6 +84,23 @@ msgstr "Non puoi eliminare attività di altri utenti"
 #: activity/make-updateActivity.js:75
 msgid "You can't edit other user's activities"
 msgstr "Non puoi modificare attività di altri utenti"
+
+#: category/make-addTerms.js:7 category/make-deleteCategory.js:18
+#: category/make-getCategory.js:17 category/make-removeTerms.js:7
+#: category/make-updateCategory.js:7 category/make-updateTerms.js:7
+msgid "Category not found"
+msgstr "Categoria non trovata"
+
+#: category/make-deleteCategory.js:8 category/make-getCategory.js:8
+msgid "Invalid category ID"
+msgstr "ID della categoria non valido"
+
+#: category/make-updateTerms.js:27
+#, javascript-format
+msgid "Term not found (%s)"
+msgid_plural "Some terms were not found (%s)"
+msgstr[0] "Termine non trovato (%s)"
+msgstr[1] "Alcuni termini non sono stati trovati (%s)"
 
 #: user/make-createUser.js:24
 msgid "A user is registered with the same e-mail address"

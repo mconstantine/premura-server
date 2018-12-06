@@ -1,3 +1,4 @@
+const util = require('util')
 const fs = require('fs')
 const path = require('path')
 const router = require('express').Router()
@@ -48,12 +49,12 @@ module.exports = ({ config }) => {
     catchExceptions,
     createCategory: makeCreateCategory({ getDb, createError }),
     getCategories: makeGetCategories({ getDb, createFindFilters, cursorify }),
-    getCategory: makeGetCategory({ getDb, ObjectID, createError }),
-    updateCategory: makeUpdateCategory({ getDb, ObjectID, createError }),
-    deleteCategory: makeDeleteCategory({ getDb, ObjectID, createError }),
-    addTerms: makeAddTerms({ getDb, ObjectID, createError }),
-    updateTerms: makeUpdateTerms({ getDb, ObjectID, createError }),
-    removeTerms: makeRemoveTerms({ getDb, ObjectID, createError }),
+    getCategory: makeGetCategory({ getDb, ObjectID, createError, gt }),
+    updateCategory: makeUpdateCategory({ getDb, ObjectID, createError, gt }),
+    deleteCategory: makeDeleteCategory({ getDb, ObjectID, createError, gt }),
+    addTerms: makeAddTerms({ getDb, ObjectID, createError, gt }),
+    updateTerms: makeUpdateTerms({ getDb, ObjectID, createError, gt, util }),
+    removeTerms: makeRemoveTerms({ getDb, ObjectID, createError, gt }),
     validateCreateCategory: makeValidateCreateCategory({ check }),
     validateUpdateCategory: makeValidateUpdateCategory({ check }),
     validateAddTerms: makeValidateAddTerms({ check }),
