@@ -1,9 +1,14 @@
+const fs = require('fs')
+const path = require('path')
 const { MongoClient, ObjectID, Cursor } = require('mongodb')
 const bcrypt = require('bcryptjs')
 const ejson = require('ejson')
 const base64Url = require('base64-url')
 const { validationResult } = require('express-validator/check')
 const { check } = require('express-validator/check')
+const Gettext = require('node-gettext')
+const { mo } = require('gettext-parser')
+const gt = new Gettext()
 
 const createError = require('../misc/createServerError')
 const roles = require('../misc/roles')
@@ -18,6 +23,7 @@ const makeSendValidation = require('../misc/make-sendValidation')
 const router = require('express').Router()
 const endpoint = require('./endpoint')
 const loginGate = require('../misc/loginGate')
+const handleLanguages = require('../misc/make-handleLanguages')({ gt })
 const makeCreateUser = require('./make-createUser')
 const makeGetUsers = require('./make-getUsers')
 const makeGetUser = require('./make-getUser')
@@ -31,6 +37,20 @@ const makeValidateLogin = require('./make-validateLogin')
 const makeValidateCreateUser = require('./make-validateCreateUser')
 const makeValidateUpdateUser = require('./make-validateUpdateUser')
 
+langs.forEach(lang => {
+  const filePath = path.resolve(__dirname, '../languages', `${lang}.mo`)
+
+  if (!fs.existsSync(filePath)) {
+    return
+  }
+
+  const translation = fs.readFileSync(filePath)
+  const parsedTranslation = mo.parse(translation)
+
+  gt.addTranslations(lang, 'premura', parsedTranslation)
+  gt.setTextDomain('premura')
+})
+
 module.exports = ({ config }) => {
   const getDb = makeGetDb({ MongoClient, config })
 
@@ -38,7 +58,10 @@ module.exports = ({ config }) => {
     catchExceptions,
     router,
     loginGate,
-    createUser: makeCreateUser({ bcrypt, createError, roles, getDb, sensitiveInformationProjection }),
+    handleLanguages,
+    createUser: makeCreateUser({
+      bcrypt, createError, roles, getDb, sensitiveInformationProjection, gt
+    }),
     getUsers: makeGetUsers({ getDb, cursorify, createFindFilters, sensitiveInformationProjection }),
     getUser: makeGetUser({ getDb, createError, ObjectID, sensitiveInformationProjection }),
     getJobRoles: makeGetJobRoles({ getDb }),

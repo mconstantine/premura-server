@@ -1,5 +1,5 @@
 module.exports = ({
-  bcrypt, getDb, roles, createError, sensitiveInformationProjection
+  bcrypt, getDb, roles, createError, sensitiveInformationProjection, gt
 }) => async (req, res, next) => {
   const name = req.body.name
   const email = req.body.email
@@ -21,7 +21,7 @@ module.exports = ({
   if (alreadyExistingUser) {
     return next(
       createError(409, {
-        msg: 'a user is registered with the same e-mail address',
+        msg: gt.gettext('A user is registered with the same e-mail address'),
         conflict: alreadyExistingUser
       })
     )

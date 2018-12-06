@@ -1,7 +1,7 @@
 const makeCreateUser = require('./make-createUser')
 const roles = Array.from(require('../misc/roles'))
 const getDb = require('../misc/test-getDb')
-
+const gt = require('../misc/test-gettext')
 
 roles.includes = jest.fn(() => true)
 
@@ -23,7 +23,7 @@ describe('createUser', () => {
   const next = jest.fn()
 
   const createUser = makeCreateUser({
-    bcrypt, createError, roles, getDb, sensitiveInformationProjection
+    bcrypt, createError, roles, getDb, sensitiveInformationProjection, gt
   })
 
   getDb.setResult('insertOne', { insertedId: '1234567890abcdef' })

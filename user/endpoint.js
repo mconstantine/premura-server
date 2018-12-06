@@ -1,6 +1,7 @@
 module.exports = ({
   router,
   loginGate,
+  handleLanguages,
   createUser,
   getUsers,
   getUser,
@@ -18,6 +19,7 @@ module.exports = ({
 router
 .post('/login', validateLogin, sendValidation, catchExceptions(login))
 .use(loginGate)
+.use(handleLanguages)
 .post('/', validateCreateUser, sendValidation, catchExceptions(createUser))
 .get('/', catchExceptions(getUsers))
 .get('/roles', catchExceptions(getJobRoles))
