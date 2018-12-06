@@ -2,6 +2,7 @@ module.exports = ({
   catchExceptions,
   router,
   loginGate,
+  handleLanguages,
   sendValidation,
   getProjects,
   getProject,
@@ -26,6 +27,7 @@ module.exports = ({
 }) =>
 router
 .use(loginGate)
+.use(handleLanguages)
 .get('/', validateGetProjects, sendValidation, catchExceptions(getProjects))
 .get('/:id', catchExceptions(getProject))
 .post('/', validateCreateProject, sendValidation, catchExceptions(createProject))

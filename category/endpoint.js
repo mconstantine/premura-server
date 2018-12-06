@@ -1,6 +1,7 @@
 module.exports = ({
   router,
   loginGate,
+  handleLanguages,
   sendValidation,
   catchExceptions,
   createCategory,
@@ -19,6 +20,7 @@ module.exports = ({
 }) =>
 router
 .use(loginGate)
+.use(handleLanguages)
 .get('/', catchExceptions(getCategories))
 .get('/:id', catchExceptions(getCategory))
 .post('/', validateCreateCategory, sendValidation, catchExceptions(createCategory))

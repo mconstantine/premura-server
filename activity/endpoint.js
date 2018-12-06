@@ -1,6 +1,7 @@
 module.exports = ({
   router,
   loginGate,
+  handleLanguages,
   sendValidation,
   catchExceptions,
   createActivity,
@@ -17,6 +18,7 @@ module.exports = ({
 }) =>
 router
 .use(loginGate)
+.use(handleLanguages)
 .get('/', validateGetActivities, sendValidation, catchExceptions(getActivities))
 .get('/:id', catchExceptions(getActivity))
 .post('/', validateCreateActivity, sendValidation, catchExceptions(createActivity))

@@ -14,6 +14,7 @@ describe('project endpoint', () => {
 
     const paths = {
       loginGate: 'loginGate',
+      handleLanguages: 'handleLanguages',
       getProjects: 'getProjects',
       getProject: 'getProject',
       createProject: 'createProject',
@@ -39,8 +40,9 @@ describe('project endpoint', () => {
 
     endpoint(Object.assign(paths, { router, catchExceptions }))
 
-    expect(router.use).toHaveBeenCalledTimes(1)
+    expect(router.use).toHaveBeenCalledTimes(2)
     expect(router.use).toHaveBeenNthCalledWith(1, paths.loginGate)
+    expect(router.use).toHaveBeenNthCalledWith(2, paths.handleLanguages)
 
     expect(router.get).toHaveBeenCalledTimes(2)
     expect(router.get).toHaveBeenNthCalledWith(1,

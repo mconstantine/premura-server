@@ -23,7 +23,7 @@ const makeSendValidation = require('../misc/make-sendValidation')
 const router = require('express').Router()
 const endpoint = require('./endpoint')
 const loginGate = require('../misc/loginGate')
-const handleLanguages = require('../misc/make-handleLanguages')({ gt })
+const handleLanguages = require('../misc/make-handleLanguages')({ fs, path, gt, mo, langs })
 const makeCreateUser = require('./make-createUser')
 const makeGetUsers = require('./make-getUsers')
 const makeGetUser = require('./make-getUser')
@@ -36,20 +36,6 @@ const logout = require('./logout')
 const makeValidateLogin = require('./make-validateLogin')
 const makeValidateCreateUser = require('./make-validateCreateUser')
 const makeValidateUpdateUser = require('./make-validateUpdateUser')
-
-langs.forEach(lang => {
-  const filePath = path.resolve(__dirname, '../languages', `${lang}.mo`)
-
-  if (!fs.existsSync(filePath)) {
-    return
-  }
-
-  const translation = fs.readFileSync(filePath)
-  const parsedTranslation = mo.parse(translation)
-
-  gt.addTranslations(lang, 'premura', parsedTranslation)
-  gt.setTextDomain('premura')
-})
 
 module.exports = ({ config }) => {
   const getDb = makeGetDb({ MongoClient, config })

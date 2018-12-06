@@ -14,6 +14,7 @@ describe('category endpoint', () => {
 
     const paths = {
       loginGate: 'loginGate',
+      handleLanguages: 'handleLanguages',
       createCategory: 'createCategory',
       getCategories: 'getCategories',
       getCategory: 'getCategory',
@@ -32,8 +33,9 @@ describe('category endpoint', () => {
 
     endpoint(Object.assign(paths, { router, catchExceptions }))
 
-    expect(router.use).toHaveBeenCalledTimes(1)
+    expect(router.use).toHaveBeenCalledTimes(2)
     expect(router.use).toHaveBeenNthCalledWith(1, paths.loginGate)
+    expect(router.use).toHaveBeenNthCalledWith(2, paths.handleLanguages)
 
     expect(router.get).toHaveBeenCalledTimes(2)
     expect(router.get).toHaveBeenNthCalledWith(1,'/', paths.getCategories)
