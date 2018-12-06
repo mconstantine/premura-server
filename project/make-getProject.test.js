@@ -1,6 +1,7 @@
 const makeGetProject = require('./make-getProject')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('getProject', () => {
   const createError = (httpCode, message) => [httpCode, message]
@@ -11,7 +12,7 @@ describe('getProject', () => {
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
   const userCanReadProject = () => userCanReadProjectResult
   const getProject = makeGetProject({
-    getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
+    getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
   })
   const id = '1234567890abcdef'
   const req = { session: { user: { _id: 'me' } }, params: { id } }
@@ -27,7 +28,7 @@ describe('getProject', () => {
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid project id'
+        msg: expect.any(String)
       }]
     })
     req.params = { id }

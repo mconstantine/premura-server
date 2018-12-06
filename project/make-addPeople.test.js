@@ -1,6 +1,7 @@
 const makeAddPeople = require('./make-addPeople')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('addPeople', () => {
   let userCanReadProjectResult = true
@@ -8,7 +9,9 @@ describe('addPeople', () => {
   const userCanReadProject = () => userCanReadProjectResult
   const createError = (httpCode, message) => [httpCode, message]
   const getProjectFromDb = () => getProjectFromDbResult
-  const addPeople = makeAddPeople({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject })
+  const addPeople = makeAddPeople({
+    getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
+  })
   const id = '1234567890abcdef'
   const req = {
     session: { user: { _id: 'me' } },
@@ -70,7 +73,7 @@ describe('addPeople', () => {
         location: 'body',
         param: 'people[1]',
         value: users[1]._id.toString(),
-        msg: 'user not active'
+        msg: expect.any(String)
       }]
     })
   })

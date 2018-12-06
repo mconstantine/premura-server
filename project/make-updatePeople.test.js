@@ -1,6 +1,7 @@
 const makeUpdatePeople = require('./make-updatePeople')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('updatePeople', () => {
   let userCanReadProjectResult = true
@@ -9,7 +10,7 @@ describe('updatePeople', () => {
   const getProjectFromDbResult = { test: true }
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
   const updatePeople = makeUpdatePeople({
-    getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
+    getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
   })
 
   const people = [
@@ -19,7 +20,7 @@ describe('updatePeople', () => {
 
   const id = '1234567890abcdef'
   const req = { session: { user: { _id: 'me' } }, params: { id }, body: { people } }
-  const res = { send: jest.fn() }
+  const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
 
   const project = {
@@ -54,7 +55,16 @@ describe('updatePeople', () => {
     }
 
     await updatePeople(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('personthree')])
+
+    expect(res.status).toHaveBeenLastCalledWith(422)
+    expect(res.send).toHaveBeenLastCalledWith({
+      errors: [{
+        location: 'body',
+        param: 'people[1]',
+        value: 'personthree',
+        msg: expect.any(String)
+      }]
+    })
   })
 
   it("Should ignore budgets if the project doesn't have a budget", async () => {

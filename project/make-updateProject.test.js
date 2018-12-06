@@ -1,12 +1,13 @@
 const makeUpdateProject = require('./make-updateProject')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('updateProject', () => {
   let userCanReadProjectResult = true
   const userCanReadProject = () => userCanReadProjectResult
   const createError = (httpCode, message) => [httpCode, message]
-  const updateProject = makeUpdateProject({ getDb, ObjectID, createError, userCanReadProject })
+  const updateProject = makeUpdateProject({ getDb, ObjectID, createError, userCanReadProject, gt })
   const id = '1234567890abcdef'
   const req = { session: { user: { _id: 'me' } }, params: { id }, body: {} }
   const res = { send: jest.fn() }

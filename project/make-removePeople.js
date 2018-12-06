@@ -1,5 +1,5 @@
 module.exports = ({
-  getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
+  getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
 }) => async (req, res, next) => {
   const _id = new ObjectID(req.params.id)
   const db = await getDb()
@@ -7,11 +7,11 @@ module.exports = ({
   const project = await collection.findOne({ _id })
 
   if (!project) {
-    return next(createError(404, 'project not found'))
+    return next(createError(404, gt.gettext('Project not found')))
   }
 
   if (!userCanReadProject(req.session.user, project)) {
-    return next(createError(401, 'you cannot access this project'))
+    return next(createError(401, gt.gettext("You can't access this project")))
   }
 
   const people = req.body.people.map(person =>
@@ -23,7 +23,7 @@ module.exports = ({
   )
 
   if (!project.people.length) {
-    return next(createError(422, 'a project cannot be assigned to no one'))
+    return next(createError(422, gt.gettext("A project can't be assigned to no one")))
   }
 
   if (project.budget) {

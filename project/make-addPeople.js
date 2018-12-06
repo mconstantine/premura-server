@@ -1,5 +1,5 @@
 module.exports = ({
-  getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
+  getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
 }) => async (req, res, next) => {
   const _id = new ObjectID(req.params.id)
   const db = await getDb()
@@ -7,11 +7,11 @@ module.exports = ({
   const project = await collection.findOne({ _id })
 
   if (!project) {
-    return next(createError(404, 'project not found'))
+    return next(createError(404, gt.gettext('Project not found')))
   }
 
   if (!userCanReadProject(req.session.user, project)) {
-    return next(createError(401, 'you cannot access this project'))
+    return next(createError(401, gt.gettext("You can't access this project")))
   }
 
   let people = req.body.people.map(
@@ -28,16 +28,26 @@ module.exports = ({
     .toArray()
 
   const peopleIDsFromDB = peopleFromDB.map(({ _id }) => _id)
+  let errors = []
 
   if (peopleIDsFromDB.length !== peopleIDs.length) {
-    for (let _id of peopleIDs) {
+    peopleIDs.forEach((_id, index) => {
       if (!peopleIDsFromDB.includes(_id)) {
-        return next(createError(404, `user ${_id} not found`))
+        errors.push({
+          location: 'body',
+          param: `people[${index}]`,
+          value: _id.toString(),
+          msg: gt.gettext('User not found')
+        })
       }
-    }
+    })
   }
 
-  const errors = []
+  if (errors.length) {
+    return res.status(422).send({ errors })
+  }
+
+  errors = []
 
   peopleFromDB.forEach(user => {
     if (!user.isActive) {
@@ -45,7 +55,7 @@ module.exports = ({
         location: 'body',
         param: 'people[' + peopleIDs.findIndex(_id => _id.equals(user._id)) + ']',
         value: user._id.toString(),
-        msg: 'user not active'
+        msg: gt.gettext('User not active')
       })
     }
   })

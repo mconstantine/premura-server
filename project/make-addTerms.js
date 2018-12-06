@@ -3,7 +3,7 @@
  */
 
 module.exports = ({
-  getDb, ObjectID, createError, userCanReadProject, getProjectFromDb
+  getDb, ObjectID, createError, userCanReadProject, getProjectFromDb, gt
 }) => async (req, res, next) => {
   const db = await getDb()
   const projectsCollection = db.collection('projects')
@@ -11,11 +11,11 @@ module.exports = ({
   const project = await projectsCollection.findOne({ _id: project_id })
 
   if (!project) {
-    return next(createError(404, 'project not found'))
+    return next(createError(404, gt.gettext('Project not found')))
   }
 
   if (!userCanReadProject(req.session.user, project)) {
-    return next(createError(401, 'you cannot access this project'))
+    return next(createError(401, gt.gettext("You can't access this project")))
   }
 
   const term_ids = req.body.terms.map(_id => new ObjectID(_id))
@@ -47,7 +47,7 @@ module.exports = ({
         location: 'body',
         param: `terms[${index}]`,
         value: term_id.toString(),
-        msg: 'term not found'
+        msg: gt.gettext('Term not found')
       })
     }
   })

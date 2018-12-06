@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-06 17:37+0100\n"
-"PO-Revision-Date: 2018-12-06 17:37+0100\n"
+"POT-Creation-Date: 2018-12-06 18:28+0100\n"
+"PO-Revision-Date: 2018-12-06 18:30+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -34,22 +34,32 @@ msgstr "Non puoi assegnare attività ad altri utenti"
 #: activity/make-addPeople.js:28 activity/make-createActivity.js:25
 #: activity/make-deleteActivity.js:28 activity/make-getActivity.js:27
 #: activity/make-removePeople.js:18 activity/make-updateActivity.js:48
+#: project/make-addDeadlines.js:14 project/make-addPeople.js:14
+#: project/make-addTerms.js:18 project/make-deleteProject.js:23
+#: project/make-getProject.js:24 project/make-moveTerms.js:14
+#: project/make-removeDeadlines.js:14 project/make-removePeople.js:14
+#: project/make-removeTerms.js:18 project/make-updatePeople.js:14
+#: project/make-updateProject.js:11
 msgid "You can't access this project"
 msgstr "Non puoi accedere a questo progetto"
 
-#: activity/make-addPeople.js:51
-#, javascript-format
-msgid "User not found (%s)"
-msgid_plural "Some users were not found (%s)"
-msgstr[0] "Utente non trovato (%s)"
-msgstr[1] "Alcuni utenti non sono stati trovati (%s)"
+#: activity/make-addPeople.js:48 project/make-addPeople.js:40
+#: project/make-updatePeople.js:32
+msgid "User not found"
+msgstr "Utente non trovato"
 
-#: activity/make-addPeople.js:60
+#: activity/make-addPeople.js:62
 #, javascript-format
 msgid "%s cannot access this project"
 msgstr "%s non può accedere a questo progetto"
 
 #: activity/make-createActivity.js:21 activity/make-updateActivity.js:37
+#: project/make-addDeadlines.js:10 project/make-addPeople.js:10
+#: project/make-addTerms.js:14 project/make-deleteProject.js:19
+#: project/make-getProject.js:20 project/make-moveTerms.js:10
+#: project/make-removeDeadlines.js:10 project/make-removePeople.js:10
+#: project/make-removeTerms.js:14 project/make-updatePeople.js:10
+#: project/make-updateProject.js:7
 msgid "Project not found"
 msgstr "Progetto non trovato"
 
@@ -95,12 +105,37 @@ msgstr "Categoria non trovata"
 msgid "Invalid category ID"
 msgstr "ID della categoria non valido"
 
-#: category/make-updateTerms.js:27
-#, javascript-format
-msgid "Term not found (%s)"
-msgid_plural "Some terms were not found (%s)"
-msgstr[0] "Termine non trovato (%s)"
-msgstr[1] "Alcuni termini non sono stati trovati (%s)"
+#: category/make-updateTerms.js:22 project/make-addTerms.js:50
+msgid "Term not found"
+msgstr "Termine non trovato"
+
+#: project/make-addDeadlines.js:32
+msgid "Deadlines should be today or in the future"
+msgstr "Le scadenze devono essere oggi o nel futuro"
+
+#: project/make-addPeople.js:58
+msgid "User not active"
+msgstr "Utente non attivo"
+
+#: project/make-deleteProject.js:8 project/make-getProject.js:10
+msgid "Invalid project ID"
+msgstr "ID del progetto non valido"
+
+#: project/make-moveTerms.js:21
+msgid "Destination project not found"
+msgstr "Progetto di destinazione non trovato"
+
+#: project/make-moveTerms.js:25
+msgid "You can't access the destination project"
+msgstr "Non puoi accedere al progetto di destinazione"
+
+#: project/make-removePeople.js:26
+msgid "A project can't be assigned to no one"
+msgstr "Un progetto non può non essere assegnato a nessuno"
+
+#: project/make-updatePeople.js:51
+msgid "People budgets don't add up"
+msgstr "I budget delle persone non quadrano"
 
 #: user/make-createUser.js:24
 msgid "A user is registered with the same e-mail address"

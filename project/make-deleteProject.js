@@ -1,11 +1,11 @@
-module.exports = ({ getDb, ObjectID, createError, userCanReadProject }) => async (req, res, next) => {
+module.exports = ({ getDb, ObjectID, createError, userCanReadProject, gt }) => async (req, res, next) => {
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
       errors: [{
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid project id'
+        msg: gt.gettext('Invalid project ID')
       }]
     })
   }
@@ -16,11 +16,11 @@ module.exports = ({ getDb, ObjectID, createError, userCanReadProject }) => async
   const project = await projectsCollection.findOne({ _id })
 
   if (!project) {
-    return next(createError(404, 'project not found'))
+    return next(createError(404, gt.gettext('Project not found')))
   }
 
   if (!userCanReadProject(req.session.user, project)) {
-    return next(createError(401, 'you cannot access this project'))
+    return next(createError(401, gt.gettext("You can't access this project")))
   }
 
   const categoriesCollection = db.collection('categories')

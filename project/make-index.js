@@ -56,20 +56,32 @@ module.exports = ({ config }) => {
     handleLanguages,
     sendValidation: makeSendValidation({ validationResult }),
     getProjects: makeGetProjects({ getDb, ObjectID, cursorify, createFindFilters }),
-    getProject: makeGetProject({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject }),
-    createProject: makeCreateProject({ getDb }),
-    updateProject: makeUpdateProject({ getDb, ObjectID, createError, userCanReadProject }),
-    deleteProject: makeDeleteProject({ getDb, ObjectID, createError, userCanReadProject }),
-    addPeople: makeAddPeople({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject }),
-    updatePeople: makeUpdatePeople({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject }),
-    removePeople: makeRemovePeople({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject }),
-    addDeadlines: makeAddDeadlines({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject }),
-    removeDeadlines: makeRemoveDeadlines({
-      getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
+    getProject: makeGetProject({
+      getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
     }),
-    addTerms: makeAddTerms({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject }),
-    moveTerms: makeMoveTerms({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject }),
-    removeTerms: makeRemoveTerms({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject }),
+    createProject: makeCreateProject({ getDb }),
+    updateProject: makeUpdateProject({ getDb, ObjectID, createError, userCanReadProject, gt }),
+    deleteProject: makeDeleteProject({ getDb, ObjectID, createError, userCanReadProject, gt }),
+    addPeople: makeAddPeople({
+      getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
+    }),
+    updatePeople: makeUpdatePeople({
+      getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
+    }),
+    removePeople: makeRemovePeople({
+      getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
+    }),
+    addDeadlines: makeAddDeadlines({
+      getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
+    }),
+    removeDeadlines: makeRemoveDeadlines({
+      getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
+    }),
+    addTerms: makeAddTerms({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt }),
+    moveTerms: makeMoveTerms({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt }),
+    removeTerms: makeRemoveTerms({
+      getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
+    }),
     validateCreateProject: makeValidateCreateProject({ check, status }),
     validateUpdateProject: makeValidateUpdateProject({ check, status }),
     validateGetProjects: makeValidateGetProjects({ check, status }),

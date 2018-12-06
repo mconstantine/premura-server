@@ -1,6 +1,7 @@
 const makeAddTerms = require('./make-addTerms')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('addTerms', () => {
   let userCanReadProjectResult = true
@@ -8,7 +9,10 @@ describe('addTerms', () => {
   const createError = (httpCode, message) => [httpCode, message]
   const userCanReadProject = () => userCanReadProjectResult
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
-  const addTerms = makeAddTerms({ getDb, ObjectID, createError, userCanReadProject, getProjectFromDb })
+
+  const addTerms = makeAddTerms({
+    getDb, ObjectID, createError, userCanReadProject, getProjectFromDb, gt
+  })
 
   const id = '1234567890abcdef'
   const next = jest.fn()
@@ -52,7 +56,7 @@ describe('addTerms', () => {
     getDb.setResult('findOne', false)
     getDb.setResult('find', categories) // resetting getDb's lastResult
     await addTerms(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('project')])
+    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
     getDb.setResult('findOne', project)
     getDb.setResult('find', categories)
   })
@@ -61,7 +65,7 @@ describe('addTerms', () => {
     next.mockClear()
     userCanReadProjectResult = false
     await addTerms(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([401, expect.stringContaining('project')])
+    expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
     userCanReadProjectResult = true
   })
 
@@ -76,7 +80,7 @@ describe('addTerms', () => {
         location: 'body',
         param: `terms[1]`,
         value: 'termfourid',
-        msg: 'term not found'
+        msg: expect.any(String)
       }]
     })
     req.body.terms[1] = 'termtwoid'

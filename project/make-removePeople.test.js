@@ -1,6 +1,7 @@
 const makeRemovePeople = require('./make-removePeople')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('removePeople', () => {
   let userCanReadProjectResult = true
@@ -9,7 +10,7 @@ describe('removePeople', () => {
   const getProjectFromDbResult = { test: true }
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
   const removePeople = makeRemovePeople({
-    getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
+    getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
   })
 
   const getPeople = () => [

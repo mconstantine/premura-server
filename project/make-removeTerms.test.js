@@ -1,6 +1,7 @@
 const makeRemoveTerms = require('./make-removeTerms')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('addTerms', () => {
   let userCanReadProjectResult = true
@@ -9,7 +10,7 @@ describe('addTerms', () => {
   const userCanReadProject = () => userCanReadProjectResult
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
   const removeTerms = makeRemoveTerms({
-    getDb, ObjectID, createError, userCanReadProject, getProjectFromDb
+    getDb, ObjectID, createError, userCanReadProject, getProjectFromDb, gt
   })
 
   const id = '1234567890abcdef'
@@ -53,7 +54,7 @@ describe('addTerms', () => {
     getDb.setResult('findOne', false)
     getDb.setResult('find', categories) // resetting getDb's lastResult
     await removeTerms(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('project')])
+    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
     getDb.setResult('findOne', project)
     getDb.setResult('find', categories)
   })
@@ -62,7 +63,7 @@ describe('addTerms', () => {
     next.mockClear()
     userCanReadProjectResult = false
     await removeTerms(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([401, expect.stringContaining('project')])
+    expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
     userCanReadProjectResult = true
   })
 

@@ -1,6 +1,7 @@
 const makeMoveTerms = require('./make-moveTerms')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('moveTerms', () => {
   let userCanReadProjectResult = () => true
@@ -8,7 +9,9 @@ describe('moveTerms', () => {
   const createError = (httpCode, message) => [httpCode, message]
   const userCanReadProject = (...args) => userCanReadProjectResult(...args)
   const getProjectFromDb = jest.fn(() => getProjectFromDbResult)
-  const moveTerms = makeMoveTerms({ getDb, ObjectID, createError, userCanReadProject, getProjectFromDb })
+  const moveTerms = makeMoveTerms({
+    getDb, ObjectID, createError, userCanReadProject, getProjectFromDb, gt
+  })
 
   const id = '1234567890abcdef'
   const destination = 'destinationprojectid'
@@ -47,7 +50,7 @@ describe('moveTerms', () => {
     getDb.setResult('findOne', false)
     getDb.setResult('find', getCategories)
     await moveTerms(req, res, next)
-    expect(next).toHaveBeenCalledWith([404, expect.stringContaining('project')])
+    expect(next).toHaveBeenCalledWith([404, expect.any(String)])
     expect(getDb.functions.findOne).toHaveBeenLastCalledWith({ _id: new ObjectID(id) })
     getDb.setResult('findOne', findOneResult)
     getDb.setResult('find', getCategories)
@@ -57,7 +60,7 @@ describe('moveTerms', () => {
     next.mockClear()
     userCanReadProjectResult = (user, { _id }) => !_id.equals(new ObjectID(id))
     await moveTerms(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([401, expect.stringContaining('project')])
+    expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
     userCanReadProjectResult = () => true
   })
 
@@ -68,7 +71,7 @@ describe('moveTerms', () => {
     getDb.setResult('find', getCategories)
 
     await moveTerms(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('destination')])
+    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
     expect(getDb.functions.findOne).toHaveBeenCalledWith({ _id: new ObjectID(destination) })
     getDb.setResult('findOne', findOneResult)
     getDb.setResult('find', getCategories)
@@ -78,7 +81,7 @@ describe('moveTerms', () => {
     next.mockClear()
     userCanReadProjectResult = (user, { _id }) => !_id.equals(new ObjectID(destination))
     await moveTerms(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([401, expect.stringContaining('destination')])
+    expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
     userCanReadProjectResult = () => true
   })
 

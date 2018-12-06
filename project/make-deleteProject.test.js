@@ -1,12 +1,13 @@
 const makeDeleteProject = require('./make-deleteProject')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('deleteProject', () => {
   let userCanReadProjectResult = true
   const userCanReadProject = () => userCanReadProjectResult
   const createError = (httpCode, message) => [httpCode, message]
-  const deleteProject = makeDeleteProject({ getDb, ObjectID, createError, userCanReadProject })
+  const deleteProject = makeDeleteProject({ getDb, ObjectID, createError, userCanReadProject, gt })
   const id = '1234567890abcdef'
   const req = { session: { user: { _id: 'me' } }, params: { id } }
   const res = { status: jest.fn(() => res), send: jest.fn(), end: jest.fn() }
@@ -39,7 +40,7 @@ describe('deleteProject', () => {
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid project id'
+        msg: expect.any(String)
       }]
     })
     req.params = { id }

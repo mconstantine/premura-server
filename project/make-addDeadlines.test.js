@@ -1,6 +1,7 @@
 const makeAddDeadlines = require('./make-addDeadlines')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('addDeadlines', () => {
   let userCanReadProjectResult = true
@@ -9,7 +10,7 @@ describe('addDeadlines', () => {
   const getProjectFromDb = () => getProjectFromDbResult
   const userCanReadProject = () => userCanReadProjectResult
   const addDeadlines = makeAddDeadlines({
-    getDb, ObjectID, createError, getProjectFromDb, userCanReadProject
+    getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
   })
 
   const id = '1234567890abcdef'
@@ -41,7 +42,7 @@ describe('addDeadlines', () => {
     getDb.setResult('findOne', false)
     await addDeadlines(req, res, next)
     expect(getDb.functions.findOne).toHaveBeenLastCalledWith({ _id: new ObjectID(id) })
-    expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('project')])
+    expect(next).toHaveBeenLastCalledWith([404, expect.any(String)])
     getDb.setResult('findOne', getProject())
   })
 
@@ -49,7 +50,7 @@ describe('addDeadlines', () => {
     next.mockClear()
     userCanReadProjectResult = false
     await addDeadlines(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([401, expect.stringContaining('project')])
+    expect(next).toHaveBeenLastCalledWith([401, expect.any(String)])
     userCanReadProjectResult = true
   })
 
@@ -69,7 +70,7 @@ describe('addDeadlines', () => {
         location: "body",
         param: "deadlines[1]",
         value: req.body.deadlines[1],
-        msg: "deadlines should be today or in the future"
+        msg: expect.any(String)
       }]
     })
 
