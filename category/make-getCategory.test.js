@@ -1,13 +1,14 @@
 const makeGetCategory = require('./make-getCategory')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('getCategory', () => {
   const createError = (httpCode, message) => [httpCode, message]
   const req = { params: { id: '1234567890abcdef' } }
   const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
-  const getCategory = makeGetCategory({ getDb, ObjectID, createError })
+  const getCategory = makeGetCategory({ getDb, ObjectID, createError, gt })
 
   it('Should reject invalid category ID', async () => {
     res.send.mockClear()
@@ -22,7 +23,7 @@ describe('getCategory', () => {
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid category id'
+        msg: expect.any(String)
       }]
     })
     req.params.id = originalId

@@ -1,10 +1,10 @@
-module.exports = ({ getDb, ObjectID, createError }) => async (req, res, next) => {
+module.exports = ({ getDb, ObjectID, createError, gt }) => async (req, res, next) => {
   const categoryId = new ObjectID(req.params.id)
   const collection = (await getDb()).collection('categories')
   const category = await collection.findOne({ _id: categoryId })
 
   if (!category) {
-    return next(createError(404, 'category not found'))
+    return next(createError(404, gt.gettext('Category not found')))
   }
 
   const termsToBeDeleted = req.body.terms.map(({ _id }) => _id)

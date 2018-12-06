@@ -1,6 +1,8 @@
 const makeUpdateTerms = require('./make-updateTerms')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
+const util = require('util')
 
 describe('updateTerms', () => {
   const createError = (httpCode, message) => [httpCode, message]
@@ -19,7 +21,7 @@ describe('updateTerms', () => {
 
   const res = { send: jest.fn() }
   const next = jest.fn()
-  const updateTerms = makeUpdateTerms({ getDb, ObjectID, createError })
+  const updateTerms = makeUpdateTerms({ getDb, ObjectID, createError, gt, util })
 
   it('Should ensure that the category exists', async () => {
     res.send.mockClear()
@@ -27,7 +29,7 @@ describe('updateTerms', () => {
     req.params.id = ''
     await updateTerms(req, res, next)
     expect(res.send).not.toHaveBeenCalled()
-    expect(next).toHaveBeenCalledWith([404, expect.stringContaining('category')])
+    expect(next).toHaveBeenCalledWith([404, expect.any(String)])
     req.params.id = originalId
   })
 

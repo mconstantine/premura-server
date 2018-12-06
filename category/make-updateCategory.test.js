@@ -1,6 +1,7 @@
 const makeUpdateCategory = require('./make-updateCategory')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('updateCategory', () => {
   const createError = (httpCode, message) => [httpCode, message]
@@ -12,7 +13,7 @@ describe('updateCategory', () => {
   }
 
   getDb.setResult('findOne', Object.assign({}, category))
-  const updateCategory = makeUpdateCategory({ getDb, ObjectID, createError })
+  const updateCategory = makeUpdateCategory({ getDb, ObjectID, createError, gt })
   const next = jest.fn()
   const res = { send: jest.fn() }
   const req = {

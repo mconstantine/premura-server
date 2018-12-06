@@ -1,3 +1,4 @@
 module.exports = {
-  gettext: x => x
+  gettext: x => x,
+  ngettext: x => x,
 }
