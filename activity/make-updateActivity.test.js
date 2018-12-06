@@ -1,6 +1,7 @@
 const makeUpdateActivity = require('./make-updateActivity')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('updateActivity', () => {
   let currentUserCanReadProject = true, recipientCanReadProject = true
@@ -29,7 +30,7 @@ describe('updateActivity', () => {
   const getActivityFromDb = jest.fn(() => ({ test: true }))
 
   const updateActivity = makeUpdateActivity({
-    getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+    getDb, ObjectID, createError, userCanReadProject, getActivityFromDb, gt
   })
 
   const req = {

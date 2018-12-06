@@ -1,5 +1,5 @@
 module.exports = ({
-  getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+  getDb, ObjectID, createError, userCanReadProject, getActivityFromDb, gt
 }) => async (req, res, next) => {
   const db = await getDb()
   const activity_id = new ObjectID(req.params.id)
@@ -9,7 +9,7 @@ module.exports = ({
   })
 
   if (!activity) {
-    return next(createError(404, 'activity not found'))
+    return next(createError(404, gt.gettext('Activity not found')))
   }
 
   const currentUser = req.session.user
@@ -34,7 +34,7 @@ module.exports = ({
     })
 
     if (!project) {
-      return next(createError(404, 'project not found'))
+      return next(createError(404, gt.gettext('Project not found')))
     }
   } else {
     const project_id = new ObjectID(activity.project)
@@ -45,7 +45,7 @@ module.exports = ({
   }
 
   if (!userCanReadProject(currentUser, project)) {
-    return next(createError(401, 'you cannot access this project'))
+    return next(createError(401, gt.gettext("You can't access this project")))
   }
 
   if (req.body.recipient) {
@@ -57,11 +57,11 @@ module.exports = ({
     })
 
     if (!recipient) {
-      return next(createError(404, 'recipient not found'))
+      return next(createError(404, gt.gettext('Recipient not found')))
     }
 
     if (!userCanReadProject(recipient, project)) {
-      return next(createError(401, 'recipient cannot access this project'))
+      return next(createError(401, gt.gettext("Recipient can't access this project")))
     }
   } else {
     const recipient_id = new ObjectID(activity.recipient)
@@ -72,7 +72,7 @@ module.exports = ({
   }
 
   if (!currentUser._id.equals(recipient._id) && currentUser.role === 'maker') {
-    return next(createError(401, "you cannot edit other user's activities"))
+    return next(createError(401, gt.gettext("You can't edit other user's activities")))
   }
 
   const timeFrom = new Date(req.body.timeFrom || activity.timeFrom)
@@ -85,7 +85,7 @@ module.exports = ({
           location: 'body',
           param: 'timeTo',
           value: timeTo.toISOString(),
-          message: 'timeTo should be rater than timeFrom'
+          message: gt.gettext('"time to" should be later than "time from"')
         }]
       })
     }
@@ -118,7 +118,7 @@ module.exports = ({
 
   if (conflict) {
     return next(createError(409, {
-      msg: 'an activity is already assigned for this time range',
+      msg: gt.gettext('An activity with this time range is already assigned'),
       conflict
     }))
   }
@@ -139,7 +139,7 @@ module.exports = ({
           location: 'body',
           param: 'timeTo',
           value: timeTo.toISOString(),
-          message: 'there is no budget left'
+          message: gt.gettext('There is no budget left for this project')
         }]
       })
     }

@@ -1,6 +1,7 @@
 const makeGetActivity = require('./make-getActivity')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('getActivity', () => {
   const createError = (httpCode, message) => [httpCode, message]
@@ -11,7 +12,7 @@ describe('getActivity', () => {
   const getActivityFromDb = jest.fn(() => getActivityFromDbResult)
   const userCanReadProject = () => userCanReadProjectResult
   const getActivity = makeGetActivity({
-    getDb, ObjectID, createError, getActivityFromDb, userCanReadProject
+    getDb, ObjectID, createError, getActivityFromDb, userCanReadProject, gt
   })
   const id = '1234567890abcdef'
   const req = { session: { user: { _id: 'me' } }, params: { id } }
@@ -27,7 +28,7 @@ describe('getActivity', () => {
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid activity id'
+        msg: expect.any(String)
       }]
     })
     req.params = { id }

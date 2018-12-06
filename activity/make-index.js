@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const util = require('util')
 const router = require('express').Router()
 const { validationResult } = require('express-validator/check')
 const { check } = require('express-validator/check')
@@ -48,25 +49,25 @@ module.exports = ({ config }) => {
     sendValidation,
     catchExceptions,
     createActivity: makeCreateActivity({
-      getDb, ObjectID, createError, userCanReadProject
+      getDb, ObjectID, createError, userCanReadProject, gt
     }),
     getActivities: makeGetActivities({
       getDb, ObjectID, cursorify, createFindFilters
     }),
     getActivity: makeGetActivity({
-      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb, gt
     }),
     updateActivity: makeUpdateActivity({
-      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb, gt
     }),
     deleteActivity: makeDeleteActivity({
-      getDb, ObjectID, createError, userCanReadProject
+      getDb, ObjectID, createError, userCanReadProject, gt
     }),
     addPeople: makeAddPeople({
-      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb, gt, util
     }),
     removePeople: makeRemovePeople({
-      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+      getDb, ObjectID, createError, userCanReadProject, getActivityFromDb, gt
     }),
     validateCreateActivity: makeValidateCreateActivity({ check }),
     validateGetActivities: makeValidateGetActivities({ check }),

@@ -1,5 +1,5 @@
 module.exports = ({
-  getDb, ObjectID, createError, userCanReadProject
+  getDb, ObjectID, createError, userCanReadProject, gt
 }) => async (req, res, next) => {
   const currentUser = req.session.user
   const activity = {
@@ -18,11 +18,11 @@ module.exports = ({
   })
 
   if (!project) {
-    return next(createError(404, 'project not found'))
+    return next(createError(404, gt.gettext('Project not found')))
   }
 
   if (!userCanReadProject(currentUser, project)) {
-    return next(createError(401, 'you cannot access this project'))
+    return next(createError(401, gt.gettext("You can't access this project")))
   }
 
   activity.project = project_id
@@ -33,17 +33,17 @@ module.exports = ({
   })
 
   if (!recipient) {
-    return next(createError(404, 'recipient not found'))
+    return next(createError(404, gt.gettext('Recipient not found')))
   }
 
   if (!userCanReadProject(recipient, project)) {
-    return next(createError(401, 'recipient cannot access this project'))
+    return next(createError(401, gt.gettext("Recipient can't access this project")))
   }
 
   activity.recipient = recipient_id
 
   if (!currentUser._id.equals(recipient_id) && currentUser.role === 'maker') {
-    return next(createError(401, 'you cannot assign activities to other users'))
+    return next(createError(401, gt.gettext("You can't assign activities to other users")))
   }
 
   const timeFrom = new Date(req.body.timeFrom)
@@ -55,7 +55,7 @@ module.exports = ({
         location: 'body',
         param: 'timeTo',
         value: timeTo.toISOString(),
-        message: 'timeTo should be rater than timeFrom'
+        message: gt.gettext('"time to" should be later than "time from"')
       }]
     })
   }
@@ -83,7 +83,7 @@ module.exports = ({
 
   if (conflict) {
     return next(createError(409, {
-      msg: 'an activity is already assigned for this time range',
+      msg: gt.gettext('An activity with this time range is already assigned'),
       conflict
     }))
   }
@@ -104,7 +104,7 @@ module.exports = ({
           location: 'body',
           param: 'timeTo',
           value: timeTo.toISOString(),
-          message: 'there is no budget left'
+          message: gt.gettext('There is no budget left for this project')
         }]
       })
     }

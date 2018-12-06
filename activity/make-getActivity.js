@@ -1,5 +1,5 @@
 module.exports = ({
-  getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+  getDb, ObjectID, createError, userCanReadProject, getActivityFromDb, gt
 }) => async (req, res, next) => {
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
@@ -7,7 +7,7 @@ module.exports = ({
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid activity id'
+        msg: gt.gettext('Invalid activity ID')
       }]
     })
   }
@@ -17,14 +17,14 @@ module.exports = ({
   const activity = await getActivityFromDb(db, activity_id)
 
   if (!activity) {
-    return next(createError(404, 'activity not found'))
+    return next(createError(404, gt.gettext('Activity not found')))
   }
 
   const project_id = activity.project._id
   const project = await db.collection('projects').findOne({ _id: project_id })
 
   if (!userCanReadProject(req.session.user, project)) {
-    return next(createError(401, 'you cannot access this project'))
+    return next(createError(401, gt.gettext("You can't access this project")))
   }
 
   return res.send(activity)

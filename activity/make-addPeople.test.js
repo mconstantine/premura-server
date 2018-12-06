@@ -1,6 +1,8 @@
 const makeAddPeople = require('./make-addPeople')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
+const util = require('util')
 
 describe('addPeople', () => {
   const getMasterUser = () => ({
@@ -49,7 +51,7 @@ describe('addPeople', () => {
   getDb.setResult('findOne', findOne)
 
   const addPeople = makeAddPeople({
-    getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+    getDb, ObjectID, createError, userCanReadProject, getActivityFromDb, gt, util
   })
 
   const req = {

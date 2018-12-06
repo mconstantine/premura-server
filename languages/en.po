@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-06 12:13+0100\n"
-"PO-Revision-Date: 2018-12-06 13:03+0100\n"
+"POT-Creation-Date: 2018-12-06 17:18+0100\n"
+"PO-Revision-Date: 2018-12-06 17:18+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -13,9 +13,77 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: gettext, dgettext:2, dcgettext:2, ngettext:1,2, dngettext:2,3, dcngettext:2,3, gettext_noop, and pgettext:1c,2, dpgettext:2c,3, dcpgettext:2c,3, npgettext:1c,2,3, dnpgettext:2c,3,4, dcnpgettext:2c,3,4\n"
+"X-Poedit-KeywordsList: gettext, dgettext:2, dcgettext:2, ngettext:1,2, "
+"dngettext:2,3, dcngettext:2,3, gettext_noop, and pgettext:1c,2, "
+"dpgettext:2c,3, dcpgettext:2c,3, npgettext:1c,2,3, dnpgettext:2c,3,4, "
+"dcnpgettext:2c,3,4\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: node_modules\n"
+
+#: activity/make-addPeople.js:12 activity/make-deleteActivity.js:21
+#: activity/make-getActivity.js:20 activity/make-removePeople.js:10
+#: activity/make-updateActivity.js:12
+msgid "Activity not found"
+msgstr "Activity not found"
+
+#: activity/make-addPeople.js:20 activity/make-createActivity.js:46
+#: activity/make-removePeople.js:22
+msgid "You can't assign activities to other users"
+msgstr "You can't assign activities to other users"
+
+#: activity/make-addPeople.js:28 activity/make-createActivity.js:25
+#: activity/make-deleteActivity.js:28 activity/make-getActivity.js:27
+#: activity/make-removePeople.js:18 activity/make-updateActivity.js:48
+msgid "You can't access this project"
+msgstr "You can't access this project"
+
+#: activity/make-addPeople.js:51
+#, javascript-format
+msgid "User not found (%s)"
+msgid_plural "Some users were not found (%s)"
+msgstr[0] "User not found (%s)"
+msgstr[1] "Some users were not found (%s)"
+
+#: activity/make-addPeople.js:60
+#, javascript-format
+msgid "%s cannot access this project"
+msgstr "%s cannot access this project"
+
+#: activity/make-createActivity.js:21 activity/make-updateActivity.js:37
+msgid "Project not found"
+msgstr "Project not found"
+
+#: activity/make-createActivity.js:36 activity/make-updateActivity.js:60
+msgid "Recipient not found"
+msgstr "Recipient not found"
+
+#: activity/make-createActivity.js:40 activity/make-updateActivity.js:64
+msgid "Recipient can't access this project"
+msgstr "Recipient can't access this project"
+
+#: activity/make-createActivity.js:58 activity/make-updateActivity.js:88
+msgid "\"time to\" should be later than \"time from\""
+msgstr "\"time to\" should be later than \"time from\""
+
+#: activity/make-createActivity.js:86 activity/make-updateActivity.js:121
+msgid "An activity with this time range is already assigned"
+msgstr "An activity with this time range is already assigned"
+
+#: activity/make-createActivity.js:107 activity/make-updateActivity.js:142
+msgid "There is no budget left for this project"
+msgstr "There is no budget left for this project"
+
+#: activity/make-deleteActivity.js:10 activity/make-getActivity.js:10
+msgid "Invalid activity ID"
+msgstr "Invalid activity ID"
+
+#: activity/make-deleteActivity.js:32
+msgid "You can't delete other user's activities"
+msgstr "You can't delete other user's activities"
+
+#: activity/make-updateActivity.js:75
+msgid "You can't edit other user's activities"
+msgstr "You can't edit other user's activities"
 
 #: user/make-createUser.js:24
 msgid "A user is registered with the same e-mail address"

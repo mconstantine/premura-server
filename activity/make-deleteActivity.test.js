@@ -1,12 +1,13 @@
 const makeDeleteActivity = require('./make-deleteActivity')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('deleteProject', () => {
   let userCanReadProjectResult = true
   const userCanReadProject = () => userCanReadProjectResult
   const createError = (httpCode, message) => [httpCode, message]
-  const deleteActivity = makeDeleteActivity({ getDb, ObjectID, createError, userCanReadProject })
+  const deleteActivity = makeDeleteActivity({ getDb, ObjectID, createError, userCanReadProject, gt })
   const id = '1234567890abcdef'
   const req = { session: { user: { _id: new ObjectID('me'), role: 'manager' } }, params: { id } }
   const res = { status: jest.fn(() => res), send: jest.fn(), end: jest.fn() }
@@ -42,7 +43,7 @@ describe('deleteProject', () => {
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid activity id'
+        msg: expect.any(String)
       }]
     })
     req.params = { id }

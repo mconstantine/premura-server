@@ -1,6 +1,7 @@
 const makeRemovePeople = require('./make-removePeople')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('removePeople', () => {
   const getMasterUser = () => ({
@@ -41,7 +42,7 @@ describe('removePeople', () => {
   getDb.setResult('findOne', findOne)
 
   const removePeople = makeRemovePeople({
-    getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+    getDb, ObjectID, createError, userCanReadProject, getActivityFromDb, gt
   })
 
   const req = {

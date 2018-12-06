@@ -1,5 +1,5 @@
 module.exports = ({
-  getDb, ObjectID, createError, userCanReadProject, getActivityFromDb
+  getDb, ObjectID, createError, userCanReadProject, getActivityFromDb, gt
 }) => async (req, res, next) => {
   const currentUser = req.session.user
   const db = await getDb()
@@ -7,7 +7,7 @@ module.exports = ({
   const activity = await db.collection('activities').findOne({ _id })
 
   if (!activity) {
-    return next(createError(404, 'activity not found'))
+    return next(createError(404, gt.gettext('Activity not found')))
   }
 
   const project = await db.collection('projects').findOne({
@@ -15,11 +15,11 @@ module.exports = ({
   })
 
   if (!userCanReadProject(currentUser, project)) {
-    return next(createError(401, 'you cannot access this project'))
+    return next(createError(401, gt.gettext("You can't access this project")))
   }
 
   if (!currentUser._id.equals(activity.recipient) && currentUser.role === 'maker') {
-    return next(createError(401, 'you cannot assign activities to other users'))
+    return next(createError(401, gt.gettext("You can't assign activities to other users")))
   }
 
   const peopleToRemove = req.body.people.map(_id => new ObjectID(_id))

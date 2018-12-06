@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-06 12:13+0100\n"
-"PO-Revision-Date: 2018-12-06 12:14+0100\n"
+"POT-Creation-Date: 2018-12-06 17:17+0100\n"
+"PO-Revision-Date: 2018-12-06 17:17+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -19,6 +19,71 @@ msgstr ""
 "dcnpgettext:2c,3,4\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: node_modules\n"
+
+#: activity/make-addPeople.js:12 activity/make-deleteActivity.js:21
+#: activity/make-getActivity.js:20 activity/make-removePeople.js:10
+#: activity/make-updateActivity.js:12
+msgid "Activity not found"
+msgstr "Attività non trovata"
+
+#: activity/make-addPeople.js:20 activity/make-createActivity.js:46
+#: activity/make-removePeople.js:22
+msgid "You can't assign activities to other users"
+msgstr "Non puoi assegnare attività ad altri utenti"
+
+#: activity/make-addPeople.js:28 activity/make-createActivity.js:25
+#: activity/make-deleteActivity.js:28 activity/make-getActivity.js:27
+#: activity/make-removePeople.js:18 activity/make-updateActivity.js:48
+msgid "You can't access this project"
+msgstr "Non puoi accedere a questo progetto"
+
+#: activity/make-addPeople.js:51
+#, javascript-format
+msgid "User not found (%s)"
+msgid_plural "Some users were not found (%s)"
+msgstr[0] "Utente non trovato (%s)"
+msgstr[1] "Alcuni utenti non sono stati trovati (%s)"
+
+#: activity/make-addPeople.js:60
+#, javascript-format
+msgid "%s cannot access this project"
+msgstr "%s non può accedere a questo progetto"
+
+#: activity/make-createActivity.js:21 activity/make-updateActivity.js:37
+msgid "Project not found"
+msgstr "Progetto non trovato"
+
+#: activity/make-createActivity.js:36 activity/make-updateActivity.js:60
+msgid "Recipient not found"
+msgstr "Destinatario non trovato"
+
+#: activity/make-createActivity.js:40 activity/make-updateActivity.js:64
+msgid "Recipient can't access this project"
+msgstr "Il destinatario non può accedere a questo progetto"
+
+#: activity/make-createActivity.js:58 activity/make-updateActivity.js:88
+msgid "\"time to\" should be later than \"time from\""
+msgstr "La fine dell’attività deve venire dopo l’inizio"
+
+#: activity/make-createActivity.js:86 activity/make-updateActivity.js:121
+msgid "An activity with this time range is already assigned"
+msgstr "Un’attività durante questo intervallo di tempo è già stata assegnata"
+
+#: activity/make-createActivity.js:107 activity/make-updateActivity.js:142
+msgid "There is no budget left for this project"
+msgstr "Non è rimasto budget disponibile per questo progetto"
+
+#: activity/make-deleteActivity.js:10 activity/make-getActivity.js:10
+msgid "Invalid activity ID"
+msgstr "ID dell’attività non valido"
+
+#: activity/make-deleteActivity.js:32
+msgid "You can't delete other user's activities"
+msgstr "Non puoi eliminare attività di altri utenti"
+
+#: activity/make-updateActivity.js:75
+msgid "You can't edit other user's activities"
+msgstr "Non puoi modificare attività di altri utenti"
 
 #: user/make-createUser.js:24
 msgid "A user is registered with the same e-mail address"

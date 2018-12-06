@@ -1,6 +1,7 @@
 const makeCreateActivity = require('./make-createActivity')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('createActivity', () => {
   let currentUserCanReadProject = true, recipientCanReadProject = true
@@ -27,7 +28,7 @@ describe('createActivity', () => {
   })
 
   const createActivity = makeCreateActivity({
-    getDb, ObjectID, createError, userCanReadProject
+    getDb, ObjectID, createError, userCanReadProject, gt
   })
 
   const req = {
