@@ -1,11 +1,11 @@
-module.exports = ({ createError, ObjectID, getDb, roles }) => async (req, res, next) => {
+module.exports = ({ createError, ObjectID, getDb, gt }) => async (req, res, next) => {
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
       errors: [{
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid user id'
+        msg: gt.gettext('Invalid user ID')
       }]
     })
   }
@@ -17,11 +17,11 @@ module.exports = ({ createError, ObjectID, getDb, roles }) => async (req, res, n
   const currentUser = req.session.user
 
   if (!user) {
-    return next(createError(404, 'user not found'))
+    return next(createError(404, gt.gettext('User not found')))
   }
 
   if (currentUser.role !== 'master') {
-    return next(createError(401, 'only a master user can delete a user'))
+    return next(createError(401, gt.gettext('Only a master user can delete a user')))
   }
 
   const projectsCollection = db.collection('projects')

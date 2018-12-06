@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-06 17:36+0100\n"
-"PO-Revision-Date: 2018-12-06 17:37+0100\n"
+"POT-Creation-Date: 2018-12-06 18:37+0100\n"
+"PO-Revision-Date: 2018-12-06 18:37+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -34,22 +34,35 @@ msgstr "You can't assign activities to other users"
 #: activity/make-addPeople.js:28 activity/make-createActivity.js:25
 #: activity/make-deleteActivity.js:28 activity/make-getActivity.js:27
 #: activity/make-removePeople.js:18 activity/make-updateActivity.js:48
+#: project/make-addDeadlines.js:14 project/make-addPeople.js:14
+#: project/make-addTerms.js:18 project/make-deleteProject.js:23
+#: project/make-getProject.js:24 project/make-moveTerms.js:14
+#: project/make-removeDeadlines.js:14 project/make-removePeople.js:14
+#: project/make-removeTerms.js:18 project/make-updatePeople.js:14
+#: project/make-updateProject.js:11
 msgid "You can't access this project"
 msgstr "You can't access this project"
 
-#: activity/make-addPeople.js:51
-#, javascript-format
-msgid "User not found (%s)"
-msgid_plural "Some users were not found (%s)"
-msgstr[0] "User not found (%s)"
-msgstr[1] "Some users were not found (%s)"
+#: activity/make-addPeople.js:48 project/make-addPeople.js:40
+#: project/make-updatePeople.js:32 user/make-deleteUser.js:20
+#: user/make-getUser.js:21
+#| msgid "User not found (%s)"
+#| msgid_plural "Some users were not found (%s)"
+msgid "User not found"
+msgstr "User not found"
 
-#: activity/make-addPeople.js:60
+#: activity/make-addPeople.js:62
 #, javascript-format
 msgid "%s cannot access this project"
 msgstr "%s cannot access this project"
 
 #: activity/make-createActivity.js:21 activity/make-updateActivity.js:37
+#: project/make-addDeadlines.js:10 project/make-addPeople.js:10
+#: project/make-addTerms.js:14 project/make-deleteProject.js:19
+#: project/make-getProject.js:20 project/make-moveTerms.js:10
+#: project/make-removeDeadlines.js:10 project/make-removePeople.js:10
+#: project/make-removeTerms.js:14 project/make-updatePeople.js:10
+#: project/make-updateProject.js:7
 msgid "Project not found"
 msgstr "Project not found"
 
@@ -88,24 +101,63 @@ msgstr "You can't edit other user's activities"
 #: category/make-addTerms.js:7 category/make-deleteCategory.js:18
 #: category/make-getCategory.js:17 category/make-removeTerms.js:7
 #: category/make-updateCategory.js:7 category/make-updateTerms.js:7
-#| msgid "Activity not found"
 msgid "Category not found"
 msgstr "Category not found"
 
 #: category/make-deleteCategory.js:8 category/make-getCategory.js:8
-#| msgid "Invalid activity ID"
 msgid "Invalid category ID"
 msgstr "Invalid category ID"
 
-#: category/make-updateTerms.js:27
-#, javascript-format
-#| msgid "User not found (%s)"
-#| msgid_plural "Some users were not found (%s)"
-msgid "Term not found (%s)"
-msgid_plural "Some terms were not found (%s)"
-msgstr[0] "Term not found (%s)"
-msgstr[1] "Some terms were not found (%s)"
+#: category/make-updateTerms.js:22 project/make-addTerms.js:50
+#| msgid "Term not found (%s)"
+#| msgid_plural "Some terms were not found (%s)"
+msgid "Term not found"
+msgstr "Term not found"
+
+#: project/make-addDeadlines.js:32
+msgid "Deadlines should be today or in the future"
+msgstr "Deadlines should be today or in the future"
+
+#: project/make-addPeople.js:58
+msgid "User not active"
+msgstr "User not active"
+
+#: project/make-deleteProject.js:8 project/make-getProject.js:10
+#| msgid "Invalid activity ID"
+msgid "Invalid project ID"
+msgstr "Invalid project ID"
+
+#: project/make-moveTerms.js:21
+#| msgid "Project not found"
+msgid "Destination project not found"
+msgstr "Destination project not found"
+
+#: project/make-moveTerms.js:25
+#| msgid "You can't access this project"
+msgid "You can't access the destination project"
+msgstr "You can't access the destination project"
+
+#: project/make-removePeople.js:26
+msgid "A project can't be assigned to no one"
+msgstr "A project can't be assigned to no one"
+
+#: project/make-updatePeople.js:51
+msgid "People budgets don't add up"
+msgstr "People budgets don't add up"
+
+#: user/make-createUser.js:13
+msgid "You can't register a user with a role higher than yours"
+msgstr "You can't register a user with a role higher than yours"
 
 #: user/make-createUser.js:24
 msgid "A user is registered with the same e-mail address"
 msgstr "A user is registered with the same e-mail address"
+
+#: user/make-deleteUser.js:8 user/make-getUser.js:10
+#| msgid "Invalid category ID"
+msgid "Invalid user ID"
+msgstr "Invalid user ID"
+
+#: user/make-deleteUser.js:24
+msgid "Only a master user can delete a user"
+msgstr "Only a master user can delete a user"

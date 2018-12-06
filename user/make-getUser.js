@@ -1,5 +1,5 @@
 module.exports = ({
-  getDb, createError, ObjectID, sensitiveInformationProjection
+  getDb, createError, ObjectID, sensitiveInformationProjection, gt
 }) => async (req, res, next) => {
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
@@ -7,25 +7,18 @@ module.exports = ({
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid user id'
+        msg: gt.gettext('Invalid user ID')
       }]
     })
   }
 
-  let _id
-
-  try {
-    _id = new ObjectID(req.params.id)
-  } catch (ex) {
-    return next(createError(404, 'user not found'))
-  }
-
+  const _id = new ObjectID(req.params.id)
   const user = await (await getDb()).collection('users').findOne({ _id }, {
     projection: sensitiveInformationProjection
   })
 
   if (!user) {
-    return next(createError(404, 'user not found'))
+    return next(createError(404, gt.gettext('User not found')))
   }
 
   res.send(user)

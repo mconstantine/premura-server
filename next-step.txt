@@ -1,2 +1,3 @@
+Keep adding translations starting from login.
 When a user is removed from a project, what happens to its activities?
 Do projects conversations

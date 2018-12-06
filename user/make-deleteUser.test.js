@@ -1,7 +1,7 @@
 const makeDeleteUser = require('./make-deleteUser')
-const roles = require('../misc/roles')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('deleteUser', () => {
   const id = '1234567890abcdef'
@@ -9,7 +9,7 @@ describe('deleteUser', () => {
   const next = jest.fn()
   const createError = (httpCode, message) => [httpCode, message]
   const res = { status: jest.fn(() => res), send: jest.fn(), end: () => {} }
-  const deleteUser = makeDeleteUser({ createError, getDb, ObjectID, roles })
+  const deleteUser = makeDeleteUser({ createError, getDb, ObjectID, gt })
 
   const getUser = () => ({
     _id: new ObjectID(id),
@@ -67,7 +67,7 @@ describe('deleteUser', () => {
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid user id'
+        msg: expect.any(String)
       }]
     })
 

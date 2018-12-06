@@ -10,7 +10,7 @@ module.exports = ({
   const currentUser = req.session.user
 
   if (roles.indexOf(role) >= roles.indexOf(currentUser.role)) {
-    return next(createError(401, 'you cannot register a user with a role higher than yours'))
+    return next(createError(401, gt.gettext("You can't register a user with a role higher than yours")))
   }
 
   const collection = (await getDb()).collection('users')

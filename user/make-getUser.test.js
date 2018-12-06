@@ -1,6 +1,7 @@
 const getDb = require('../misc/test-getDb')
 const makeGetUser = require('./make-getUser')
 const ObjectID = require('../misc/test-ObjectID')
+const gt = require('../misc/test-gettext')
 
 describe('getUser', () => {
   const createError = (httpCode, message) => [httpCode, message]
@@ -11,7 +12,7 @@ describe('getUser', () => {
   const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
 
-  const getUser = makeGetUser({ getDb, createError, ObjectID, sensitiveInformationProjection })
+  const getUser = makeGetUser({ getDb, createError, ObjectID, sensitiveInformationProjection, gt })
 
   it('Should check that an ID is provided', async () => {
     req.params = {}
@@ -23,7 +24,7 @@ describe('getUser', () => {
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid user id'
+        msg: expect.any(String)
       }]
     })
 

@@ -49,13 +49,13 @@ module.exports = ({ config }) => {
       bcrypt, createError, roles, getDb, sensitiveInformationProjection, gt
     }),
     getUsers: makeGetUsers({ getDb, cursorify, createFindFilters, sensitiveInformationProjection }),
-    getUser: makeGetUser({ getDb, createError, ObjectID, sensitiveInformationProjection }),
+    getUser: makeGetUser({ getDb, createError, ObjectID, sensitiveInformationProjection, gt }),
     getJobRoles: makeGetJobRoles({ getDb }),
     updateUser: makeUpdateUser({
       createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection
     }),
-    deleteUser: makeDeleteUser({ createError, ObjectID, getDb, roles }),
-    login: makeLogin({ bcrypt, createError, getDb }),
+    deleteUser: makeDeleteUser({ createError, ObjectID, getDb, gt }),
+    login: makeLogin({ bcrypt, createError, getDb, gt }),
     logout,
     sendValidation: makeSendValidation({ validationResult }),
     validateLogin: makeValidateLogin({ check }),

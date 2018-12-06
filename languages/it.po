@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-06 18:28+0100\n"
-"PO-Revision-Date: 2018-12-06 18:30+0100\n"
+"POT-Creation-Date: 2018-12-06 18:36+0100\n"
+"PO-Revision-Date: 2018-12-06 18:37+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -44,7 +44,8 @@ msgid "You can't access this project"
 msgstr "Non puoi accedere a questo progetto"
 
 #: activity/make-addPeople.js:48 project/make-addPeople.js:40
-#: project/make-updatePeople.js:32
+#: project/make-updatePeople.js:32 user/make-deleteUser.js:20
+#: user/make-getUser.js:21
 msgid "User not found"
 msgstr "Utente non trovato"
 
@@ -137,6 +138,18 @@ msgstr "Un progetto non può non essere assegnato a nessuno"
 msgid "People budgets don't add up"
 msgstr "I budget delle persone non quadrano"
 
+#: user/make-createUser.js:13
+msgid "You can't register a user with a role higher than yours"
+msgstr "Non puoi registrare un utente con un ruolo più alto del tuo"
+
 #: user/make-createUser.js:24
 msgid "A user is registered with the same e-mail address"
 msgstr "C’è un utente registrato con lo stesso indirizzo e-mail"
+
+#: user/make-deleteUser.js:8 user/make-getUser.js:10
+msgid "Invalid user ID"
+msgstr "ID dell’utente non valido"
+
+#: user/make-deleteUser.js:24
+msgid "Only a master user can delete a user"
+msgstr "Solo un utente master può eliminare un utente"
