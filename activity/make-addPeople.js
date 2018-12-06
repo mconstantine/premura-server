@@ -35,23 +35,25 @@ module.exports = ({
   .filter(_id => !activity.people.find(person_id => _id.equals(person_id)))
 
   if (peopleIds.length) {
-    const notFoundUsers = []
-    const people = await Promise.all(peopleIds.map(async _id => {
+    const errors = []
+
+    const people = await Promise.all(peopleIds.map(async (_id, index) => {
       const user = await db.collection('users').findOne({ _id })
 
       if (!user) {
-        notFoundUsers.push(_id.toString())
+        errors.push({
+          location: 'body',
+          param: `people[${index}]`,
+          value: _id,
+          msg: gt.gettext('User not found')
+        })
       }
 
       return user
     }))
 
-    if (notFoundUsers.length) {
-      return next(createError(404, util.format(gt.ngettext(
-        'User not found (%s)',
-        'Some users were not found (%s)',
-        notFoundUsers.length
-      ), notFoundUsers.join(', '))))
+    if (errors.length) {
+      return res.status(422).send({ errors })
     }
 
     for (let user of people) {

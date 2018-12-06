@@ -19,7 +19,7 @@ describe('updateTerms', () => {
     body: { terms: genTerms() }
   }
 
-  const res = { send: jest.fn() }
+  const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
   const updateTerms = makeUpdateTerms({ getDb, ObjectID, createError, gt, util })
 
@@ -43,8 +43,21 @@ describe('updateTerms', () => {
     })
 
     await updateTerms(req, res, next)
-    expect(res.send).not.toHaveBeenCalled()
-    expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('term')])
+
+    expect(res.status).toHaveBeenCalledWith(422)
+    expect(res.send).toHaveBeenLastCalledWith({
+      errors: [{
+        location: 'body',
+        param: 'terms[0]',
+        value: 'termoneid',
+        msg: expect.any(String)
+      }, {
+        location: 'body',
+        param: 'terms[1]',
+        value: 'termtwoid',
+        msg: expect.any(String)
+      }]
+    })
   })
 
   it('Should not save any extra information', async () => {
