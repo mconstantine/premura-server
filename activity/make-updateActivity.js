@@ -117,7 +117,10 @@ module.exports = ({
   })
 
   if (conflict) {
-    return next(createError(409, JSON.stringify(conflict)))
+    return next(createError(409, {
+      msg: 'an activity is already assigned for this time range',
+      conflict
+    }))
   }
 
   if (project.budget) {

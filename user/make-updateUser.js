@@ -59,7 +59,10 @@ module.exports = ({
     )
 
     if (alreadyExistingUser) {
-      return next(createError(409, JSON.stringify(alreadyExistingUser)))
+      return next(createError(409, {
+        msg: 'a user is registered with the same e-mail address',
+        conflict: alreadyExistingUser
+      }))
     }
 
     update.email = email

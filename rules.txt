@@ -1,1 +1,2 @@
 Users are called people in the context of projects
+Errors with code 409 should have an Object with msg (message) and conflict (the Object causing the conflict) as its keys.

@@ -204,11 +204,13 @@ describe('updateActivity', () => {
     const three = new Date(now + 1000 * 60 * 60 * 48)
     const four = new Date(now + 1000 * 60 * 60 * 72)
 
-    activities = [{
+    const conflict = {
       _id: new ObjectID('anotheractivityid'),
       timeFrom: one,
       timeTo: three
-    }]
+    }
+
+    activities = [conflict]
 
     req.body = {
       timeFrom: two.toISOString(),
@@ -216,7 +218,11 @@ describe('updateActivity', () => {
     }
 
     await updateActivity(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([409, expect.any(String)])
+
+    expect(next).toHaveBeenLastCalledWith([409, expect.objectContaining({
+      msg: expect.any(String),
+      conflict
+    })])
   })
 
   it('Should exclude current activity while checking for conflicts', async () => {
@@ -252,11 +258,13 @@ describe('updateActivity', () => {
     const three = new Date(now + 1000 * 60 * 60 * 48)
     const four = new Date(now + 1000 * 60 * 60 * 72)
 
-    activities = [{
+    const conflict = {
       _id: new ObjectID('anotheractivityid'),
       timeFrom: two,
       timeTo: four
-    }]
+    }
+
+    activities = [conflict]
 
     req.body = {
       timeFrom: one.toISOString(),
@@ -264,7 +272,11 @@ describe('updateActivity', () => {
     }
 
     await updateActivity(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([409, expect.any(String)])
+
+    expect(next).toHaveBeenLastCalledWith([409, {
+      msg: expect.any(String),
+      conflict
+    }])
   })
 
   it('Should check for conflicts (after)', async () => {
@@ -298,11 +310,13 @@ describe('updateActivity', () => {
     const one = new Date(now)
     const two = new Date(now + 1000 * 60 * 60 * 24)
 
-    activities = [{
+    const conflict = {
       _id: new ObjectID('anotheractivityid'),
       timeFrom: one,
       timeTo: two
-    }]
+    }
+
+    activities = [conflict]
 
     req.body = {
       timeFrom: one.toISOString(),
@@ -310,7 +324,11 @@ describe('updateActivity', () => {
     }
 
     await updateActivity(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([409, expect.any(String)])
+
+    expect(next).toHaveBeenLastCalledWith([409, {
+      msg: expect.any(String),
+      conflict
+    }])
   })
 
   it('Should check for budget conflicts', async () => {

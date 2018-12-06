@@ -91,12 +91,18 @@ describe('createUser', () => {
   })
 
   it('Should report the conflict in case of existing user', async () => {
-    getDb.setResult('findOne', { test: true })
+    const conflict = { test: true }
+    getDb.setResult('findOne', conflict)
     req.session.user = Object.assign({}, data)
     req.session.user.role = 'master'
     req.body = Object.assign({}, data)
     await createUser(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([409, JSON.stringify(getDb.getResult('findOne'))])
+
+    expect(next).toHaveBeenLastCalledWith([409, expect.objectContaining({
+      msg: expect.any(String),
+      conflict
+    })])
+
     getDb.setResult('findOne', null)
   })
 

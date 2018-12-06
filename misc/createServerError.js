@@ -1,4 +1,7 @@
 module.exports = (httpCode, message, ...messages) => {
-  const errors = [message].concat(messages).map(msg => ({ msg }))
+  const errors = [message].concat(messages).map(msg =>
+    typeof msg === 'string' ? ({ msg }) : msg
+  )
+
   return Object.assign(new Error(JSON.stringify({ errors })), { httpCode })
 }

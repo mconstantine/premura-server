@@ -34,4 +34,16 @@ describe('createServerError', () => {
       ]
     }))
   })
+
+  it('Should handle an Object', () => {
+    const message = {
+      one: 1,
+      two: 2
+    }
+    const error = createServerError(42, message)
+
+    expect(error.message).toBe(JSON.stringify({
+      errors: [message]
+    }))
+  })
 })

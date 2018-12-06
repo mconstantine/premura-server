@@ -396,7 +396,12 @@ describe('updateUser', () => {
     req.session.user = { _id: 'notMe', role: 'master' }
     req.body = { email }
     await updateUser(req, res, next)
-    expect(next).toHaveBeenLastCalledWith([409, JSON.stringify({ email })])
+
+    expect(next).toHaveBeenLastCalledWith([409, {
+      msg: expect.any(String),
+      conflict: { email }
+    }])
+
     getDb.functions.findOne = originalFindOne
   })
 
