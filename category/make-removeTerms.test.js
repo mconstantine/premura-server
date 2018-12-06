@@ -51,15 +51,6 @@ describe('removeTerms', () => {
     getDb.setResult('findOne', category)
   })
 
-  it('Should check that the terms exist', async () => {
-    res.send.mockClear()
-    req.body.terms[1]._id = '5'
-    await removeTerms(req, res, next)
-    expect(res.send).not.toHaveBeenCalled()
-    expect(next).toHaveBeenLastCalledWith([404, expect.stringContaining('term')])
-    req.body.terms[1]._id = '2'
-  })
-
   it('Should update the last update date', async () => {
     getDb.functions.updateOne.mockClear()
     await removeTerms(req, res, next)
