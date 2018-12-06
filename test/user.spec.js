@@ -17,7 +17,8 @@ describe('user', () => {
           password,
           passwordConfirmation: password,
           role: roles[pickRandom(0, roles.length - 2)],
-          jobRole: 'Example'
+          jobRole: 'Example',
+          lang: 'en'
         }
       })
 
@@ -81,7 +82,8 @@ describe('user', () => {
       email: 'masterupdate@example.com',
       role: 'maker',
       password: 'masterupdate',
-      passwordConfirmation: 'masterupdate'
+      passwordConfirmation: 'masterupdate',
+      lang: 'it'
     }
 
     response = await client.put(`/users/${exampleUser._id}`, {

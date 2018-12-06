@@ -13,7 +13,8 @@ describe('privacy', () => {
       email: 'some-user@example.com',
       password: 'supersecret',
       role: 'maker',
-      jobRole: 'Example'
+      jobRole: 'Example',
+      lang: 'en'
     }
 
     // Master is logged in

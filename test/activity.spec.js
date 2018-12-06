@@ -8,7 +8,8 @@ describe('activity', () => {
     email: 'maker@example.com',
     password: 'makeruser',
     role: 'maker',
-    jobRole: 'Example'
+    jobRole: 'Example',
+    lang: 'en'
   }
 
   const activities = [], projects = []

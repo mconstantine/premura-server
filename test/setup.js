@@ -18,7 +18,8 @@ module.exports = async () => {
     jobRole: 'Master',
     registrationDate: new Date(),
     lastUpdateDate: new Date(),
-    isActive: true
+    isActive: true,
+    lang: 'en'
   })
 
   await client.login()

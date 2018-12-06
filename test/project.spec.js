@@ -71,7 +71,8 @@ describe('project', () => {
         password,
         passwordConfirmation: password,
         role: roles[pickRandom(0, roles.length - 2)],
-        jobRole: 'Example'
+        jobRole: 'Example',
+        lang: 'en'
       }
 
       const response = await client.post('/users/', {
