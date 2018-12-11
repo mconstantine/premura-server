@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-06 18:37+0100\n"
-"PO-Revision-Date: 2018-12-06 18:37+0100\n"
+"POT-Creation-Date: 2018-12-11 12:53+0100\n"
+"PO-Revision-Date: 2018-12-11 12:53+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -45,9 +45,7 @@ msgstr "You can't access this project"
 
 #: activity/make-addPeople.js:48 project/make-addPeople.js:40
 #: project/make-updatePeople.js:32 user/make-deleteUser.js:20
-#: user/make-getUser.js:21
-#| msgid "User not found (%s)"
-#| msgid_plural "Some users were not found (%s)"
+#: user/make-getUser.js:21 user/make-login.js:12 user/make-updateUser.js:20
 msgid "User not found"
 msgstr "User not found"
 
@@ -109,8 +107,6 @@ msgid "Invalid category ID"
 msgstr "Invalid category ID"
 
 #: category/make-updateTerms.js:22 project/make-addTerms.js:50
-#| msgid "Term not found (%s)"
-#| msgid_plural "Some terms were not found (%s)"
 msgid "Term not found"
 msgstr "Term not found"
 
@@ -118,22 +114,19 @@ msgstr "Term not found"
 msgid "Deadlines should be today or in the future"
 msgstr "Deadlines should be today or in the future"
 
-#: project/make-addPeople.js:58
+#: project/make-addPeople.js:58 user/make-login.js:16
 msgid "User not active"
 msgstr "User not active"
 
 #: project/make-deleteProject.js:8 project/make-getProject.js:10
-#| msgid "Invalid activity ID"
 msgid "Invalid project ID"
 msgstr "Invalid project ID"
 
 #: project/make-moveTerms.js:21
-#| msgid "Project not found"
 msgid "Destination project not found"
 msgstr "Destination project not found"
 
 #: project/make-moveTerms.js:25
-#| msgid "You can't access this project"
 msgid "You can't access the destination project"
 msgstr "You can't access the destination project"
 
@@ -149,15 +142,43 @@ msgstr "People budgets don't add up"
 msgid "You can't register a user with a role higher than yours"
 msgstr "You can't register a user with a role higher than yours"
 
-#: user/make-createUser.js:24
+#: user/make-createUser.js:24 user/make-updateUser.js:66
 msgid "A user is registered with the same e-mail address"
 msgstr "A user is registered with the same e-mail address"
 
-#: user/make-deleteUser.js:8 user/make-getUser.js:10
-#| msgid "Invalid category ID"
+#: user/make-deleteUser.js:8 user/make-getUser.js:10 user/make-updateUser.js:10
 msgid "Invalid user ID"
 msgstr "Invalid user ID"
 
 #: user/make-deleteUser.js:24
 msgid "Only a master user can delete a user"
 msgstr "Only a master user can delete a user"
+
+#: user/make-login.js:20
+msgid "Invalid password"
+msgstr "Invalid password"
+
+#: user/make-updateUser.js:33
+msgid "Only a user with a higher role can change another user's role"
+msgstr "Only a user with a higher role can change another user's role"
+
+#: user/make-updateUser.js:45
+msgid "You can change only your own language"
+msgstr "You can change only your own language"
+
+#: user/make-updateUser.js:56
+msgid "You can change only your own e-mail address"
+msgstr "You can change only your own e-mail address"
+
+#: user/make-updateUser.js:80
+msgid "You can change only your own password"
+msgstr "You can change only your own password"
+
+#: user/make-updateUser.js:91
+#| msgid "Only a master user can delete a user"
+msgid "Only master users can change the active state"
+msgstr "Only master users can change the active state"
+
+#: user/make-updateUser.js:105
+msgid "You can change this information only for your own profile"
+msgstr "You can change this information only for your own profile"

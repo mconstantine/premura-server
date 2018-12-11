@@ -2,6 +2,7 @@ const makeUpdateUser = require('./make-updateUser')
 const roles = require('../misc/roles')
 const ObjectID = require('../misc/test-ObjectID')
 const getDb = require('../misc/test-getDb')
+const gt = require('../misc/test-gettext')
 
 describe('updateUser', () => {
   getDb.setResult('findOne', true)
@@ -13,7 +14,7 @@ describe('updateUser', () => {
   const bcrypt = { hash: jest.fn(() => '3ncrypt3d') }
   const sensitiveInformationProjection = {}
   const updateUser = makeUpdateUser({
-    createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection
+    createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection, gt
   })
 
   const res = { status: jest.fn(() => res), end: jest.fn(), send: jest.fn() }
@@ -40,7 +41,7 @@ describe('updateUser', () => {
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid user id'
+        msg: expect.any(String)
       }]
     })
     req.params = { id }

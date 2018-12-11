@@ -1,5 +1,5 @@
 module.exports = ({
-  createError, ObjectID, getDb, roles, langs, bcrypt, sensitiveInformationProjection
+  createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection, gt
 }) => async (req, res, next) => {
   if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
@@ -7,7 +7,7 @@ module.exports = ({
         location: 'params',
         param: 'id',
         value: req.params.id,
-        msg: 'invalid user id'
+        msg: gt.gettext('Invalid user ID')
       }]
     })
   }
@@ -17,7 +17,7 @@ module.exports = ({
   const user = await collection.findOne({ _id })
 
   if (!user) {
-    return next(createError(404, 'user not found'))
+    return next(createError(404, gt.gettext('User not found')))
   }
 
   const currentUser = req.session.user
@@ -28,7 +28,10 @@ module.exports = ({
     delete req.body.role
 
     if (roles.indexOf(currentUser.role) <= roles.indexOf(user.role)) {
-      return next(createError(401, "only a user with a higher role can change another user's role"))
+      return next(createError(
+        401,
+        gt.gettext("Only a user with a higher role can change another user's role")
+      ))
     }
 
     update.role = role
@@ -39,7 +42,7 @@ module.exports = ({
     delete req.body.lang
 
     if (currentUser._id != user._id.toString() && currentUser.role !== 'master') {
-      return next(createError(401, 'you can change only your own language'))
+      return next(createError(401, gt.gettext('You can change only your own language')))
     }
 
     update.lang = lang
@@ -50,7 +53,7 @@ module.exports = ({
     delete req.body.email
 
     if (currentUser._id != user._id.toString() && currentUser.role !== 'master') {
-      return next(createError(401, 'you can change only your own e-mail address'))
+      return next(createError(401, gt.gettext('You can change only your own e-mail address')))
     }
 
     const alreadyExistingUser = await collection.findOne(
@@ -60,7 +63,7 @@ module.exports = ({
 
     if (alreadyExistingUser) {
       return next(createError(409, {
-        msg: 'a user is registered with the same e-mail address',
+        msg: gt.gettext('A user is registered with the same e-mail address'),
         conflict: alreadyExistingUser
       }))
     }
@@ -74,7 +77,7 @@ module.exports = ({
     delete req.body.passwordConfirmation
 
     if (currentUser._id != user._id.toString() && currentUser.role !== 'master') {
-      return next(createError(401, 'you can change only your own password'))
+      return next(createError(401, gt.gettext('You can change only your own password')))
     }
 
     update.password = await bcrypt.hash(password, 10)
@@ -85,7 +88,7 @@ module.exports = ({
     delete req.body.isActive
 
     if (currentUser.role !== 'master') {
-      return next(createError(401, 'only master users can change the active state'))
+      return next(createError(401, gt.gettext('Only master users can change the active state')))
     }
 
     update.isActive = isActive
@@ -97,7 +100,10 @@ module.exports = ({
     }
 
     if (currentUser._id != user._id.toString()) {
-      return next(createError(401, 'you can change this information only for your own profile'))
+      return next(createError(
+        401,
+        gt.gettext('You can change this information only for your own profile')
+      ))
     }
 
     switch(i) {

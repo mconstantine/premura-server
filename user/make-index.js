@@ -52,13 +52,13 @@ module.exports = ({ config }) => {
     getUser: makeGetUser({ getDb, createError, ObjectID, sensitiveInformationProjection, gt }),
     getJobRoles: makeGetJobRoles({ getDb }),
     updateUser: makeUpdateUser({
-      createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection
+      createError, ObjectID, getDb, roles, bcrypt, sensitiveInformationProjection, gt
     }),
     deleteUser: makeDeleteUser({ createError, ObjectID, getDb, gt }),
     login: makeLogin({ bcrypt, createError, getDb, gt }),
     logout,
     sendValidation: makeSendValidation({ validationResult }),
-    validateLogin: makeValidateLogin({ check }),
+    validateLogin: makeValidateLogin({ check, langs }),
     validateCreateUser: makeValidateCreateUser({ check, roles, langs }),
     validateUpdateUser: makeValidateUpdateUser({ check, roles, langs })
   })

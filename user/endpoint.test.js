@@ -32,8 +32,8 @@ describe('user endpoint', () => {
     endpoint(Object.assign(paths, { router, catchExceptions }))
 
     expect(router.use).toHaveBeenCalledTimes(2)
-    expect(router.use).toHaveBeenNthCalledWith(1, paths.loginGate)
-    expect(router.use).toHaveBeenNthCalledWith(2, paths.handleLanguages)
+    expect(router.use).toHaveBeenNthCalledWith(1, paths.handleLanguages)
+    expect(router.use).toHaveBeenNthCalledWith(2, paths.loginGate)
 
     expect(router.get).toHaveBeenCalledTimes(3)
     expect(router.get).toHaveBeenNthCalledWith(1, '/', paths.getUsers)

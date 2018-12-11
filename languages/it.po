@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-06 18:36+0100\n"
-"PO-Revision-Date: 2018-12-06 18:37+0100\n"
+"POT-Creation-Date: 2018-12-11 12:53+0100\n"
+"PO-Revision-Date: 2018-12-11 12:55+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -45,7 +45,7 @@ msgstr "Non puoi accedere a questo progetto"
 
 #: activity/make-addPeople.js:48 project/make-addPeople.js:40
 #: project/make-updatePeople.js:32 user/make-deleteUser.js:20
-#: user/make-getUser.js:21
+#: user/make-getUser.js:21 user/make-login.js:12 user/make-updateUser.js:20
 msgid "User not found"
 msgstr "Utente non trovato"
 
@@ -114,7 +114,7 @@ msgstr "Termine non trovato"
 msgid "Deadlines should be today or in the future"
 msgstr "Le scadenze devono essere oggi o nel futuro"
 
-#: project/make-addPeople.js:58
+#: project/make-addPeople.js:58 user/make-login.js:16
 msgid "User not active"
 msgstr "Utente non attivo"
 
@@ -142,14 +142,43 @@ msgstr "I budget delle persone non quadrano"
 msgid "You can't register a user with a role higher than yours"
 msgstr "Non puoi registrare un utente con un ruolo più alto del tuo"
 
-#: user/make-createUser.js:24
+#: user/make-createUser.js:24 user/make-updateUser.js:66
 msgid "A user is registered with the same e-mail address"
 msgstr "C’è un utente registrato con lo stesso indirizzo e-mail"
 
-#: user/make-deleteUser.js:8 user/make-getUser.js:10
+#: user/make-deleteUser.js:8 user/make-getUser.js:10 user/make-updateUser.js:10
 msgid "Invalid user ID"
 msgstr "ID dell’utente non valido"
 
 #: user/make-deleteUser.js:24
 msgid "Only a master user can delete a user"
 msgstr "Solo un utente master può eliminare un utente"
+
+#: user/make-login.js:20
+msgid "Invalid password"
+msgstr "Password non valida"
+
+#: user/make-updateUser.js:33
+msgid "Only a user with a higher role can change another user's role"
+msgstr ""
+"Solo un utente con un ruolo più alto può cambiare il ruolo di un altro utente"
+
+#: user/make-updateUser.js:45
+msgid "You can change only your own language"
+msgstr "Puoi cambiare solo la tua lingua"
+
+#: user/make-updateUser.js:56
+msgid "You can change only your own e-mail address"
+msgstr "Puoi cambiare solo il tuo indirizzo e-mail"
+
+#: user/make-updateUser.js:80
+msgid "You can change only your own password"
+msgstr "Puoi cambiare solo la tua password"
+
+#: user/make-updateUser.js:91
+msgid "Only master users can change the active state"
+msgstr "Solo un utente master può cambiare uno stato di attività"
+
+#: user/make-updateUser.js:105
+msgid "You can change this information only for your own profile"
+msgstr "Puoi cambiare questa informazione solo per il tuo profilo"

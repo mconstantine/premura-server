@@ -1,4 +1,6 @@
-module.exports = ({ bcrypt, createError, getDb }) => async (req, res, next) => {
+module.exports = ({ bcrypt, createError, getDb, gt }) => async (req, res, next) => {
+  gt.setLocale(req.body.lang)
+
   const email = req.body.email
   const password = req.body.password
   const collection = (await getDb()).collection('users')
@@ -7,15 +9,15 @@ module.exports = ({ bcrypt, createError, getDb }) => async (req, res, next) => {
   })
 
   if (!user) {
-    return next(createError(404, 'user not found'))
+    return next(createError(404, gt.gettext('User not found')))
   }
 
   if (!user.isActive) {
-    return next(createError(401, 'user not active'))
+    return next(createError(401, gt.gettext('User not active')))
   }
 
   if (!await bcrypt.compare(password, user.password)) {
-    return next(createError(401, 'invalid password'))
+    return next(createError(401, gt.gettext('Invalid password')))
   }
 
   delete user.password

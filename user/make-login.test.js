@@ -1,11 +1,12 @@
 const getDb = require('../misc/test-getDb')
 const makeLogin = require('./make-login')
+const gt = require('../misc/test-gettext')
 
 describe('login', () => {
   let compareReturnValue
   const createError = (httpCode, message) => [httpCode, message]
   const bcrypt = { compare: jest.fn(() => compareReturnValue) }
-  const login = makeLogin({ bcrypt, createError, getDb })
+  const login = makeLogin({ bcrypt, createError, getDb, gt })
 
   const data = {
     email: 'john.doe@example.com',
