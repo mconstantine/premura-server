@@ -1,5 +1,5 @@
-module.exports = ({ fs, path, gt, mo, langs }) => (req, res, next) => {
-  langs.forEach(lang => {
+module.exports = ({ fs, path, gt, mo, langs }) => {
+  !this.didReadTranslations && langs.forEach(lang => {
     const filePath = path.resolve(__dirname, '../languages', `${lang}.mo`)
 
     if (!fs.existsSync(filePath)) {
@@ -13,9 +13,13 @@ module.exports = ({ fs, path, gt, mo, langs }) => (req, res, next) => {
     gt.setTextDomain('premura')
   })
 
-  if (req.session.user && req.session.user.lang) {
-    gt.setLocale(req.session.user.lang)
-  }
+  this.didReadTranslations = true
 
-  return next()
+  return (req, res, next) => {
+    if (req.session.user && req.session.user.lang) {
+      gt.setLocale(req.session.user.lang)
+    }
+
+    return next()
+  }
 }

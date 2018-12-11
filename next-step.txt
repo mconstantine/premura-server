@@ -1,3 +1,2 @@
-Read translations one time only, it makes no sense to do it for every request
 When a user is removed from a project, what happens to its activities?
 Do projects conversations
