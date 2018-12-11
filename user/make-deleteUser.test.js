@@ -147,4 +147,17 @@ describe('deleteUser', () => {
     await deleteUser(req, res, next)
     expect(getDb.functions.deleteMany).toHaveBeenCalledWith({ recipient: new ObjectID(id) })
   })
+
+  it("Should remove user from activities' people", async () => {
+    getDb.functions.updateMany.mockClear()
+    await deleteUser(req, res, next)
+
+    expect(getDb.functions.updateMany).toHaveBeenLastCalledWith({
+      people: new ObjectID(req.params.id)
+    }, {
+      $pull: {
+        people: new ObjectID(req.params.id)
+      }
+    })
+  })
 })

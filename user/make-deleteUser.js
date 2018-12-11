@@ -84,6 +84,14 @@ module.exports = ({ createError, ObjectID, getDb, gt }) => async (req, res, next
   })
 
   await db.collection('activities').deleteMany({ recipient: _id })
+  await db.collection('activities').updateMany({
+    people: _id
+  }, {
+    $pull: {
+      people: _id
+    }
+  })
+
   await usersCollection.deleteOne({ _id })
 
   res.end()

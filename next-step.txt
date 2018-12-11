@@ -1,2 +1,1 @@
-When a user is deleted, it should be removed from activities' people
 Do projects conversations
