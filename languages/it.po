@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-11 12:53+0100\n"
-"PO-Revision-Date: 2018-12-11 12:55+0100\n"
+"POT-Creation-Date: 2018-12-11 15:58+0100\n"
+"PO-Revision-Date: 2018-12-11 15:58+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -37,7 +37,7 @@ msgstr "Non puoi assegnare attività ad altri utenti"
 #: project/make-addDeadlines.js:14 project/make-addPeople.js:14
 #: project/make-addTerms.js:18 project/make-deleteProject.js:23
 #: project/make-getProject.js:24 project/make-moveTerms.js:14
-#: project/make-removeDeadlines.js:14 project/make-removePeople.js:14
+#: project/make-removeDeadlines.js:14 project/make-removePeople.js:13
 #: project/make-removeTerms.js:18 project/make-updatePeople.js:14
 #: project/make-updateProject.js:11
 msgid "You can't access this project"
@@ -58,7 +58,7 @@ msgstr "%s non può accedere a questo progetto"
 #: project/make-addDeadlines.js:10 project/make-addPeople.js:10
 #: project/make-addTerms.js:14 project/make-deleteProject.js:19
 #: project/make-getProject.js:20 project/make-moveTerms.js:10
-#: project/make-removeDeadlines.js:10 project/make-removePeople.js:10
+#: project/make-removeDeadlines.js:10 project/make-removePeople.js:9
 #: project/make-removeTerms.js:14 project/make-updatePeople.js:10
 #: project/make-updateProject.js:7
 msgid "Project not found"
@@ -130,7 +130,7 @@ msgstr "Progetto di destinazione non trovato"
 msgid "You can't access the destination project"
 msgstr "Non puoi accedere al progetto di destinazione"
 
-#: project/make-removePeople.js:26
+#: project/make-removePeople.js:33
 msgid "A project can't be assigned to no one"
 msgstr "Un progetto non può non essere assegnato a nessuno"
 

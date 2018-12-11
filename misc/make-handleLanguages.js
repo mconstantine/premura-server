@@ -1,23 +1,26 @@
 module.exports = ({ fs, path, gt, mo, langs }) => {
-  !this.didReadTranslations && langs.forEach(lang => {
-    const filePath = path.resolve(__dirname, '../languages', `${lang}.mo`)
+  if (!global.gt) {
+    global.gt = gt
 
-    if (!fs.existsSync(filePath)) {
-      return
-    }
+    langs.forEach(lang => {
+      const filePath = path.resolve(__dirname, '../languages', `${lang}.mo`)
 
-    const translation = fs.readFileSync(filePath)
-    const parsedTranslation = mo.parse(translation)
+      if (!fs.existsSync(filePath)) {
+        return
+      }
 
-    gt.addTranslations(lang, 'premura', parsedTranslation)
+      const translation = fs.readFileSync(filePath)
+      const parsedTranslation = mo.parse(translation)
+
+      gt.addTranslations(lang, 'premura', parsedTranslation)
+    })
+
     gt.setTextDomain('premura')
-  })
-
-  this.didReadTranslations = true
+  }
 
   return (req, res, next) => {
     if (req.session.user && req.session.user.lang) {
-      gt.setLocale(req.session.user.lang)
+      global.gt.setLocale(req.session.user.lang)
     }
 
     return next()

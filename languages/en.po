@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-11 12:53+0100\n"
-"PO-Revision-Date: 2018-12-11 12:53+0100\n"
+"POT-Creation-Date: 2018-12-11 15:58+0100\n"
+"PO-Revision-Date: 2018-12-11 15:58+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: en\n"
@@ -37,7 +37,7 @@ msgstr "You can't assign activities to other users"
 #: project/make-addDeadlines.js:14 project/make-addPeople.js:14
 #: project/make-addTerms.js:18 project/make-deleteProject.js:23
 #: project/make-getProject.js:24 project/make-moveTerms.js:14
-#: project/make-removeDeadlines.js:14 project/make-removePeople.js:14
+#: project/make-removeDeadlines.js:14 project/make-removePeople.js:13
 #: project/make-removeTerms.js:18 project/make-updatePeople.js:14
 #: project/make-updateProject.js:11
 msgid "You can't access this project"
@@ -58,7 +58,7 @@ msgstr "%s cannot access this project"
 #: project/make-addDeadlines.js:10 project/make-addPeople.js:10
 #: project/make-addTerms.js:14 project/make-deleteProject.js:19
 #: project/make-getProject.js:20 project/make-moveTerms.js:10
-#: project/make-removeDeadlines.js:10 project/make-removePeople.js:10
+#: project/make-removeDeadlines.js:10 project/make-removePeople.js:9
 #: project/make-removeTerms.js:14 project/make-updatePeople.js:10
 #: project/make-updateProject.js:7
 msgid "Project not found"
@@ -130,7 +130,7 @@ msgstr "Destination project not found"
 msgid "You can't access the destination project"
 msgstr "You can't access the destination project"
 
-#: project/make-removePeople.js:26
+#: project/make-removePeople.js:33
 msgid "A project can't be assigned to no one"
 msgstr "A project can't be assigned to no one"
 
@@ -175,7 +175,6 @@ msgid "You can change only your own password"
 msgstr "You can change only your own password"
 
 #: user/make-updateUser.js:91
-#| msgid "Only a master user can delete a user"
 msgid "Only master users can change the active state"
 msgstr "Only master users can change the active state"
 

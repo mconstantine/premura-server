@@ -4,10 +4,8 @@
   "description": "A server and API for Premura.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --testPathPattern \\.test\\.js$ --watch",
-    "start": "nodemon .",
-    "test-dev": "jest --testPathPattern \\.spec\\.js$ --globalSetup ./test/setup.js --globalTeardown ./test/teardown.js --runInBand --watch",
-    "test-all": "jest --testPathPattern \\.spec\\.js$ --globalSetup ./test/setup.js --globalTeardown ./test/teardown.js --runInBand --forceExit"
+    "test": "jest --watch",
+    "start": "nodemon ."
   },
   "repository": {
     "type": "git",
