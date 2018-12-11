@@ -112,4 +112,28 @@ describe('removePeople', () => {
       $set: expect.objectContaining({ lastUpdateDate: expect.any(Date) })
     })
   })
+
+  it('Should remove activities with the deleted user as recipient', async () => {
+    getDb.functions.deleteMany.mockClear()
+    await removePeople(req, res, next)
+
+    req.body.people.forEach(({ _id }) => {
+      expect(getDb.functions.deleteMany).toHaveBeenCalledWith({
+        recipient: new ObjectID(_id)
+      })
+    })
+  })
+
+  it('Should remove people from activities', async () => {
+    getDb.functions.updateMany.mockClear()
+    await removePeople(req, res, next)
+
+    req.body.people.forEach(({ _id }) => {
+      expect(getDb.functions.updateMany).toHaveBeenCalledWith({
+        people: new ObjectID(_id)
+      }, {
+        $pull: { people: new ObjectID(_id) }
+      })
+    })
+  })
 })

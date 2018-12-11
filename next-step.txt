@@ -1,2 +1,2 @@
-When a user is removed from a project, what happens to its activities?
+When a user is deleted, it should be removed from activities' people
 Do projects conversations
