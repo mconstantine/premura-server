@@ -15,6 +15,7 @@ const Collection = {
   findOne: jest.fn((...args) => getResult(results.findOne, ...args)),
   findOneAndUpdate: jest.fn((...args) => getResult(results.findOneAndUpdate, ...args)),
   updateOne: jest.fn((...args) => getResult(results.updateOne, ...args)),
+  updateMany: jest.fn((...args) => getResult(results.updateMeny, ...args)),
   insertOne: jest.fn((...args) => getResult(results.insertOne, ...args)),
   deleteOne: jest.fn((...args) => getResult(results.deleteOne, ...args)),
   deleteMany: jest.fn((...args) => getResult(results.deleteMany, ...args)),
