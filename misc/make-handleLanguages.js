@@ -1,6 +1,6 @@
-module.exports = ({ fs, path, gt, mo, langs }) => {
+module.exports = ({ fs, path, Gettext, mo, langs }) => {
   if (!global.gt) {
-    global.gt = gt
+    global.gt = new Gettext()
 
     langs.forEach(lang => {
       const filePath = path.resolve(__dirname, '../languages', `${lang}.mo`)
@@ -12,10 +12,10 @@ module.exports = ({ fs, path, gt, mo, langs }) => {
       const translation = fs.readFileSync(filePath)
       const parsedTranslation = mo.parse(translation)
 
-      gt.addTranslations(lang, 'premura', parsedTranslation)
+      global.gt.addTranslations(lang, 'premura', parsedTranslation)
     })
 
-    gt.setTextDomain('premura')
+    global.gt.setTextDomain('premura')
   }
 
   return (req, res, next) => {
