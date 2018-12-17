@@ -58,4 +58,23 @@ module.exports = class App {
 
     return Object.assign(activity, result)
   }
+
+  async createCategory(props = {}) {
+    const category = Object.assign({
+      name: faker.lorem.words(pickRandom(1, 3)),
+      description: faker.lorem.words(pickRandom(5, 30)),
+      allowsMultipleTerms: pickRandom()
+    }, props)
+
+    const response = await this.client.post('/categories/', category)
+    const result = await response.json()
+
+    return Object.assign(category, result)
+  }
+
+  createTerm() {
+    return {
+      name: faker.lorem.words(pickRandom(1, 2))
+    }
+  }
 }
