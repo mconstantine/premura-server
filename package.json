@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --testPathIgnorePatterns /tests/ --watch",
-    "test-all": "jest /tests/ --forceExit",
-    "test-dev": "jest /tests/ --watch",
+    "test-all": "jest /tests/ --forceExit --globalSetup ./tests/setup.js --globalTeardown ./tests/teardown.js",
+    "test-dev": "jest /tests/ --globalSetup ./tests/setup.js --globalTeardown ./tests/teardown.js --watch",
     "start": "nodemon ."
   },
   "repository": {

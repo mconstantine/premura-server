@@ -1,5 +1,3 @@
-const setup = require('./setup')
-const teardown = require('./teardown')
 const Client = require('./client')
 const App = require('./app')
 
@@ -9,7 +7,6 @@ describe('user', async () => {
   const users = []
 
   beforeAll(async () => {
-    await setup()
     await client.login()
 
     for (let i = 0; i < 3; i++) {
@@ -230,9 +227,5 @@ describe('user', async () => {
 
     const response = await client.get(`/activities/${activity._id}/`)
     expect(response.status).toBe(404)
-  })
-
-  afterAll(async () => {
-    await teardown()
   })
 })
