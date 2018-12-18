@@ -41,12 +41,12 @@ module.exports = ({ createError, ObjectID, getDb, gt }) => async (req, res, next
     if (people.length) {
       if (project.budget) {
         const budgetPerPerson = project.budget / people.length
-        const budgetPerPersonInt = Math.floor(budgetPerPerson)
+        const intBudgetPerPerson = Math.floor(budgetPerPerson)
 
         people.forEach(person => person.budget = budgetPerPerson)
 
-        if (budgetPerPersonInt < budgetPerPerson) {
-          people[0].budget++
+        if (intBudgetPerPerson !== budgetPerPerson) {
+          people[0].budget = Math.abs(intBudgetPerPerson * (people.length - 1) - project.budget)
         }
       }
 

@@ -104,8 +104,8 @@ describe('addPeople', () => {
     expect(getDb.functions.updateOne).toHaveBeenLastCalledWith(
       expect.any(Object),
       { $set: expect.objectContaining({ people: [
-        expect.objectContaining({ budget: 21 }),
-        expect.objectContaining({ budget: 20 })
+        expect.objectContaining({ budget: 20 }),
+        expect.objectContaining({ budget: 21 })
       ] }) }
     )
 

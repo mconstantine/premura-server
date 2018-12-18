@@ -47,8 +47,10 @@ module.exports = ({ getDb, ObjectID, createError, userCanReadProject, gt }) => a
 
       project.people = project.people.map(person => Object.assign(person, { budget: intBudgetPerPerson }))
 
-      if (budgetPerPerson > intBudgetPerPerson) {
-        project.people[0].budget++
+      if (budgetPerPerson !== intBudgetPerPerson) {
+        project.people[0].budget = Math.abs(
+          intBudgetPerPerson * (project.people.length - 1) - project.budget
+        )
       }
 
       update.people = project.people

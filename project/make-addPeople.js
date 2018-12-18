@@ -72,12 +72,12 @@ module.exports = ({
 
   if (project.budget) {
     const budgetPerPerson = project.budget / people.length
-    const intBudgetPerPerson = Math.floor(budgetPerPerson)
+    const intBudgetPerPerson = Math.round(budgetPerPerson)
 
     people = people.map(person => Object.assign(person, { budget: intBudgetPerPerson }))
 
-    if (budgetPerPerson > intBudgetPerPerson) {
-      people[0].budget++
+    if (budgetPerPerson !== intBudgetPerPerson) {
+      people[0].budget = Math.abs(intBudgetPerPerson * (people.length - 1) - project.budget)
     }
   }
 
