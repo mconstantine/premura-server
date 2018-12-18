@@ -1,7 +1,10 @@
 const Client = require('./client')
 const App = require('./app')
+const teardown = require('./single-teardown')
 
 describe('category', () => {
+  afterAll(teardown)
+
   const client = new Client('http://localhost:3000')
   const app = new App(client)
   const categories = []
@@ -24,11 +27,14 @@ describe('category', () => {
     }
 
     const response = await client.post(`/categories/${category._id}/terms/`, { terms })
+    const content = await response.json()
+
     expect(response.status).toBe(200)
+    expect(content._id).toEqual(category._id)
   })
 
   it('Should update categories', async () => {
-    let category = categories[1]
+    const category = categories[1]
     const update = {
       name: 'Updated name',
       description: 'This is an updated description',
@@ -37,6 +43,7 @@ describe('category', () => {
 
     const content = await client.put(`/categories/${category._id}/`, update, true)
 
+    expect(content._id).toEqual(category._id)
     expect(content.name).toBe(update.name)
     expect(content.description).toBe(update.description)
     expect(content.allowsMultipleTerms).toBe(update.allowsMultipleTerms)
@@ -111,6 +118,7 @@ describe('category', () => {
       terms: [{ _id: terms[1]._id }]
     }, true)
 
+    expect(content._id).toEqual(category._id)
     expect(content.terms).toContainEqual(expect.objectContaining({ _id: terms[0]._id }))
     expect(content.terms).not.toContainEqual(expect.objectContaining({ _id: terms[1]._id }))
     expect(content.terms).toContainEqual(expect.objectContaining({ _id: terms[2]._id }))

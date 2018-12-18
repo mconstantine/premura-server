@@ -1,7 +1,10 @@
 const Client = require('./client')
 const App = require('./app')
+const teardown = require('./single-teardown')
 
 describe('user', async () => {
+  afterAll(teardown)
+
   const client = new Client('http://localhost:3000')
   const app = new App(client)
   const users = []
@@ -82,6 +85,7 @@ describe('user', async () => {
 
     response = await client.put(`/users/${user._id}`, update, true)
 
+    expect(response._id).toBe(user._id)
     expect(response.role).toEqual(update.role)
     expect(response.lang).toEqual(update.lang)
     expect(new Date(response.lastUpdateDate).getTime()).toBeGreaterThan(lastUpdateDate.getTime())
