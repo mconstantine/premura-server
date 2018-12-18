@@ -24,8 +24,6 @@ describe('category', () => {
     }
 
     const response = await client.post(`/categories/${category._id}/terms/`, { terms })
-    const content = await response.json()
-
     expect(response.status).toBe(200)
   })
 
@@ -37,8 +35,7 @@ describe('category', () => {
       allowsMultipleTerms: !category.allowsMultipleTerms
     }
 
-    const response = await client.put(`/categories/${category._id}/`, update)
-    const content = await response.json()
+    const content = await client.put(`/categories/${category._id}/`, update, true)
 
     expect(content.name).toBe(update.name)
     expect(content.description).toBe(update.description)
@@ -81,21 +78,18 @@ describe('category', () => {
   it('Should sort categories by name', async () => {
     const getNames = arr => arr.map(({ name }) => ({ name }))
 
-    const response = await client.get('/categories/')
-    const content = await response.json()
+    const content = await client.get('/categories/', undefined, true)
     const received = getNames(content)
-
     const expected = getNames(content)
-    expected.sort((a, b) => a.name > b.name ? 1 : -1)
 
+    expected.sort((a, b) => a.name > b.name ? 1 : -1)
     expect(received).toEqual(expected)
   })
 
   it('Should find categories by name', async () => {
     const category = categories[2]
     const target = category.name.split(' ')[0]
-    const response = await client.get(`/categories/?name=${target}`)
-    const content = await response.json()
+    const content = await client.get(`/categories/?name=${target}`, undefined, true)
 
     expect(content.length).toBeLessThan(categories.length)
     expect(content).toContainEqual(expect.objectContaining({ _id: category._id }))
@@ -103,21 +97,19 @@ describe('category', () => {
 
   it('Should remove terms', async () => {
     const category = categories[3]
-    let response, content
+    let content
     let terms = [
       app.createTerm(),
       app.createTerm(),
       app.createTerm()
     ]
 
-    response = await client.post(`/categories/${category._id}/terms/`, { terms })
-    content = await response.json()
+    content = await client.post(`/categories/${category._id}/terms/`, { terms }, true)
     terms = content.terms
 
-    response = await client.delete(`/categories/${category._id}/terms/`, {
+    content = await client.delete(`/categories/${category._id}/terms/`, {
       terms: [{ _id: terms[1]._id }]
-    })
-    content = await response.json()
+    }, true)
 
     expect(content.terms).toContainEqual(expect.objectContaining({ _id: terms[0]._id }))
     expect(content.terms).not.toContainEqual(expect.objectContaining({ _id: terms[1]._id }))
@@ -125,20 +117,16 @@ describe('category', () => {
   })
 
   it('Should delete categories', async () => {
-    let response
     const category = categories[4]
     await client.delete(`/categories/${category._id}/`)
 
-    response = await client.get('/categories/')
-    const content = await response.json()
-
+    const content = await client.get('/categories/', undefined, true)
     expect(content).not.toContainEqual(expect.objectContaining({ _id: category._id }))
   })
 
   it('Should return a single category', async () => {
     const category = categories[5]
-    const response = await client.get(`/categories/${category._id}/`)
-    const content = await response.json()
+    const content = await client.get(`/categories/${category._id}/`, undefined, true)
 
     expect(content._id).toEqual(category._id)
   })
