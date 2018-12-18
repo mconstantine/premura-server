@@ -72,9 +72,9 @@ module.exports = class App {
     return Object.assign(category, result)
   }
 
-  createTerm() {
-    return {
+  createTerm(props = {}) {
+    return Object.assign({
       name: faker.lorem.words(pickRandom(1, 2))
-    }
+    }, props)
   }
 }
