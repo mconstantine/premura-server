@@ -5,6 +5,7 @@ const status = require('../misc/status')
 module.exports = class App {
   constructor(client) {
     this.client = client
+    this.activityIndex = 0
   }
 
   async createUser(props = {}) {
@@ -40,12 +41,16 @@ module.exports = class App {
   }
 
   async createActivity(recipient, project, props = {}) {
+    this.activityIndex++
+
     const activity = Object.assign({
       title: faker.lorem.words(pickRandom(3, 8)),
       recipient,
       project,
-      timeFrom: new Date(Date.now()).toISOString(),
-      timeTo: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
+      timeFrom: new Date(Date.now() + 1000 * 60 * 60 * 24 * this.activityIndex).toISOString(),
+      timeTo: new Date(
+        Date.now() + 1000 * 60 * 60 * 24 * this.activityIndex + 1000 * 60 * 60 * this.activityIndex
+      ).toISOString(),
     }, props)
 
     // Assign the recipient to the project
