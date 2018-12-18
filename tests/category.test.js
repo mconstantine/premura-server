@@ -41,12 +41,12 @@ describe('category', () => {
       allowsMultipleTerms: !category.allowsMultipleTerms
     }
 
-    const content = await client.put(`/categories/${category._id}/`, update, true)
+    const response = await client.put(`/categories/${category._id}/`, update, true)
 
-    expect(content._id).toEqual(category._id)
-    expect(content.name).toBe(update.name)
-    expect(content.description).toBe(update.description)
-    expect(content.allowsMultipleTerms).toBe(update.allowsMultipleTerms)
+    expect(response._id).toEqual(category._id)
+    expect(response.name).toBe(update.name)
+    expect(response.description).toBe(update.description)
+    expect(response.allowsMultipleTerms).toBe(update.allowsMultipleTerms)
   })
 
   it('Should paginate categories', async () => {
@@ -85,9 +85,9 @@ describe('category', () => {
   it('Should sort categories by name', async () => {
     const getNames = arr => arr.map(({ name }) => ({ name }))
 
-    const content = await client.get('/categories/', undefined, true)
-    const received = getNames(content)
-    const expected = getNames(content)
+    const response = await client.get('/categories/', undefined, true)
+    const received = getNames(response)
+    const expected = getNames(response)
 
     expected.sort((a, b) => a.name > b.name ? 1 : -1)
     expect(received).toEqual(expected)
@@ -96,46 +96,46 @@ describe('category', () => {
   it('Should find categories by name', async () => {
     const category = categories[2]
     const target = category.name.split(' ')[0]
-    const content = await client.get(`/categories/?name=${target}`, undefined, true)
+    const response = await client.get(`/categories/?name=${target}`, undefined, true)
 
-    expect(content.length).toBeLessThan(categories.length)
-    expect(content).toContainEqual(expect.objectContaining({ _id: category._id }))
+    expect(response.length).toBeLessThan(categories.length)
+    expect(response).toContainEqual(expect.objectContaining({ _id: category._id }))
   })
 
   it('Should remove terms', async () => {
     const category = categories[3]
-    let content
+    let response
     let terms = [
       app.createTerm(),
       app.createTerm(),
       app.createTerm()
     ]
 
-    content = await client.post(`/categories/${category._id}/terms/`, { terms }, true)
-    terms = content.terms
+    response = await client.post(`/categories/${category._id}/terms/`, { terms }, true)
+    terms = response.terms
 
-    content = await client.delete(`/categories/${category._id}/terms/`, {
+    response = await client.delete(`/categories/${category._id}/terms/`, {
       terms: [{ _id: terms[1]._id }]
     }, true)
 
-    expect(content._id).toEqual(category._id)
-    expect(content.terms).toContainEqual(expect.objectContaining({ _id: terms[0]._id }))
-    expect(content.terms).not.toContainEqual(expect.objectContaining({ _id: terms[1]._id }))
-    expect(content.terms).toContainEqual(expect.objectContaining({ _id: terms[2]._id }))
+    expect(response._id).toEqual(category._id)
+    expect(response.terms).toContainEqual(expect.objectContaining({ _id: terms[0]._id }))
+    expect(response.terms).not.toContainEqual(expect.objectContaining({ _id: terms[1]._id }))
+    expect(response.terms).toContainEqual(expect.objectContaining({ _id: terms[2]._id }))
   })
 
   it('Should delete categories', async () => {
     const category = categories[4]
     await client.delete(`/categories/${category._id}/`)
 
-    const content = await client.get('/categories/', undefined, true)
-    expect(content).not.toContainEqual(expect.objectContaining({ _id: category._id }))
+    const response = await client.get('/categories/', undefined, true)
+    expect(response).not.toContainEqual(expect.objectContaining({ _id: category._id }))
   })
 
   it('Should return a single category', async () => {
     const category = categories[5]
-    const content = await client.get(`/categories/${category._id}/`, undefined, true)
+    const response = await client.get(`/categories/${category._id}/`, undefined, true)
 
-    expect(content._id).toEqual(category._id)
+    expect(response._id).toEqual(category._id)
   })
 })
