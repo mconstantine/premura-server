@@ -1,1 +1,2 @@
+_Every time_ a project is deleted, terms should be updated.
 Do projects conversations
