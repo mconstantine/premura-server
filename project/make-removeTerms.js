@@ -25,15 +25,9 @@ module.exports = ({
   }).toArray()
 
   categories.forEach(async category => {
-    category.terms.forEach(term => {
-      const index = term.projects.findIndex(_id => _id.equals(project._id))
-
-      if (index < 0) {
-        return
-      }
-
-      term.projects.splice(index, 1)
-    })
+    category.terms
+    .filter(term => term_ids.find(_id => term._id.equals(_id)))
+    .forEach(term => term.projects = term.projects.filter(_id => !_id.equals(project_id)))
 
     await categoriesCollection.updateOne({ _id: category._id }, {
       $set: {

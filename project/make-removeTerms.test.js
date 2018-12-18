@@ -3,7 +3,7 @@ const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
 const gt = require('../misc/test-gettext')
 
-describe('addTerms', () => {
+describe('removeTerms', () => {
   let userCanReadProjectResult = true
   const getProjectFromDbResult = { test: true }
   const createError = (httpCode, message) => [httpCode, message]
