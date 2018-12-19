@@ -3,6 +3,7 @@ const cors = require('cors')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
 const bodyParser = require('body-parser')
+const mongoSanitize = require('express-mongo-sanitize')
 
 const app = express()
 
@@ -37,6 +38,7 @@ module.exports.open = ({ config, port = 5000 }) => {
   .use(session(sessionOptions))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: false }))
+  .use(mongoSanitize())
   .use('/users', makeUser({ config }))
   .use('/categories', makeCategory({ config }))
   .use('/projects', makeProject({ config }))
