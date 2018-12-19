@@ -39,6 +39,7 @@ const makeAddTerms = require('./make-addTerms')
 const makeMoveTerms = require('./make-moveTerms')
 const makeRemoveTerms = require('./make-removeTerms')
 const makeAddMessage = require('./make-addMessage')
+const makeGetMessages = require('./make-getMessages')
 const makeValidateCreateProject = require('./make-validateCreateProject')
 const makeValidateUpdateProject = require('./make-validateUpdateProject')
 const makeValidateGetProjects = require('./make-validateGetProjects')
@@ -80,6 +81,7 @@ module.exports = ({ config }) => {
       getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
     }),
     addMessage: makeAddMessage({ getDb, ObjectID, createError, gt }),
+    getMessages: makeGetMessages({ getDb, ObjectID, cursorify, createFindFilters }),
     addTerms: makeAddTerms({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt }),
     moveTerms: makeMoveTerms({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt }),
     removeTerms: makeRemoveTerms({

@@ -18,6 +18,7 @@ module.exports = ({
   addDeadlines,
   removeDeadlines,
   addMessage,
+  getMessages,
   validateCreateProject,
   validateUpdateProject,
   validateGetProjects,
@@ -32,6 +33,7 @@ router
 .use(handleLanguages)
 .get('/', validateGetProjects, sendValidation, catchExceptions(getProjects))
 .get('/:id', catchExceptions(getProject))
+.get('/:id/messages', catchExceptions(getMessages))
 .post('/', validateCreateProject, sendValidation, catchExceptions(createProject))
 .post('/:id/people', validateEditPeople, sendValidation, catchExceptions(addPeople))
 .post('/:id/deadlines', validateEditDeadlines, sendValidation, catchExceptions(addDeadlines))

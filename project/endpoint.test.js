@@ -25,6 +25,7 @@ describe('project endpoint', () => {
       removePeople: 'removePeople',
       addDeadlines: 'addDeadlines',
       addMessage: 'addMessage',
+      getMessages: 'getMessages',
       addTerms: 'addTerms',
       moveTerms: 'moveTerms',
       removeTerms: 'removeTerms',
@@ -46,10 +47,11 @@ describe('project endpoint', () => {
     expect(router.use).toHaveBeenNthCalledWith(1, paths.loginGate)
     expect(router.use).toHaveBeenNthCalledWith(2, paths.handleLanguages)
 
-    expect(router.get).toHaveBeenCalledTimes(2)
+    expect(router.get).toHaveBeenCalledTimes(3)
     expect(router.get).toHaveBeenNthCalledWith(1,
       '/', paths.validateGetProjects, paths.sendValidation, paths.getProjects)
     expect(router.get).toHaveBeenNthCalledWith(2,'/:id', paths.getProject)
+    expect(router.get).toHaveBeenNthCalledWith(3,'/:id/messages', paths.getMessages)
 
     expect(router.post).toHaveBeenCalledTimes(5)
     expect(router.post).toHaveBeenNthCalledWith(1,
