@@ -38,11 +38,13 @@ const makeRemoveDeadlines = require('./make-removeDeadlines')
 const makeAddTerms = require('./make-addTerms')
 const makeMoveTerms = require('./make-moveTerms')
 const makeRemoveTerms = require('./make-removeTerms')
+const makeAddMessage = require('./make-addMessage')
 const makeValidateCreateProject = require('./make-validateCreateProject')
 const makeValidateUpdateProject = require('./make-validateUpdateProject')
 const makeValidateGetProjects = require('./make-validateGetProjects')
 const makeValidateEditPeople = require('./make-validateEditPeople')
 const makeValidateEditDeadlines = require('./make-validateEditDeadlines')
+const makeValidateAddMessage = require('./make-validateAddMessage')
 const makeValidateEditTerms = require('./make-validateEditTerms')
 const makeValidateMoveTerms = require('./make-validateMoveTerms')
 
@@ -77,6 +79,7 @@ module.exports = ({ config }) => {
     removeDeadlines: makeRemoveDeadlines({
       getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
     }),
+    addMessage: makeAddMessage({ getDb, ObjectID, createError, gt }),
     addTerms: makeAddTerms({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt }),
     moveTerms: makeMoveTerms({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt }),
     removeTerms: makeRemoveTerms({
@@ -87,6 +90,7 @@ module.exports = ({ config }) => {
     validateGetProjects: makeValidateGetProjects({ check, status }),
     validateEditPeople: makeValidateEditPeople({ check }),
     validateEditDeadlines: makeValidateEditDeadlines({ check }),
+    validateAddMessage: makeValidateAddMessage({ check }),
     validateEditTerms: makeValidateEditTerms({ check }),
     validateMoveTerms: makeValidateMoveTerms({ check })
   })

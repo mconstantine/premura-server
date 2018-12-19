@@ -53,6 +53,14 @@ describe('createProject', () => {
     }))
   })
 
+  it('Should create a messages Array by default', async () => {
+    req.body = { name }
+    await createProject(req, res)
+    expect(getDb.functions.insertOne).toHaveBeenLastCalledWith(expect.objectContaining({
+      messages: []
+    }))
+  })
+
   it('Should save the creation and last update Dates', async () => {
     req.body = { name }
     await createProject(req, res)

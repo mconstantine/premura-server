@@ -25,6 +25,7 @@ module.exports = ({ getDb }) => async (req, res) => {
 
   project.people = [creatorUser]
   project.deadlines = []
+  project.messages = []
   project.status = status || 'opened'
   project.creationDate = new Date()
   project.lastUpdateDate = new Date()

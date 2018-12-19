@@ -17,11 +17,13 @@ module.exports = ({
   removeTerms,
   addDeadlines,
   removeDeadlines,
+  addMessage,
   validateCreateProject,
   validateUpdateProject,
   validateGetProjects,
   validateEditPeople,
   validateEditDeadlines,
+  validateAddMessage,
   validateEditTerms,
   validateMoveTerms
 }) =>
@@ -33,6 +35,7 @@ router
 .post('/', validateCreateProject, sendValidation, catchExceptions(createProject))
 .post('/:id/people', validateEditPeople, sendValidation, catchExceptions(addPeople))
 .post('/:id/deadlines', validateEditDeadlines, sendValidation, catchExceptions(addDeadlines))
+.post('/:id/messages', validateAddMessage, sendValidation, catchExceptions(addMessage))
 .post('/:id/terms', validateEditTerms, sendValidation, catchExceptions(addTerms))
 .put('/:id', validateUpdateProject, sendValidation, catchExceptions(updateProject))
 .put('/:id/people', validateEditPeople, sendValidation, catchExceptions(updatePeople))
