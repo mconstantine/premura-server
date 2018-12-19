@@ -20,6 +20,7 @@ module.exports = ({
   addMessage,
   getMessages,
   updateMessage,
+  deleteMessage,
   validateCreateProject,
   validateUpdateProject,
   validateGetProjects,
@@ -49,3 +50,4 @@ router
 .delete('/:id/people', validateEditPeople, sendValidation, catchExceptions(removePeople))
 .delete('/:id/deadlines', validateEditDeadlines, sendValidation, catchExceptions(removeDeadlines))
 .delete('/:id/terms', validateEditTerms, sendValidation, catchExceptions(removeTerms))
+.delete('/:id/messages/:messageId', catchExceptions(deleteMessage))

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-19 13:17+0100\n"
-"PO-Revision-Date: 2018-12-19 13:17+0100\n"
+"POT-Creation-Date: 2018-12-19 15:04+0100\n"
+"PO-Revision-Date: 2018-12-19 15:04+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -118,6 +118,18 @@ msgstr "Le scadenze devono essere oggi o nel futuro"
 msgid "User not active"
 msgstr "Utente non attivo"
 
+#: project/make-deleteMessage.js:7 project/make-updateMessage.js:7
+msgid "Message not found"
+msgstr "Messaggio non trovato"
+
+#: project/make-deleteMessage.js:11
+msgid "You can't delete another user's message"
+msgstr "Non puoi eliminare messaggi di altri utenti"
+
+#: project/make-deleteMessage.js:21 project/make-updateMessage.js:21
+msgid "Your message is not part of this project's conversation"
+msgstr "Il tuo messaggio non fa parte della conversazione di questo progetto"
+
 #: project/make-deleteProject.js:8 project/make-getProject.js:10
 msgid "Invalid project ID"
 msgstr "ID del progetto non valido"
@@ -134,17 +146,9 @@ msgstr "Non puoi accedere al progetto di destinazione"
 msgid "A project can't be assigned to no one"
 msgstr "Un progetto non può non essere assegnato a nessuno"
 
-#: project/make-updateMessage.js:7
-msgid "Message not found"
-msgstr "Messaggio non trovato"
-
 #: project/make-updateMessage.js:11
 msgid "You can't edit another user's message"
 msgstr "Non puoi modificare messaggi di altri utenti"
-
-#: project/make-updateMessage.js:21
-msgid "Your message is not part of this project's conversation"
-msgstr "Il tuo messaggio non fa parte della conversazione di questo progetto"
 
 #: project/make-updatePeople.js:51
 msgid "People budgets don't add up"
