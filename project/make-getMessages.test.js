@@ -1,11 +1,14 @@
 const makeGetMessages = require('./make-getMessages')
 const getDb = require('../misc/test-getDb')
 const ObjectID = require('../misc/test-ObjectID')
+const sensitiveInformationProjection = require('../user/sensitiveInformationProjection')
 
 describe('getMessages', () => {
   const cursorify = jest.fn((req, res, query) => query)
   const createFindFilters = jest.fn(x => x)
-  const getMessages = makeGetMessages({ getDb, ObjectID, cursorify, createFindFilters })
+  const getMessages = makeGetMessages({
+    getDb, ObjectID, cursorify, createFindFilters, sensitiveInformationProjection
+  })
 
   const req = {
     params: { id: 'someprojectid' },
@@ -17,9 +20,11 @@ describe('getMessages', () => {
   it('Should filter by project id', async () => {
     await getMessages(req, res)
 
-    expect(getDb.functions.find).toHaveBeenCalledWith({
-      project: new ObjectID(req.params.id)
-    })
+    expect(getDb.functions.aggregate).toHaveBeenCalledWith(expect.arrayContaining([{
+      $match: {
+        project: new ObjectID(req.params.id)
+      }
+    }]))
   })
 
   it('Should paginate messages', async () => {
@@ -35,12 +40,14 @@ describe('getMessages', () => {
     await getMessages(req, res)
 
     expect(createFindFilters).toHaveBeenCalled()
-    expect(getDb.functions.find).toHaveBeenCalledWith({
-      $and: [
-        { project: new ObjectID(req.params.id) },
-        { content: queryString }
-      ]
-    })
+    expect(getDb.functions.aggregate).toHaveBeenCalledWith(expect.arrayContaining([{
+      $match: {
+        $and: [
+          { project: new ObjectID(req.params.id) },
+          { content: queryString }
+        ]
+      }
+    }]))
 
     req.query = {}
   })

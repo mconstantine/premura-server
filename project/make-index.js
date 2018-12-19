@@ -84,7 +84,9 @@ module.exports = ({ config }) => {
       getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
     }),
     addMessage: makeAddMessage({ getDb, ObjectID, createError, gt }),
-    getMessages: makeGetMessages({ getDb, ObjectID, cursorify, createFindFilters }),
+    getMessages: makeGetMessages({
+      getDb, ObjectID, cursorify, createFindFilters, sensitiveInformationProjection
+    }),
     updateMessage: makeUpdateMessage({ getDb, ObjectID, createError, gt }),
     deleteMessage: makeDeleteMessage({ getDb, ObjectID, createError, gt }),
     addTerms: makeAddTerms({ getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt }),
