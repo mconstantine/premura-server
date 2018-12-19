@@ -13,16 +13,13 @@ module.exports = ({ getDb, ObjectID, createError, gt }) => async (req, res, next
   const lastUpdateDate = new Date()
 
   const message = {
-    _id: new ObjectID(),
     from: currentUser._id,
+    project: project_id,
     creationDate,
     lastUpdateDate,
     content
   }
 
-  await db.collection('projects').updateOne({ _id: project_id }, {
-    $push: { messages: message }
-  })
-
-  return res.send(message)
+  const result = await db.collection('messages').insertOne(message)
+  return res.send({ _id: result.insertedId })
 }

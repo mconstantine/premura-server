@@ -17,6 +17,7 @@ describe('addMessage', () => {
   const next = jest.fn()
 
   getDb.setResult('findOne', {})
+  getDb.setResult('insertOne', { insertedId: 'insertedid' })
 
   it('Should check that project exists', async () => {
     getDb.functions.findOne.mockClear()
@@ -24,39 +25,35 @@ describe('addMessage', () => {
     expect(getDb.functions.findOne).toHaveBeenLastCalledWith({ _id: new ObjectID(req.params.id) })
   })
 
-  it('Should create an _id', async () => {
+  it('Should save the sender id', async () => {
     await addMessage(req, res, next)
 
-    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith({
-      _id: new ObjectID(req.params.id)
-    }, {
-      $push: {
-        messages: expect.objectContaining({ _id: new ObjectID() })
-      }
-    })
+    expect(getDb.functions.insertOne).toHaveBeenLastCalledWith(
+      expect.objectContaining({ from: req.session.user._id })
+    )
+  })
+
+  it('Should save the project id', async () => {
+    await addMessage(req, res, next)
+
+    expect(getDb.functions.insertOne).toHaveBeenLastCalledWith(
+      expect.objectContaining({ project: new ObjectID(req.params.id) })
+    )
   })
 
   it('Should save creationDate', async () => {
     await addMessage(req, res, next)
 
-    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith({
-      _id: new ObjectID(req.params.id)
-    }, {
-      $push: {
-        messages: expect.objectContaining({ creationDate: expect.any(Date) })
-      }
-    })
+    expect(getDb.functions.insertOne).toHaveBeenLastCalledWith(
+      expect.objectContaining({ creationDate: expect.any(Date) })
+    )
   })
 
   it('Should save lastUpdateDate', async () => {
     await addMessage(req, res, next)
 
-    expect(getDb.functions.updateOne).toHaveBeenLastCalledWith({
-      _id: new ObjectID(req.params.id)
-    }, {
-      $push: {
-        messages: expect.objectContaining({ lastUpdateDate: expect.any(Date) })
-      }
-    })
+    expect(getDb.functions.insertOne).toHaveBeenLastCalledWith(
+      expect.objectContaining({ lastUpdateDate: expect.any(Date) })
+    )
   })
 })
