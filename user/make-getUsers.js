@@ -16,6 +16,7 @@ module.exports = ({
   }
 
   filters = createFindFilters(filters)
+
   const query = collection.find(filters)
   const options = await cursorify(req, res, query, { projection: sensitiveInformationProjection })
   const users = await collection.find(filters, options).toArray()
