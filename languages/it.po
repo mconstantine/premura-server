@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Premura Server\n"
-"POT-Creation-Date: 2018-12-11 15:58+0100\n"
-"PO-Revision-Date: 2018-12-11 15:58+0100\n"
+"POT-Creation-Date: 2018-12-19 13:17+0100\n"
+"PO-Revision-Date: 2018-12-19 13:17+0100\n"
 "Last-Translator: Mauro Constantinescu <mconst@mconst.it>\n"
 "Language-Team: \n"
 "Language: it\n"
@@ -55,12 +55,12 @@ msgid "%s cannot access this project"
 msgstr "%s non può accedere a questo progetto"
 
 #: activity/make-createActivity.js:21 activity/make-updateActivity.js:37
-#: project/make-addDeadlines.js:10 project/make-addPeople.js:10
-#: project/make-addTerms.js:14 project/make-deleteProject.js:19
-#: project/make-getProject.js:20 project/make-moveTerms.js:10
-#: project/make-removeDeadlines.js:10 project/make-removePeople.js:9
-#: project/make-removeTerms.js:14 project/make-updatePeople.js:10
-#: project/make-updateProject.js:7
+#: project/make-addDeadlines.js:10 project/make-addMessage.js:8
+#: project/make-addPeople.js:10 project/make-addTerms.js:14
+#: project/make-deleteProject.js:19 project/make-getProject.js:20
+#: project/make-moveTerms.js:10 project/make-removeDeadlines.js:10
+#: project/make-removePeople.js:9 project/make-removeTerms.js:14
+#: project/make-updatePeople.js:10 project/make-updateProject.js:7
 msgid "Project not found"
 msgstr "Progetto non trovato"
 
@@ -133,6 +133,18 @@ msgstr "Non puoi accedere al progetto di destinazione"
 #: project/make-removePeople.js:33
 msgid "A project can't be assigned to no one"
 msgstr "Un progetto non può non essere assegnato a nessuno"
+
+#: project/make-updateMessage.js:7
+msgid "Message not found"
+msgstr "Messaggio non trovato"
+
+#: project/make-updateMessage.js:11
+msgid "You can't edit another user's message"
+msgstr "Non puoi modificare messaggi di altri utenti"
+
+#: project/make-updateMessage.js:21
+msgid "Your message is not part of this project's conversation"
+msgstr "Il tuo messaggio non fa parte della conversazione di questo progetto"
 
 #: project/make-updatePeople.js:51
 msgid "People budgets don't add up"

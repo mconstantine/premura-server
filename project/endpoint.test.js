@@ -26,6 +26,7 @@ describe('project endpoint', () => {
       addDeadlines: 'addDeadlines',
       addMessage: 'addMessage',
       getMessages: 'getMessages',
+      updateMessage: 'updateMessage',
       addTerms: 'addTerms',
       moveTerms: 'moveTerms',
       removeTerms: 'removeTerms',
@@ -36,6 +37,7 @@ describe('project endpoint', () => {
       validateEditPeople: 'validateEditPeople',
       validateEditDeadlines: 'validateEditDeadlines',
       validateAddMessage: 'validateAddMessage',
+      validateUpdateMessage: 'validateUpdateMessage',
       validateEditTerms: 'validateEditTerms',
       validateMoveTerms: 'validateMoveTerms',
       sendValidation: 'sendValidation'
@@ -65,13 +67,15 @@ describe('project endpoint', () => {
     expect(router.post).toHaveBeenNthCalledWith(5,
       '/:id/terms', paths.validateEditTerms, paths.sendValidation, paths.addTerms)
 
-    expect(router.put).toHaveBeenCalledTimes(3)
+    expect(router.put).toHaveBeenCalledTimes(4)
     expect(router.put).toHaveBeenNthCalledWith(1,
       '/:id', paths.validateUpdateProject, paths.sendValidation, paths.updateProject)
     expect(router.put).toHaveBeenNthCalledWith(2,
       '/:id/people', paths.validateEditPeople, paths.sendValidation, paths.updatePeople)
     expect(router.put).toHaveBeenNthCalledWith(3,
       '/:id/terms', paths.validateMoveTerms, paths.sendValidation, paths.moveTerms)
+    expect(router.put).toHaveBeenNthCalledWith(4,
+      '/:id/messages/:messageId', paths.validateUpdateMessage, paths.sendValidation, paths.updateMessage)
 
     expect(router.delete).toHaveBeenCalledTimes(4)
     expect(router.delete).toHaveBeenNthCalledWith(1,'/:id', paths.deleteProject)
