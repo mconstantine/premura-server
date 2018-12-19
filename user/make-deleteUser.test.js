@@ -123,9 +123,12 @@ describe('deleteUser', () => {
     async () => {
       const projects = getProjects()
       const categories = getCategories()
+
       getDb.functions.updateOne.mockClear()
       getDb.functions.deleteOne.mockClear()
+      getDb.functions.deleteMany.mockClear()
       await deleteUser(req, res, next)
+
       expect(getDb.functions.deleteOne).toHaveBeenCalledWith({
         _id: projects[0]._id
       })
@@ -138,6 +141,9 @@ describe('deleteUser', () => {
             projects: [categories[0].terms[0].projects[1]]
           }]
         }
+      })
+      expect(getDb.functions.deleteMany).toHaveBeenCalledWith({
+        project: projects[0]._id
       })
     }
   )
@@ -158,6 +164,14 @@ describe('deleteUser', () => {
       $pull: {
         people: new ObjectID(req.params.id)
       }
+    })
+  })
+
+  it("Should delete all of the user's messages", async () => {
+    getDb.functions.deleteMany.mockClear()
+    await deleteUser(req, res, next)
+    expect(getDb.functions.deleteMany).toHaveBeenLastCalledWith({
+      from: new ObjectID(req.params.id)
     })
   })
 })

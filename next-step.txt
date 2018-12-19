@@ -1,2 +1,1 @@
-When a project is deleted, all of the messages should be deleted too
-When a user is deleted, all of the messages should be deleted too
+Do projects and activities histories

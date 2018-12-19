@@ -12,8 +12,7 @@ module.exports = ({ createError, ObjectID, getDb, gt }) => async (req, res, next
 
   const _id = new ObjectID(req.params.id)
   const db = await getDb()
-  const usersCollection = db.collection('users')
-  const user = await usersCollection.findOne({ _id })
+  const user = await db.collection('users').findOne({ _id })
   const currentUser = req.session.user
 
   if (!user) {
@@ -24,8 +23,7 @@ module.exports = ({ createError, ObjectID, getDb, gt }) => async (req, res, next
     return next(createError(401, gt.gettext('Only a master user can delete a user')))
   }
 
-  const projectsCollection = db.collection('projects')
-  const projects = await projectsCollection.find({
+  const projects = await db.collection('projects').find({
     'people._id': _id
   }).toArray()
 
@@ -50,14 +48,14 @@ module.exports = ({ createError, ObjectID, getDb, gt }) => async (req, res, next
         }
       }
 
-      await projectsCollection.updateOne({ _id: project._id }, {
+      await db.collection('projects').updateOne({ _id: project._id }, {
         $set: { people }
       })
     } else {
-      await projectsCollection.deleteOne({ _id: project._id })
+      await db.collection('projects').deleteOne({ _id: project._id })
+      await db.collection('messages').deleteMany({ project: project._id })
 
-      const categoriesCollection = db.collection('categories')
-      const categories = await categoriesCollection.find({
+      const categories = await db.collection('categories').find({
         'terms.projects': project._id
       }).toArray()
 
@@ -76,7 +74,7 @@ module.exports = ({ createError, ObjectID, getDb, gt }) => async (req, res, next
           }, [])
         })
 
-        await categoriesCollection.updateOne({ _id: category._id }, {
+        await db.collection('categories').updateOne({ _id: category._id }, {
           $set: { terms: category.terms }
         })
       })
@@ -92,7 +90,8 @@ module.exports = ({ createError, ObjectID, getDb, gt }) => async (req, res, next
     }
   })
 
-  await usersCollection.deleteOne({ _id })
+  await db.collection('users').deleteOne({ _id })
+  await db.collection('messages').deleteMany({ from: _id })
 
   res.end()
 }

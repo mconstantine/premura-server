@@ -11,9 +11,8 @@ module.exports = ({ getDb, ObjectID, createError, userCanReadProject, gt }) => a
   }
 
   const db = await getDb()
-  const projectsCollection = db.collection('projects')
   const _id = new ObjectID(req.params.id)
-  const project = await projectsCollection.findOne({ _id })
+  const project = await db.collection('projects').findOne({ _id })
 
   if (!project) {
     return next(createError(404, gt.gettext('Project not found')))
@@ -23,8 +22,7 @@ module.exports = ({ getDb, ObjectID, createError, userCanReadProject, gt }) => a
     return next(createError(401, gt.gettext("You can't access this project")))
   }
 
-  const categoriesCollection = db.collection('categories')
-  const categories = await categoriesCollection.find({
+  const categories = await db.collection('categories').find({
     'terms.projects': project._id
   }).toArray()
 
@@ -39,11 +37,15 @@ module.exports = ({ getDb, ObjectID, createError, userCanReadProject, gt }) => a
       }, [])
     })
 
-    await categoriesCollection.updateOne({ _id: category._id }, {
+    await db.collection('categories').updateOne({ _id: category._id }, {
       $set: { terms: category.terms }
     })
   })
 
-  await projectsCollection.deleteOne({ _id })
+  await db.collection('projects').deleteOne({ _id })
+  await db.collection('messages').deleteMany({
+    project: _id
+  })
+
   return res.end()
 }

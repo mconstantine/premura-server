@@ -94,4 +94,12 @@ describe('deleteProject', () => {
       }
     })
   })
+
+  it("Should delete the project's conversation", async () => {
+    await deleteProject(req, res, next)
+
+    expect(getDb.functions.deleteMany).toHaveBeenLastCalledWith({
+      project: new ObjectID(req.params.id)
+    })
+  })
 })
