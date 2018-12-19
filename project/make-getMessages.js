@@ -29,6 +29,21 @@ module.exports = ({
 
   aggregation.push({
     $lookup: {
+      from: 'projects',
+      localField: 'project',
+      foreignField: '_id',
+      as: 'project_extended'
+    }
+  }, {
+    $match: {
+      'project_extended.people._id': req.session.user._id
+    }
+  }, {
+    $project: {
+      project_extended: 0
+    }
+  }, {
+    $lookup: {
       from: 'users',
       localField: 'from',
       foreignField: '_id',

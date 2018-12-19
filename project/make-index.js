@@ -83,7 +83,7 @@ module.exports = ({ config }) => {
     removeDeadlines: makeRemoveDeadlines({
       getDb, ObjectID, createError, getProjectFromDb, userCanReadProject, gt
     }),
-    addMessage: makeAddMessage({ getDb, ObjectID, createError, gt }),
+    addMessage: makeAddMessage({ getDb, ObjectID, createError, userCanReadProject, gt }),
     getMessages: makeGetMessages({
       getDb, ObjectID, cursorify, createFindFilters, sensitiveInformationProjection
     }),

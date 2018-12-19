@@ -28,12 +28,17 @@ describe('privacy', () => {
     })
 
     const project = await app.createProject()
-    const now = Date.now()
     const activities = []
 
     for (let i = 0; i < 3; i++) {
       activities.push(await app.createActivity(user._id, project._id))
     }
+
+    const messageId = (
+      await client.post(`/projects/${project._id}/messages/`, {
+        content: 'A message'
+      }, true)
+    )._id
 
     // Master log in
     await client.login()
@@ -80,6 +85,22 @@ describe('privacy', () => {
     response = await client.post(`/projects/${project._id}/terms/`, {
       terms: [randomId]
     })
+    expect(response.status).toBe(401)
+
+    response = await client.get(`/projects/${project._id}/messages/`, undefined, true)
+    expect(response.length).toBe(0)
+
+    response = await client.post(`/projects/${project._id}/messages/`, {
+      content: 'Hello'
+    })
+    expect(response.status).toBe(401)
+
+    response = await client.put(`/projects/${project._id}/messages/${messageId}/`, {
+      content: 'Hello'
+    })
+    expect(response.status).toBe(401)
+
+    response = await client.delete(`/projects/${project._id}/messages/${messageId}/`)
     expect(response.status).toBe(401)
 
     response = await client.put(`/projects/${project._id}/terms/`, {

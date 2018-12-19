@@ -11,6 +11,7 @@ describe('getMessages', () => {
   })
 
   const req = {
+    session: { user: { _id: new ObjectID('me') } },
     params: { id: 'someprojectid' },
     query: {}
   }
@@ -30,6 +31,16 @@ describe('getMessages', () => {
   it('Should paginate messages', async () => {
     await getMessages(req, res)
     expect(cursorify).toHaveBeenCalled()
+  })
+
+  it('Should check that the user can read the project', async () => {
+    await getMessages(req, res)
+
+    expect(getDb.functions.aggregate).toHaveBeenCalledWith(expect.arrayContaining([{
+      $match: {
+        'project_extended.people._id': req.session.user._id
+      }
+    }]))
   })
 
   it('Should search in messages content', async () => {

@@ -1,4 +1,4 @@
-module.exports = ({ getDb, ObjectID, createError, gt }) => async (req, res, next) => {
+module.exports = ({ getDb, ObjectID, createError, userCanReadProject, gt }) => async (req, res, next) => {
   const currentUser = req.session.user
   const db = await getDb()
   const project_id = new ObjectID(req.params.id)
@@ -6,6 +6,10 @@ module.exports = ({ getDb, ObjectID, createError, gt }) => async (req, res, next
 
   if (!project) {
     return next(createError(404, gt.gettext('Project not found')))
+  }
+
+  if (!userCanReadProject(req.session.user, project)) {
+    return next(createError(401, gt.gettext("You can't access this project")))
   }
 
   const content = req.body.content
