@@ -6,7 +6,7 @@ module.exports = {
     saveUninitialized: false,
     cookie: { maxAge: 60 * 60 * 24 * 14 * 1000 }
   },
-  env: 'development',
+  env: 'production',
   db: {
     url: 'mongodb://localhost:27017',
     dbName: 'premura',

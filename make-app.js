@@ -24,15 +24,15 @@ module.exports.open = ({ config, port = 5000 }) => {
 
   if (config.env === 'production') {
     app.set('trust proxy', 1)
-    session.cookie.secure = true
-  } else if (config.env === 'development') {
-    app.use(cors({
-      origin: true,
-      credentials: true,
-      exposedHeaders: [],
-      allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept']
-    }))
+    sessionOptions.cookie.secure = true
   }
+
+  app.use(cors({
+    origin: true,
+    credentials: true,
+    exposedHeaders: [],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept']
+  }))
 
   app
   .use(session(sessionOptions))
