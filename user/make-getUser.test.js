@@ -8,7 +8,7 @@ describe('getUser', () => {
   const sensitiveInformationProjection = { test: true }
 
   const id = '1234567890abcdef'
-  const req = { params: { id } }
+  const req = { params: { id }, session: { user: { _id: new ObjectID('me') } } }
   const res = { status: jest.fn(() => res), send: jest.fn() }
   const next = jest.fn()
 
@@ -29,6 +29,18 @@ describe('getUser', () => {
     })
 
     req.params = { id }
+  })
+
+  it('Should get the current user if the id is "me"', async () => {
+    getDb.functions.findOne.mockClear()
+    const originalId = req.params.id
+    req.params.id = 'me'
+    await getUser(req, res, next)
+    expect(getDb.functions.findOne).toHaveBeenLastCalledWith({
+      _id: req.session.user._id },
+      expect.any(Object)
+    )
+    req.params.id = originalId
   })
 
   it("Should fail if the user doesn't exist", async () => {

@@ -1,7 +1,11 @@
 module.exports = ({
   getDb, createError, ObjectID, sensitiveInformationProjection, gt
 }) => async (req, res, next) => {
-  if (!ObjectID.isValid(req.params.id)) {
+  let _id = req.params.id
+
+  if (req.params.id === 'me') {
+    _id = req.session.user._id
+  } else if (!ObjectID.isValid(req.params.id)) {
     return res.status(422).send({
       errors: [{
         location: 'params',
@@ -10,9 +14,10 @@ module.exports = ({
         msg: gt.gettext('Invalid user ID')
       }]
     })
+  } else {
+    _id = new ObjectID(req.params.id)
   }
 
-  const _id = new ObjectID(req.params.id)
   const user = await (await getDb()).collection('users').findOne({ _id }, {
     projection: sensitiveInformationProjection
   })
