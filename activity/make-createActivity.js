@@ -76,8 +76,8 @@ module.exports = ({
 
   const conflict = otherActivities.find(({ timeFrom, timeTo }) => {
     return (
-      (timeFrom >= activity.timeFrom || timeTo >= activity.timeFrom) &&
-      (timeFrom <= activity.timeTo || timeTo <= activity.timeTo)
+      (timeFrom > activity.timeFrom || timeTo > activity.timeFrom) &&
+      (timeFrom < activity.timeTo || timeTo < activity.timeTo)
     )
   })
 
