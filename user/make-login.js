@@ -26,6 +26,6 @@ module.exports = ({ bcrypt, createError, getDb, gt }) => async (req, res, next) 
     $set: { lastLoginDate: new Date() }
   })
 
-  req.session.user = user
+  req.session.user = Object.assign(user, { lang: req.body.lang })
   res.send(req.session.user)
 }
