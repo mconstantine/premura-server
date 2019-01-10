@@ -1,1 +1,2 @@
+Languages are inconsistent. Login language should be saved to user profile.
 Do projects and activities histories
